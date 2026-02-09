@@ -1,0 +1,216 @@
+{
+  "version": "1.0.0",
+  "seeds": {
+    "roles": [
+      {
+        "_id": "admin",
+        "value": "Administrator",
+        "features": [
+          {
+            "name": "create_product",
+            "description": "Créer des produits"
+          },
+          {
+            "name": "edit_product",
+            "description": "Modifier des produits"
+          },
+          {
+            "name": "delete_product",
+            "description": "Supprimer des produits"
+          },
+          {
+            "name": "manage_users",
+            "description": "Gérer les utilisateurs"
+          },
+          {
+            "name": "view_reports",
+            "description": "Voir les rapports"
+          }
+        ]
+      },
+      {
+        "_id": "manager",
+        "value": "Manager",
+        "features": [
+          {
+            "name": "create_product",
+            "description": "Créer des produits"
+          },
+          {
+            "name": "edit_product",
+            "description": "Modifier des produits"
+          },
+          {
+            "name": "view_reports",
+            "description": "Voir les rapports"
+          }
+        ]
+      },
+      {
+        "_id": "employee",
+        "value": "Employee",
+        "features": [
+          {
+            "name": "view_products",
+            "description": "Voir les produits"
+          },
+          {
+            "name": "create_order",
+            "description": "Créer des commandes"
+          }
+        ]
+      },
+      {
+        "_id": "customer",
+        "value": "Customer",
+        "features": [
+          {
+            "name": "view_products",
+            "description": "Voir les produits"
+          },
+          {
+            "name": "create_order",
+            "description": "Créer des commandes"
+          },
+          {
+            "name": "view_my_orders",
+            "description": "Voir mes commandes"
+          }
+        ]
+      }
+    ],
+    "stores": [
+      {
+        "name": "Magasin Centre-Ville",
+        "address": "123 Rue Principale, Paris",
+        "phone": "+33123456789",
+        "email": "centerville@store.com",
+        "isActive": true
+      },
+      {
+        "name": "Magasin Quartier Nord",
+        "address": "456 Avenue du Nord, Lyon",
+        "phone": "+33987654321",
+        "email": "nord@store.com",
+        "isActive": true
+      },
+      {
+        "name": "Magasin Sud",
+        "address": "789 Boulevard du Sud, Marseille",
+        "phone": "+33555666777",
+        "email": "sud@store.com",
+        "isActive": false
+      }
+    ],
+    "products": [
+      {
+        "_id": "laptop-dell-xps-001",
+        "name": "Laptop Dell XPS 15",
+        "description": "Ordinateur portable haute performance",
+        "categories": [
+          {
+            "name": "Électronique",
+            "types": [
+              { "name": "Ordinateurs portables" },
+              { "name": "PC" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://example.com/dell-xps-1.jpg" },
+          { "link": "https://example.com/dell-xps-2.jpg" }
+        ]
+      },
+      {
+        "_id": "iphone-15-pro-001",
+        "name": "iPhone 15 Pro",
+        "description": "Smartphone Apple dernière génération",
+        "categories": [
+          {
+            "name": "Électronique",
+            "types": [
+              { "name": "Smartphones" },
+              { "name": "Apple" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://example.com/iphone-15-1.jpg" }
+        ]
+      },
+      {
+        "_id": "chair-office-001",
+        "name": "Chaise de Bureau Ergonomique",
+        "description": "Confort optimal pour longues sessions",
+        "categories": [
+          {
+            "name": "Mobilier",
+            "types": [
+              { "name": "Chaises" },
+              { "name": "Bureau" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://example.com/chair-1.jpg" }
+        ]
+      }
+    ],
+    "productStoreData": [
+      {
+        "productId": "laptop-dell-xps-001",
+        "storeEmail": "centerville@store.com",
+        "currentPrice": 1299.99,
+        "priceHistory": [
+          { "price": 1499.99, "updatedAt": "2024-01-01T00:00:00Z" },
+          { "price": 1299.99, "updatedAt": "2024-01-15T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 200.00,
+            "description": "Soldes d'hiver",
+            "startDate": "2024-01-01T00:00:00Z",
+            "endDate": "2024-01-31T23:59:59Z",
+            "isActive": false
+          }
+        ]
+      },
+      {
+        "productId": "laptop-dell-xps-001",
+        "storeEmail": "nord@store.com",
+        "currentPrice": 1349.99,
+        "priceHistory": [
+          { "price": 1349.99, "updatedAt": "2024-01-01T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "iphone-15-pro-001",
+        "storeEmail": "centerville@store.com",
+        "currentPrice": 1199.99,
+        "priceHistory": [
+          { "price": 1199.99, "updatedAt": "2024-01-01T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 100.00,
+            "description": "Promotion printemps",
+            "startDate": "2024-02-01T00:00:00Z",
+            "endDate": "2024-02-28T23:59:59Z",
+            "isActive": true
+          }
+        ]
+      },
+      {
+        "productId": "chair-office-001",
+        "storeEmail": "centerville@store.com",
+        "currentPrice": 299.99,
+        "priceHistory": [
+          { "price": 349.99, "updatedAt": "2024-01-01T00:00:00Z" },
+          { "price": 299.99, "updatedAt": "2024-02-01T00:00:00Z" }
+        ],
+        "promotions": []
+      }
+    ]
+  }
+}

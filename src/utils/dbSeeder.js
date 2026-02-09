@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
 const { Role, Store, Product, User } = require('../models');
-const logger = require('logger');
+const logger = require('./logger');
 const Migration = require('../models/migration.model');
 
 class DatabaseSeeder {

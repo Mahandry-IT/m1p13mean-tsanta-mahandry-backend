@@ -11,7 +11,7 @@ const env = {
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   CORS_ORIGINS: (process.env.CORS_ORIGINS || '*').split(',').map(s => s.trim()),
   SWAGGER_ENABLED: (process.env.SWAGGER_ENABLED || 'true') === 'true',
-  SEED_FILE: path.join(__dirname, '../config/data.json')
+  SEED_FILE: path.join(__dirname, '../database/data.json')
 };
 
 module.exports = { env };

@@ -1,20 +1,5 @@
 const mongoose = require('mongoose');
 
-const roleInfoSchema = new mongoose.Schema({
-    roleId: {
-        type: String,
-        required: true,
-        ref: 'Role'
-    },
-    value: {
-        type: String,
-        required: true
-    },
-    features: [{
-        type: String
-    }]
-}, { _id: false });
-
 const passwordHistorySchema = new mongoose.Schema({
     passwordHash: {
         type: String,
@@ -112,13 +97,9 @@ const userSchema = new mongoose.Schema({
     lastLoginAt: {
         type: Date
     },
-    storeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Store',
-        default: null
-    },
-    role: {
-        type: roleInfoSchema,
+    roleId: {
+        type: String,
+        ref: 'Role',
         required: true
     },
     passwordHistory: [passwordHistorySchema],
@@ -130,7 +111,6 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 }, { unique: true });
-userSchema.index({ 'role.roleId': 1 });
-userSchema.index({ storeId: 1 });
+userSchema.index({ roleId: 1 });
 
 module.exports = mongoose.model('User', userSchema);

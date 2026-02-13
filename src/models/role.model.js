@@ -26,6 +26,11 @@ const roleSchema = new mongoose.Schema({
         required: true,
         maxlength: 50
     },
+    homepage: {
+        type: String,
+        maxlength: 100,
+        required: true
+    },
     features: [featureSchema]
 }, {
     timestamps: true

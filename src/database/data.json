@@ -5,6 +5,7 @@
       {
         "_id": "admin",
         "value": "Administrator",
+        "homepage": "/admin/dashboard",
         "features": [
           {
             "name": "create_product",
@@ -31,6 +32,7 @@
       {
         "_id": "manager",
         "value": "Manager",
+        "homepage": "/manager/dashboard",
         "features": [
           {
             "name": "create_product",
@@ -63,6 +65,7 @@
       {
         "_id": "customer",
         "value": "Customer",
+        "homepage": "/customer/dashboard",
         "features": [
           {
             "name": "view_products",
@@ -79,12 +82,72 @@
         ]
       }
     ],
+    "users": [
+      {
+        "_id": "65f1c1a5e1c2a9b001000001",
+        "username": "owner-centre",
+        "email": "owner.centre@example.com",
+        "firstName": "Jean",
+        "lastName": "Dupont",
+        "phone": "+33123456789",
+        "role": {
+          "roleId": "manager",
+          "value": "Manager",
+          "homepage": "/manager/dashboard",
+          "features": [
+            "create_product",
+            "edit_product",
+            "view_reports"
+          ]
+        },
+        "password": "ChangeMe123!"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000002",
+        "username": "owner-nord",
+        "email": "owner.nord@example.com",
+        "firstName": "Claire",
+        "lastName": "Martin",
+        "phone": "+33987654321",
+        "role": {
+          "roleId": "manager",
+          "value": "Manager",
+          "homepage": "/manager/dashboard",
+          "features": [
+            "create_product",
+            "edit_product",
+            "view_reports"
+          ]
+        },
+        "password": "ChangeMe123!"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000003",
+        "username": "owner-sud",
+        "email": "owner.sud@example.com",
+        "firstName": "Lucas",
+        "lastName": "Bernard",
+        "phone": "+33555666777",
+        "role": {
+          "roleId": "manager",
+          "value": "Manager",
+          "homepage": "/manager/dashboard",
+          "features": [
+            "create_product",
+            "edit_product",
+            "view_reports"
+          ]
+        },
+        "password": "ChangeMe123!"
+      }
+    ],
     "stores": [
       {
         "name": "Magasin Centre-Ville",
         "address": "123 Rue Principale, Paris",
         "phone": "+33123456789",
         "email": "centerville@store.com",
+        "userId": "65f1c1a5e1c2a9b001000001",
         "isActive": true
       },
       {
@@ -92,6 +155,7 @@
         "address": "456 Avenue du Nord, Lyon",
         "phone": "+33987654321",
         "email": "nord@store.com",
+        "userId": "65f1c1a5e1c2a9b001000002",
         "isActive": true
       },
       {
@@ -99,6 +163,7 @@
         "address": "789 Boulevard du Sud, Marseille",
         "phone": "+33555666777",
         "email": "sud@store.com",
+        "userId": "65f1c1a5e1c2a9b001000003",
         "isActive": false
       }
     ],

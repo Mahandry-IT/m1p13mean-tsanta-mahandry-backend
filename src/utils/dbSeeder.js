@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const { Role, Store, Product, User } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
+const bcrypt = require('bcryptjs');
 
 class DatabaseSeeder {
     constructor(seedFilePath) {
@@ -103,14 +104,35 @@ class DatabaseSeeder {
         for (const storeData of stores) {
             const existingStore = await Store.findOne({ email: storeData.email });
 
+            // Déterminer l'utilisateur à lier: priorité à userId dans le JSON, sinon fallback via email
+            let userIdToAssign = null;
+            let relatedUser = null;
+            if (storeData.userId) {
+                relatedUser = await User.findById(storeData.userId);
+                userIdToAssign = relatedUser ? relatedUser._id : null;
+            }
+            if (!userIdToAssign) {
+                relatedUser = await User.findOne({ email: storeData.email });
+                userIdToAssign = relatedUser ? relatedUser._id : null;
+            }
+
+            const payload = { ...storeData, userId: userIdToAssign || null };
+
             if (existingStore) {
-                await Store.findByIdAndUpdate(existingStore._id, storeData);
+                await Store.findByIdAndUpdate(existingStore._id, payload);
                 updated++;
                 logger.info(`  🔄 Magasin mis à jour: ${storeData.name}`);
             } else {
-                await Store.create(storeData);
+                await Store.create(payload);
                 created++;
                 logger.info(`  ✅ Magasin créé: ${storeData.name}`);
+            }
+
+            if (userIdToAssign) {
+                const userInfo = relatedUser && relatedUser.email ? `${relatedUser.email} (${userIdToAssign.toString()})` : userIdToAssign.toString();
+                logger.info(`     ↪️  Lié à l'utilisateur ${userInfo}`);
+            } else {
+                logger.info('     ↪️  Aucun utilisateur correspondant trouvé, userId = null');
             }
         }
 
@@ -241,6 +263,60 @@ class DatabaseSeeder {
     }
 
     /**
+     * Seed des utilisateurs (utilise roleId)
+     */
+    async seedUsers(users) {
+        logger.info('\n👤 Seed des utilisateurs...');
+        let created = 0;
+        let updated = 0;
+
+        for (const u of users) {
+            const roleId = u.roleId || (u.role && u.role.roleId) || 'customer';
+            const existing = await User.findOne({ email: u.email });
+            const passwordHash = await bcrypt.hash(u.password || 'ChangeMe123!', 10);
+
+            if (existing) {
+                // Mettre à jour champs principaux et rôle
+                existing.username = u.username || existing.username;
+                existing.firstName = u.firstName || existing.firstName;
+                existing.lastName = u.lastName || existing.lastName;
+                existing.phone = u.phone || existing.phone;
+                existing.roleId = roleId;
+                existing.status = u.status || existing.status || 'active';
+                // Mettre à jour passwordHistory si différent
+                const last = (existing.passwordHistory || []).slice(-1)[0];
+                if (!last || !(await bcrypt.compare(u.password || 'ChangeMe123!', last.passwordHash))) {
+                    existing.passwordHistory = [
+                        ...(existing.passwordHistory || []),
+                        { passwordHash, createdAt: new Date() }
+                    ];
+                }
+                await existing.save();
+                updated++;
+                logger.info(`  🔄 Utilisateur mis à jour: ${u.email}`);
+            } else {
+                await User.create({
+                    username: u.username,
+                    email: u.email,
+                    firstName: u.firstName,
+                    lastName: u.lastName,
+                    phone: u.phone,
+                    roleId,
+                    status: u.status || 'active',
+                    passwordHistory: [{ passwordHash, createdAt: new Date() }],
+                    failedAttempts: 0,
+                    sessions: [],
+                    favorites: []
+                });
+                created++;
+                logger.info(`  ✅ Utilisateur créé: ${u.email}`);
+            }
+        }
+
+        logger.info(`✅ Utilisateurs: ${created} créés, ${updated} mis à jour`);
+    }
+
+    /**
      * Exécute le seeding complet
      */
     async seed() {
@@ -265,6 +341,11 @@ class DatabaseSeeder {
             // Exécuter les seeds dans l'ordre
             if (this.seedData.seeds.roles) {
                 await this.seedRoles(this.seedData.seeds.roles);
+            }
+
+            // Seed users avant stores pour permettre la liaison userId
+            if (this.seedData.seeds.users) {
+                await this.seedUsers(this.seedData.seeds.users);
             }
 
             if (this.seedData.seeds.stores) {

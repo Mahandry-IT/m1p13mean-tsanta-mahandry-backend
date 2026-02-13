@@ -7,7 +7,7 @@ module.exports = {
       const result = await AuthService.register(req.body);
       return success(res, result, 'Inscription réussie', 201);
     } catch (e) {
-      return error(res, e.message || 'Erreur inscription', e.status || 400);
+      return error(res, e.message || 'Erreur lors de l\'inscription', e.status || 400);
     }
   },
   async login(req, res) {
@@ -15,7 +15,7 @@ module.exports = {
       const result = await AuthService.login(req.body);
       return success(res, result, 'Connexion réussie');
     } catch (e) {
-      return error(res, e.message || 'Erreur connexion', e.status || 401);
+      return error(res, e.message || 'Erreur lors de la connexion', e.status || 401);
     }
   }
 };

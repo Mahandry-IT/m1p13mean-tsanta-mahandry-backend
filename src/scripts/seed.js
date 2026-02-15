@@ -2,7 +2,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const { env } = require('./env');
-const DatabaseSeeder = require('../utils/dbSeeder');
+const DatabaseSeeder = require('../utils/seeder');
 const logger = require('../utils/logger');
 
 // Configuration

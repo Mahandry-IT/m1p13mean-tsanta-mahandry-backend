@@ -24,6 +24,11 @@ const storeSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
     isActive: {
         type: Boolean,
         default: true

@@ -271,7 +271,19 @@ class DatabaseSeeder {
         let updated = 0;
 
         for (const u of users) {
-            const roleId = u.roleId || (u.role && u.role.roleId) || 'customer';
+            const roleId = u.roleId || (u.role && u.role.roleId) || null;
+
+            if (!roleId) {
+                logger.warn(`  ⚠️  roleId manquant pour l'utilisateur: ${u.email}`);
+                continue;
+            }
+
+            const roleExists = await Role.findById(roleId);
+            if (!roleExists) {
+                logger.warn(`  ⚠️  Rôle inexistant (${roleId}) pour l'utilisateur: ${u.email}. Skipping.`);
+                continue;
+            }
+
             const existing = await User.findOne({ email: u.email });
             const passwordHash = await bcrypt.hash(u.password || 'ChangeMe123!', 10);
 

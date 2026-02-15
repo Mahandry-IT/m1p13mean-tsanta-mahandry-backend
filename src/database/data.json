@@ -3,7 +3,7 @@
   "seeds": {
     "roles": [
       {
-        "_id": "admin",
+        "_id": "6990aefb7053d5bc9001e424",
         "value": "Administrator",
         "homepage": "/admin/dashboard",
         "features": [
@@ -30,7 +30,7 @@
         ]
       },
       {
-        "_id": "manager",
+        "_id": "6990aefb7053d5bc9001e425",
         "value": "Manager",
         "homepage": "/manager/dashboard",
         "features": [
@@ -49,21 +49,7 @@
         ]
       },
       {
-        "_id": "employee",
-        "value": "Employee",
-        "features": [
-          {
-            "name": "view_products",
-            "description": "Voir les produits"
-          },
-          {
-            "name": "create_order",
-            "description": "Créer des commandes"
-          }
-        ]
-      },
-      {
-        "_id": "customer",
+        "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
         "homepage": "/customer/dashboard",
         "features": [
@@ -90,16 +76,7 @@
         "firstName": "Jean",
         "lastName": "Dupont",
         "phone": "+33123456789",
-        "role": {
-          "roleId": "manager",
-          "value": "Manager",
-          "homepage": "/manager/dashboard",
-          "features": [
-            "create_product",
-            "edit_product",
-            "view_reports"
-          ]
-        },
+        "roleId": "6990aefb7053d5bc9001e425",
         "password": "ChangeMe123!"
       },
       {
@@ -109,16 +86,7 @@
         "firstName": "Claire",
         "lastName": "Martin",
         "phone": "+33987654321",
-        "role": {
-          "roleId": "manager",
-          "value": "Manager",
-          "homepage": "/manager/dashboard",
-          "features": [
-            "create_product",
-            "edit_product",
-            "view_reports"
-          ]
-        },
+        "roleId": "6990aefb7053d5bc9001e425",
         "password": "ChangeMe123!"
       },
       {
@@ -128,16 +96,7 @@
         "firstName": "Lucas",
         "lastName": "Bernard",
         "phone": "+33555666777",
-        "role": {
-          "roleId": "manager",
-          "value": "Manager",
-          "homepage": "/manager/dashboard",
-          "features": [
-            "create_product",
-            "edit_product",
-            "view_reports"
-          ]
-        },
+        "roleId": "6990aefb7053d5bc9001e425",
         "password": "ChangeMe123!"
       }
     ],
@@ -169,7 +128,7 @@
     ],
     "products": [
       {
-        "_id": "laptop-dell-xps-001",
+        "_id": "6990aefb7053d5bc9001e428",
         "name": "Laptop Dell XPS 15",
         "description": "Ordinateur portable haute performance",
         "categories": [
@@ -187,7 +146,7 @@
         ]
       },
       {
-        "_id": "iphone-15-pro-001",
+        "_id": "6990aefb7053d5bc9001e429",
         "name": "iPhone 15 Pro",
         "description": "Smartphone Apple dernière génération",
         "categories": [
@@ -204,7 +163,7 @@
         ]
       },
       {
-        "_id": "chair-office-001",
+        "_id": "6990aefb7053d5bc9001e42a",
         "name": "Chaise de Bureau Ergonomique",
         "description": "Confort optimal pour longues sessions",
         "categories": [
@@ -223,7 +182,7 @@
     ],
     "productStoreData": [
       {
-        "productId": "laptop-dell-xps-001",
+        "productId": "6990aefb7053d5bc9001e428",
         "storeEmail": "centerville@store.com",
         "currentPrice": 1299.99,
         "priceHistory": [
@@ -241,7 +200,7 @@
         ]
       },
       {
-        "productId": "laptop-dell-xps-001",
+        "productId": "6990aefb7053d5bc9001e428",
         "storeEmail": "nord@store.com",
         "currentPrice": 1349.99,
         "priceHistory": [
@@ -250,7 +209,7 @@
         "promotions": []
       },
       {
-        "productId": "iphone-15-pro-001",
+        "productId": "6990aefb7053d5bc9001e429",
         "storeEmail": "centerville@store.com",
         "currentPrice": 1199.99,
         "priceHistory": [
@@ -267,7 +226,7 @@
         ]
       },
       {
-        "productId": "chair-office-001",
+        "productId": "6990aefb7053d5bc9001e42a",
         "storeEmail": "centerville@store.com",
         "currentPrice": 299.99,
         "priceHistory": [

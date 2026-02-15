@@ -3,7 +3,7 @@ const app = require('./app');
 const { connectDB } = require('./config/database');
 const { env } = require('./config/env');
 const logger = require('./utils/logger');
-const DatabaseSeeder = require('./utils/dbSeeder');
+const DatabaseSeeder = require('./utils/seeder');
 
 const PORT = env.PORT || 3000;
 

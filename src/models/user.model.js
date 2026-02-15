@@ -113,4 +113,20 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 }, { unique: true });
 userSchema.index({ roleId: 1 });
 
+userSchema.methods.toPublicJSON = function () {
+  return {
+    id: this._id,
+    username: this.username,
+    email: this.email,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    status: this.status,
+    phone: this.phone || null,
+    roleId: this.roleId,
+    lastLoginAt: this.lastLoginAt || null,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  };
+};
+
 module.exports = mongoose.model('User', userSchema);

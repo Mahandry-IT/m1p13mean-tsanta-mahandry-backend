@@ -8,24 +8,16 @@
         "homepage": "/admin/dashboard",
         "features": [
           {
-            "name": "create_product",
+            "name": "create:product",
             "description": "Créer des produits"
           },
           {
-            "name": "edit_product",
+            "name": "edit:product",
             "description": "Modifier des produits"
           },
           {
-            "name": "delete_product",
+            "name": "delete:product",
             "description": "Supprimer des produits"
-          },
-          {
-            "name": "manage_users",
-            "description": "Gérer les utilisateurs"
-          },
-          {
-            "name": "view_reports",
-            "description": "Voir les rapports"
           }
         ]
       },
@@ -35,16 +27,12 @@
         "homepage": "/manager/dashboard",
         "features": [
           {
-            "name": "create_product",
+            "name": "create:product",
             "description": "Créer des produits"
           },
           {
-            "name": "edit_product",
+            "name": "edit:product",
             "description": "Modifier des produits"
-          },
-          {
-            "name": "view_reports",
-            "description": "Voir les rapports"
           }
         ]
       },
@@ -54,15 +42,15 @@
         "homepage": "/customer/dashboard",
         "features": [
           {
-            "name": "view_products",
+            "name": "get:products",
             "description": "Voir les produits"
           },
           {
-            "name": "create_order",
+            "name": "create:order",
             "description": "Créer des commandes"
           },
           {
-            "name": "view_my_orders",
+            "name": "get:orders",
             "description": "Voir mes commandes"
           }
         ]

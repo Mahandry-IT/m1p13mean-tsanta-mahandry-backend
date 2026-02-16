@@ -16,6 +16,17 @@ module.exports = async function auth(req, res, next) {
     if (user.status !== 'active') {
       return res.status(403).json({ success: false, message: 'Le compte utilisateur doit être actif pour accéder à cette ressource' });
     }
+
+    // Vérifier que le token correspond à une session active et non expirée
+    const session = (user.sessions || []).find(s => s.token === token && s.isActive);
+    if (!session) {
+      return res.status(401).json({ success: false, message: 'Cette session n\'est pas active, veuillez vous reconnecter' });
+    }
+    const now = new Date();
+    if (session.expiredAt && new Date(session.expiredAt) <= now) {
+      return res.status(401).json({ success: false, message: 'Votre session a expiré, veuillez vous reconnecter' });
+    }
+
     req.user = payload;
     return next();
   } catch (e) {

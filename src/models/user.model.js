@@ -51,6 +51,37 @@ const favoriteSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
+const profileSchema = new mongoose.Schema({
+  avatarUrl: {
+      type: String,
+      maxlength: 255,
+      default: null,
+  },
+  firstName: {
+      type: String,
+      required: true,
+      maxlength: 50
+  },
+  lastName: {
+      type: String,
+      required: true,
+      maxlength: 50
+  },
+  birthday: {
+      type: Date,
+      required: true
+  },
+  phone: {
+      type: String,
+      maxlength: 50
+  },
+  gender: {
+      type: String,
+      enum: ['Homme', 'Femme', 'Non défini'],
+      default: 'Non défini'
+  }
+}, { _id: false });
+
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -67,27 +98,14 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
-    firstName: {
-        type: String,
-        required: true,
-        maxlength: 50
-    },
-    lastName: {
-        type: String,
-        required: true,
-        maxlength: 50
-    },
-    birthday: {
-        type: Date
+    profile: {
+        type: profileSchema,
+        required: false
     },
     status: {
         type: String,
         enum: ['active', 'inactive', 'suspended', 'pending'],
         default: 'pending',
-        maxlength: 50
-    },
-    phone: {
-        type: String,
         maxlength: 50
     },
     failedAttempts: {
@@ -113,16 +131,19 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 }, { unique: true });
 userSchema.index({ roleId: 1 });
 
-userSchema.methods.toPublicJSON = function () {
+userSchema.methods.toJSON = function () {
   return {
     id: this._id,
     username: this.username,
     email: this.email,
-    firstName: this.firstName,
-    lastName: this.lastName,
+    profile: {
+        firstName: this.profile?.firstName,
+        lastName: this.profile?.lastName,
+        phone: this.profile?.phone || null,
+        birthday: this.profile?.birthday || null,
+        gender: this.profile?.gender || 'Non défini',
+    },
     status: this.status,
-    phone: this.phone || null,
-    roleId: this.roleId,
     lastLoginAt: this.lastLoginAt || null,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt

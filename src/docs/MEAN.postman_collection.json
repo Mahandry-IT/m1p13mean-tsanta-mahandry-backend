@@ -53,6 +53,139 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "2) Create Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// récupérer le token depuis la réponse JSON\r",
+                  "const response = pm.response.json();\r",
+                  "const token = response.data.token;\r",
+                  "\r",
+                  "// stocker dans une variable d'environnement\r",
+                  "pm.environment.set(\"authToken\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTJkOTMzMGRlNjY0NDE2YmIyMjU5MSIsImVtYWlsIjoiYW5kcmlhbmFudGVuYWluYW1haGFuZHJ5NDFAZ21haWwuY29tIiwicm9sZUlkIjoiNjk5MGFlZmI3MDUzZDViYzkwMDFlNDI3IiwiaWF0IjoxNzcxMjMxOTM0LCJleHAiOjE3NzEyMzU1MzR9.d5haOfl6IdfPuIvXYGfXepTZ-4mroJabjHROIlInYPI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "firstName",
+                  "value": "ANDRIANANTENAINA",
+                  "type": "text",
+                  "uuid": "e69247cb-5602-47e4-aeba-a04bb094de6e"
+                },
+                {
+                  "key": "lastName",
+                  "value": "Mahandry",
+                  "type": "text",
+                  "uuid": "815d8d40-5651-451e-90b5-bce0b108770d"
+                },
+                {
+                  "key": "phone",
+                  "value": "+261330866369",
+                  "type": "text",
+                  "uuid": "8fa8aa38-93df-48f8-b33f-218f8ae593d9"
+                },
+                {
+                  "key": "gender",
+                  "value": "Homme",
+                  "type": "text",
+                  "uuid": "e3579689-5e13-4b41-a9be-59566bff18f1"
+                },
+                {
+                  "key": "birthday",
+                  "value": "2004-09-08",
+                  "type": "text",
+                  "uuid": "87ac3697-7751-4304-98b3-805bbb11a261"
+                },
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "c0a37d26-4539-44dd-bd5b-69761b254a01",
+                  "src": "/E:/Téléchargement/Images/profil1.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{LOCAL}}/users/profile",
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "users",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3) Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// récupérer le token depuis la réponse JSON\r",
+                  "const response = pm.response.json();\r",
+                  "const token = response.data.token;\r",
+                  "\r",
+                  "// stocker dans une variable d'environnement\r",
+                  "pm.environment.set(\"authToken\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OTJkOTMzMGRlNjY0NDE2YmIyMjU5MSIsImVtYWlsIjoiYW5kcmlhbmFudGVuYWluYW1haGFuZHJ5NDFAZ21haWwuY29tIiwicm9sZUlkIjoiNjk5MGFlZmI3MDUzZDViYzkwMDFlNDI3IiwiaWF0IjoxNzcxMjMxOTM0LCJleHAiOjE3NzEyMzU1MzR9.d5haOfl6IdfPuIvXYGfXepTZ-4mroJabjHROIlInYPI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/auth/logout",
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -60,16 +193,26 @@
       "name": "Signup",
       "item": [
         {
-          "name": "1) Signup",
+          "name": "1) Signup user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"username\": \"Mahandry\",\r\n  \"email\": \"andrianantenainamahandry41@gmail.com\",\r\n  \"firstName\": \"ANDRIANANTENAINA\",\r\n  \"lastName\": \"Mahandry\",\r\n  \"password\": \"Caca123!\", \r\n  \"phone\": \"+261330866369\"\r\n}\r\n",
+              "raw": "{\r\n    \"username\": \"Mahandry\",\r\n    \"email\": \"andrianantenainamahandry41@gmail.com\",\r\n    \"password\": \"Caca123!\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -77,14 +220,14 @@
               }
             },
             "url": {
-              "raw": "{{LOCAL}}/auth/register/manager",
+              "raw": "{{LOCAL}}/auth/register/user",
               "host": [
                 "{{LOCAL}}"
               ],
               "path": [
                 "auth",
                 "register",
-                "manager"
+                "user"
               ]
             }
           },
@@ -209,8 +352,7 @@
     },
     {
       "key": "TOKEN",
-      "value": "",
-      "type": "default"
+      "value": ""
     }
   ]
 }

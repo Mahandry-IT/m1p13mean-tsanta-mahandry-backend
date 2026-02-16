@@ -49,7 +49,16 @@ module.exports = {
     } catch (e) {
       return error(res, e.message || 'Erreur lors du changement de mot de passe', e.status || 400, e.details || null);
     }
+  },
+  async logout(req, res) {
+    try {
+      const header = req.headers.authorization || '';
+      const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+      const result = await AuthService.logout(token);
+      return success(res, result, 'Déconnexion réussie');
+    } catch (e) {
+      return error(res, e.message || 'Erreur lors de la déconnexion', e.status || 400);
+    }
   }
 
 };
-

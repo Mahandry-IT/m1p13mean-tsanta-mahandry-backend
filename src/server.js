@@ -4,8 +4,10 @@ const { connectDB } = require('./config/database');
 const { env } = require('./config/env');
 const logger = require('./utils/logger');
 const DatabaseSeeder = require('./utils/seeder');
+const { purgeExpired } = require('./services/auth.service');
 
 const PORT = env.PORT || 3000;
+const ONE_HOUR_MS = 60 * 60 * 1000;
 
 async function start() {
   try {
@@ -41,5 +43,14 @@ async function start() {
     process.exit(1);
   }
 }
+
+setInterval(async () => {
+  try {
+    const { disabledSessions, disabledTokens } = await purgeExpired();
+    logger.info('Purge des tokens/sessions expirés effectuée', { disabledSessions, disabledTokens });
+  } catch (e) {
+    logger.error('Erreur purge des tokens/sessions', { error: e.message });
+  }
+}, ONE_HOUR_MS);
 
 start();

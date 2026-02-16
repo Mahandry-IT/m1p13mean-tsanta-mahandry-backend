@@ -11,5 +11,6 @@ router.post('/login', validate.body(loginSchema), AuthController.login);
 router.get("/activate/:token", validate.body(activationSchema), AuthController.activate);
 router.post('/reset-password', validate.body(passwordResetSchema), AuthController.resetPassword);
 router.post('/change-password', validate.body(passwordChangeSchema), AuthController.changePassword);
+router.post('/logout', AuthController.logout);
 
 module.exports = router;

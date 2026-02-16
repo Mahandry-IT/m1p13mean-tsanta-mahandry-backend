@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { env } = require('../config/env');
 const User = require('../models/user.model');
 const Role = require('../models/role.model');
+const Token = require('../models/token.model');
 const logger = require('../utils/logger');
 const { sendEmail } = require('../utils/mailer');
 
@@ -58,6 +59,11 @@ async function register({ username, email, password}, role = '6990aefb7053d5bc90
       env.JWT_SECRET,
       { expiresIn: env.JWT_EXPIRES_IN }
   );
+
+  // Enregistrer le token d'activation en base
+  const decodedReg = jwt.decode(token);
+  const expiredAtReg = decodedReg?.exp ? new Date(decodedReg.exp * 1000) : new Date(Date.now() + 3600 * 1000);
+  await Token.create({ userId: user._id, type: 'activation', token, expiredAt: expiredAtReg, isActive: true });
 
   // Envoyer email d'activation
   const activationLink = getActivationLink('/activate', 'token', encodeURIComponent(token));
@@ -162,6 +168,7 @@ async function login({ email, password }) {
   // Enregistrer la session en UTC
   user.sessions = [
     ...(user.sessions || []),
+    { token, expiredAt, isActive: true }
   ];
   await user.save();
 
@@ -184,23 +191,38 @@ async function login({ email, password }) {
   return { token, homePage: roleHomepage, user: publicUser };
 }
 
+// Helper: vérifier qu'un jeton est actif et non expiré en base pour un type donné
+async function verifyTokenRecord({ email, token, type }) {
+  const user = await User.findOne({ email });
+  if (!user) {
+    const err = new Error('Cette adresse email n\'est pas associée à un compte');
+    err.status = 401;
+    throw err;
+  }
+  const record = await Token.findOne({ userId: user._id, type, token, isActive: true });
+  if (!record) {
+    const err = new Error('Votre lien est invalide ou a déjà été utilisé');
+    err.status = 401;
+    throw err;
+  }
+  if (record.expiredAt && record.expiredAt <= new Date()) {
+    const err = new Error('Votre lien a expiré, veuillez recommencer la procédure');
+    err.status = 401;
+    throw err;
+  }
+  return { user, record };
+}
+
 async function validate(email, token){
-    const user = await User.findOne({ email });
-    if (!user) {
-        const err = new Error('Cette adresse email n\'est pas associée à un compte');
-        err.status = 401;
-        throw err;
+    // Validation JWT standard (signature, email)
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    if (decoded.email !== email) {
+      const err = new Error('Token invalide pour cet email');
+      err.status = 401;
+      throw err;
     }
-
-    if (token){
-      const decoded = jwt.verify(token, env.JWT_SECRET);
-      if (decoded.email !== email) {
-          const err = new Error('Token invalide pour cet email');
-          err.status = 401;
-          throw err;
-      }
-    }
-
+    // Vérifier en base que le token de type reset est actif et non expiré
+    const { user } = await verifyTokenRecord({ email, token, type: 'password_reset' });
     return user;
 }
 
@@ -226,15 +248,26 @@ async function change({ email, token, newPassword }) {
         { passwordHash: await bcrypt.hash(newPassword, 10), createdAt: new Date() }
     ];
     await user.save();
+
+    // Invalider le token de reset après utilisation
+    await Token.updateOne({ userId: user._id, type: 'password_reset', token }, { $set: { isActive: false } });
+
     return { message: 'Mot de passe réinitialisé avec succès' };
 }
 
 async function activate(token){
     const decoded = jwt.verify(token, env.JWT_SECRET);
     const email = decoded.email;
-    const user = await validate(email, token);
+
+    // Vérifier en base que le token d'activation est actif et non expiré
+    const { user, record } = await verifyTokenRecord({ email, token, type: 'activation' });
+
     user.status = 'active';
     await user.save();
+
+    // Invalider le token d'activation après utilisation
+    await Token.updateOne({ _id: record._id }, { $set: { isActive: false } });
+
     return { message: 'Compte activé avec succès' };
 }
 
@@ -252,6 +285,11 @@ async function reset({email}) {
       { expiresIn: env.JWT_EXPIRES_IN }
   );
 
+  // Enregistrer le token de reset en base
+  const decodedReset = jwt.decode(token);
+  const expiredAtReset = decodedReset?.exp ? new Date(decodedReset.exp * 1000) : new Date(Date.now() + 3600 * 1000);
+  await Token.create({ userId: user._id, type: 'password_reset', token, expiredAt: expiredAtReset, isActive: true });
+
   const activationLink = getActivationLink('/new-password', { email, token: encodeURIComponent(token) } );
   try {
     await sendEmail({
@@ -265,4 +303,62 @@ async function reset({email}) {
   return { message };
 }
 
-module.exports = { register, login, reset, change, activate };
+async function logout(token) {
+  if (!token) {
+    const err = new Error('Token manquant dans l\'entête de la requête');
+    err.status = 401;
+    throw err;
+  }
+  let payload;
+  try {
+    payload = jwt.verify(token, env.JWT_SECRET);
+  } catch (e) {
+    const err = new Error('Votre token est invalide, veuillez vous reconnecter');
+    err.status = 401;
+    throw err;
+  }
+  const user = await User.findOne({ email: payload.email });
+  if (!user) {
+    const err = new Error('Utilisateur introuvable pour ce token, veuillez vous reconnecter');
+    err.status = 401;
+    throw err;
+  }
+  // Trouver la session correspondante et la désactiver
+  const sessions = user.sessions || [];
+  const idx = sessions.findIndex(s => s.token === token && s.isActive);
+  if (idx === -1) {
+    const err = new Error('Votre session n\'est pas active ou a déjà été fermée, veuillez vous reconnecter');
+    err.status = 400;
+    throw err;
+  }
+  sessions[idx].isActive = false;
+  user.sessions = sessions;
+  await user.save();
+  return { message: 'Déconnexion réussie' };
+}
+
+async function purgeExpired() {
+  const now = new Date();
+  // Désactiver sessions expirées encore actives
+  const users = await User.find({ 'sessions.isActive': true, 'sessions.expiredAt': { $lte: now } });
+  let disabledSessions = 0;
+  for (const user of users) {
+    const sessions = (user.sessions || []).map(s => {
+      if (s.isActive && s.expiredAt && new Date(s.expiredAt) <= now) {
+        disabledSessions += 1;
+        return { ...s.toObject?.() ?? s, isActive: false };
+      }
+      return s;
+    });
+    user.sessions = sessions;
+    await user.save();
+  }
+
+  // Désactiver tokens expirés encore actifs
+  const res = await Token.updateMany({ isActive: true, expiredAt: { $lte: now } }, { $set: { isActive: false } });
+  const disabledTokens = res.modifiedCount || 0;
+
+  return { disabledSessions, disabledTokens };
+}
+
+module.exports = { register, login, reset, change, activate, logout, purgeExpired };

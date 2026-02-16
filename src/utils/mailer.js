@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 const { env } = require('../config/env');
 const logger = require('./logger');
+const fs = require('fs');
+const path = require('path');
 
 // Crée et réutilise un transporteur SMTP basé sur les variables d'env
 let transporter;
@@ -15,14 +17,39 @@ function getTransporter() {
   return transporter;
 }
 
-async function sendEmail({ to, subject, text, html, from }) {
-  if (!to || !subject || (!text && !html)) {
+async function resolveHtml({ html, htmlPath }) {
+  if (html) return html;
+  if (htmlPath) {
+    const fullPath = path.isAbsolute(htmlPath) ? htmlPath : path.join(process.cwd(), htmlPath);
+    return fs.readFileSync(fullPath, 'utf-8');
+  }
+  return null;
+}
+
+function applyTemplate(html, variables = {}) {
+  if (!html || !variables || typeof variables !== 'object') return html;
+  let result = html;
+  for (const [key, value] of Object.entries(variables)) {
+    const safe = String(value ?? '');
+    const pattern = new RegExp(`{{\\s*${key}\\s*}}`, 'g');
+    result = result.replace(pattern, safe);
+  }
+  return result;
+}
+
+async function sendEmail({ to, subject, text, html, from, htmlPath, variables }) {
+  // Résoudre le contenu HTML si non fourni directement
+  let finalHtml = await resolveHtml({ html, htmlPath });
+  // Appliquer les variables si présentes
+  finalHtml = applyTemplate(finalHtml, variables);
+
+  if (!to || !subject || (!text && !finalHtml)) {
     const err = new Error('Paramètres email invalides: to, subject et text/html sont requis');
     err.status = 400;
     err.details = [
       !to ? { field: 'to', message: 'Le champ to est requis' } : null,
       !subject ? { field: 'subject', message: 'Le champ subject est requis' } : null,
-      !text && !html ? { field: 'content', message: 'Un des champs text ou html est requis' } : null,
+      !text && !finalHtml ? { field: 'content', message: 'Un des champs text, html ou htmlPath est requis' } : null,
     ].filter(Boolean);
     throw err;
   }
@@ -32,7 +59,7 @@ async function sendEmail({ to, subject, text, html, from }) {
     to,
     subject,
     text,
-    html,
+    html: finalHtml || undefined,
   };
 
   const tp = getTransporter();
@@ -50,4 +77,3 @@ async function sendEmail({ to, subject, text, html, from }) {
 }
 
 module.exports = { sendEmail };
-

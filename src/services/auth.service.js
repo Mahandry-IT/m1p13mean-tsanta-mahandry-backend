@@ -70,8 +70,17 @@ async function register({ username, email, password}, role = '6990aefb7053d5bc90
   try {
     await sendEmail({
       to: user.email,
-      subject: 'Activation de votre compte',
-      html: `<p>Bonjour ${user.username},</p><p>Merci pour votre inscription.</p><p><a href="${activationLink}">Cliquez ici pour activer votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+      subject: 'Activation de votre compte.',
+      htmlPath: 'templates/activation.html',
+      variables: {
+        title: 'Activation de votre compte',
+        message: 'Merci de vous être inscrit auprès de nous ! Nous sommes ravis de vous accueillir. Pour commencer à utiliser votre compte, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous.',
+        appName: 'MEAN',
+        username: user.username,
+        activationLink,
+        expiration: env.JWT_EXPIRES_IN,
+        year: new Date().getFullYear()
+      }
     });
   } catch (e) {
     logger.error('Échec d\'envoi de l\'email d\'activation', { email: user.email, error: e.message });
@@ -134,7 +143,16 @@ async function login({ email, password }) {
       await sendEmail({
         to: user.email,
         subject: 'Réactivation de votre compte',
-        html: `<p>Bonjour ${user.username},</p><p>Votre compte a été suspendu après trop de tentatives de connexion échouées.</p><p><a href="${activationLink}">Cliquez ici pour réactiver votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+        htmlPath: 'templates/activation.html',
+        variables: {
+          title: 'Réactivation de votre compte',
+          message: 'Suite à un nombre élevé de tentatives de connexion infructueuses, votre compte a été temporairement désactivé pour des raisons de sécurité. Pour réactiver votre compte, veuillez cliquer sur le bouton ci-dessous.',
+          appName: 'MEAN',
+          username: user.username,
+          activationLink,
+          expiration: env.JWT_EXPIRES_IN,
+          year: new Date().getFullYear()
+        }
       });
     } catch (e) {
       logger.error('Échec d\'envoi de l\'email de réactivation', { email: user.email, error: e.message });
@@ -295,7 +313,16 @@ async function reset({email}) {
     await sendEmail({
       to: email,
       subject:  'Réinitialisation de votre mot de passe',
-      html: `<p>Bonjour ${user.username},</p><p>Vous avez demandé une réinitialisation de mot de passe.</p><p><a href="${activationLink}">Cliquez ici pour réinitialiser votre mot de passe</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+      htmlPath: 'templates/activation.html',
+      variables: {
+        title: 'Réinitialisation de votre mot de passe',
+        message: 'Suite à une demande de réinitialisation de mot de passe, veuillez cliquer sur le bouton ci-dessous pour choisir un nouveau mot de passe pour votre compte.',
+        appName: 'MEAN',
+        username: user.username,
+        activationLink,
+        expiration: env.JWT_EXPIRES_IN,
+        year: new Date().getFullYear()
+      }
     });
   } catch (e) {
     logger.error('Échec d\'envoi de l\'email de réinitialisation de mot de passe', { email: user.email, error: e.message });

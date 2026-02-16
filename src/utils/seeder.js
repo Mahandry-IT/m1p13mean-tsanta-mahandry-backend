@@ -287,12 +287,25 @@ class DatabaseSeeder {
             const existing = await User.findOne({ email: u.email });
             const passwordHash = await bcrypt.hash(u.password || 'ChangeMe123!', 10);
 
+            // Construire le profil depuis u.profile ou depuis anciens champs pour compatibilité
+            const profile = {
+                firstName: u.profile?.firstName ?? u.firstName,
+                lastName: u.profile?.lastName ?? u.lastName,
+                phone: u.profile?.phone ?? u.phone,
+                birthday: u.profile?.birthday ?? u.birthday ?? null,
+                gender: u.profile?.gender ?? u.gender ?? 'Non défini'
+            };
+
             if (existing) {
                 // Mettre à jour champs principaux et rôle
                 existing.username = u.username || existing.username;
-                existing.firstName = u.firstName || existing.firstName;
-                existing.lastName = u.lastName || existing.lastName;
-                existing.phone = u.phone || existing.phone;
+                existing.profile = {
+                    firstName: profile.firstName || existing.profile?.firstName,
+                    lastName: profile.lastName || existing.profile?.lastName,
+                    phone: profile.phone || existing.profile?.phone,
+                    birthday: profile.birthday || existing.profile?.birthday,
+                    gender: profile.gender || existing.profile?.gender || 'Non défini'
+                };
                 existing.roleId = roleId;
                 existing.status = u.status || existing.status || 'active';
                 // Mettre à jour passwordHistory si différent
@@ -310,11 +323,9 @@ class DatabaseSeeder {
                 await User.create({
                     username: u.username,
                     email: u.email,
-                    firstName: u.firstName,
-                    lastName: u.lastName,
-                    phone: u.phone,
                     roleId,
                     status: u.status || 'active',
+                    profile,
                     passwordHistory: [{ passwordHash, createdAt: new Date() }],
                     failedAttempts: 0,
                     sessions: [],

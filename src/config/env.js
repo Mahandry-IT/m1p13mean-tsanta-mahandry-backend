@@ -18,7 +18,11 @@ const env = {
   SMTP_SECURE: process.env.SMTP_SECURE || 'false',
   SMTP_USER: process.env.SMTP_USER || 'noreply.app2620@gmail.com',
   SMTP_PASS: process.env.SMTP_PASS || 'eerh clrv akcj xrki',
-  SMTP_FROM: process.env.SMTP_FROM || 'no-reply@mean.mg'
+  SMTP_FROM: process.env.SMTP_FROM || 'no-reply@mean.mg',
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
+  MAX_UPLOAD_SIZE: parseInt(process.env.MAX_UPLOAD_SIZE || '5242880', 10) // 5MB par défaut
 };
 
 module.exports = { env };

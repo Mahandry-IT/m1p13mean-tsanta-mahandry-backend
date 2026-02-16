@@ -5,7 +5,7 @@ module.exports = {
   async list(req, res) {
     try {
       const users = await UserService.list();
-      return success(res, users.map(u => u.toPublicJSON()));
+      return success(res, users.map(u => u.toJSON()));
     } catch (e) {
       return error(res, e.message || 'Erreur récupération utilisateurs');
     }
@@ -14,16 +14,25 @@ module.exports = {
     try {
       const user = await UserService.getById(req.params.id);
       if (!user) return res.status(404).json({ success: false, message: 'Utilisateur introuvable' });
-      return success(res, user.toPublicJSON());
+      return success(res, user.toJSON());
     } catch (e) {
       return error(res, e.message || 'Erreur récupération utilisateur');
+    }
+  },
+  async create(req, res) {
+    try {
+      const userId = req.user?.userId || req.user?._id || req.user?.id;
+      const result = await UserService.create(userId, req.body, req.file);
+      return success(res, result.toJSON(), 'Création réussie', 201);
+    } catch (e) {
+      return error(res, e.message || 'Erreur création de profil', e.status || 400);
     }
   },
   async update(req, res) {
     try {
       const user = await UserService.update(req.params.id, req.body);
       if (!user) return res.status(404).json({ success: false, message: 'Utilisateur introuvable' });
-      return success(res, user.toPublicJSON(), 'Mise à jour réussie');
+      return success(res, user.toJSON(), 'Mise à jour réussie');
     } catch (e) {
       return error(res, e.message || 'Erreur mise à jour', e.status || 400);
     }
@@ -38,4 +47,3 @@ module.exports = {
     }
   }
 };
-

@@ -12,6 +12,10 @@
             "description": "Créer des produits"
           },
           {
+            "name": "user:list",
+            "description": "Récupérer la liste des utilisateurs"
+          },
+          {
             "name": "edit:product",
             "description": "Modifier des produits"
           },
@@ -58,34 +62,60 @@
     ],
     "users": [
       {
+        "_id": "6992c794206da73f74008a7e",
+        "username": "Administrator",
+        "email": "noreply.app2620@gmail.com",
+        "roleId": "6990aefb7053d5bc9001e424",
+        "password": "9LLIg7g5mibV3zacYdtapv7aK",
+        "profile": {
+          "firstName": "Super",
+          "lastName": "Admin",
+          "phone": "+261377969564",
+          "birthday": "1985-01-15T00:00:00.000Z",
+          "gender": "Non défini"
+        }
+      },
+      {
         "_id": "65f1c1a5e1c2a9b001000001",
         "username": "owner-centre",
         "email": "owner.centre@example.com",
-        "firstName": "Jean",
-        "lastName": "Dupont",
-        "phone": "+33123456789",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!"
+        "password": "ChangeMe123!",
+        "profile": {
+          "firstName": "Jean",
+          "lastName": "Dupont",
+          "phone": "+33123456789",
+          "birthday": "1985-01-15T00:00:00.000Z",
+          "gender": "Homme"
+        }
       },
       {
         "_id": "65f1c1a5e1c2a9b001000002",
         "username": "owner-nord",
         "email": "owner.nord@example.com",
-        "firstName": "Claire",
-        "lastName": "Martin",
-        "phone": "+33987654321",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!"
+        "password": "ChangeMe123!",
+        "profile": {
+          "firstName": "Claire",
+          "lastName": "Martin",
+          "phone": "+33987654321",
+          "birthday": "1992-06-22T00:00:00.000Z",
+          "gender": "Femme"
+        }
       },
       {
         "_id": "65f1c1a5e1c2a9b001000003",
         "username": "owner-sud",
         "email": "owner.sud@example.com",
-        "firstName": "Lucas",
-        "lastName": "Bernard",
-        "phone": "+33555666777",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!"
+        "password": "ChangeMe123!",
+        "profile": {
+          "firstName": "Lucas",
+          "lastName": "Bernard",
+          "phone": "+33555666777",
+          "birthday": "1988-11-03T00:00:00.000Z",
+          "gender": "Homme"
+        }
       }
     ],
     "stores": [

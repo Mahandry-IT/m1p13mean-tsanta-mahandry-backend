@@ -20,7 +20,7 @@ function getActivationLink(path, field, value) {
   return url.href;
 }
 
-async function register({ username, email, firstName, lastName, password, phone}, role = '6990aefb7053d5bc9001e427') {
+async function register({ username, email, password}, role = '6990aefb7053d5bc9001e427') {
   // Vérifications d'unicité email et username
   const existingByEmail = await User.findOne({ email });
   if (existingByEmail) {
@@ -43,9 +43,6 @@ async function register({ username, email, firstName, lastName, password, phone}
   const userData = {
     username,
     email,
-    firstName,
-    lastName,
-    phone: phone || undefined,
     roleId: role,
     status: 'pending',
     passwordHistory,
@@ -68,22 +65,16 @@ async function register({ username, email, firstName, lastName, password, phone}
     await sendEmail({
       to: user.email,
       subject: 'Activation de votre compte',
-      html: `<p>Bonjour ${user.lastName} ${user.firstName} ,</p><p>Merci pour votre inscription.</p><p><a href="${activationLink}">Cliquez ici pour activer votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+      html: `<p>Bonjour ${user.username},</p><p>Merci pour votre inscription.</p><p><a href="${activationLink}">Cliquez ici pour activer votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
     });
   } catch (e) {
     logger.error('Échec d\'envoi de l\'email d\'activation', { email: user.email, error: e.message });
-    const err = new Error('Inscription réussie mais échec d\'envoi de l\'email d\'activation. Contactez le support.');
-    err.status = 500;
-    throw err;
   }
 
   // Construire une réponse publique sans champs sensibles
   const publicUser = {
     username: user.username,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phone: user.phone || null
+    email: user.email
   };
 
   return { user: publicUser };
@@ -137,7 +128,7 @@ async function login({ email, password }) {
       await sendEmail({
         to: user.email,
         subject: 'Réactivation de votre compte',
-        html: `<p>Bonjour ${user.lastName} ${user.firstName} ,</p><p>Votre compte a été suspendu après trop de tentatives de connexion échouées.</p><p><a href="${activationLink}">Cliquez ici pour réactiver votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+        html: `<p>Bonjour ${user.username},</p><p>Votre compte a été suspendu après trop de tentatives de connexion échouées.</p><p><a href="${activationLink}">Cliquez ici pour réactiver votre compte</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
       });
     } catch (e) {
       logger.error('Échec d\'envoi de l\'email de réactivation', { email: user.email, error: e.message });
@@ -186,9 +177,7 @@ async function login({ email, password }) {
   const publicUser = {
     username: user.username,
     email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    phone: user.phone || null,
+    profile: user.profile ? user.profile : null,
     lastLoginAt: user.lastLoginAt
   };
 
@@ -268,7 +257,7 @@ async function reset({email}) {
     await sendEmail({
       to: email,
       subject:  'Réinitialisation de votre mot de passe',
-      html: `<p>Bonjour ${user.lastName} ${user.firstName} ,</p><p>Vous avez demandé une réinitialisation de mot de passe.</p><p><a href="${activationLink}">Cliquez ici pour réinitialiser votre mot de passe</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
+      html: `<p>Bonjour ${user.username},</p><p>Vous avez demandé une réinitialisation de mot de passe.</p><p><a href="${activationLink}">Cliquez ici pour réinitialiser votre mot de passe</a></p><p>Ce lien expirera dans <strong>${env.JWT_EXPIRES_IN}</strong>.</p>`
     });
   } catch (e) {
     logger.error('Échec d\'envoi de l\'email de réinitialisation de mot de passe', { email: user.email, error: e.message });

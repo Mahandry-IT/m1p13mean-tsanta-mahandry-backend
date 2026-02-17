@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "seeds": {
     "roles": [
       {
@@ -7,22 +7,17 @@
         "value": "Administrator",
         "homepage": "/admin/dashboard",
         "features": [
-          {
-            "name": "create:product",
-            "description": "Créer des produits"
-          },
-          {
-            "name": "user:list",
-            "description": "Récupérer la liste des utilisateurs"
-          },
-          {
-            "name": "edit:product",
-            "description": "Modifier des produits"
-          },
-          {
-            "name": "delete:product",
-            "description": "Supprimer des produits"
-          }
+          { "name": "create:product", "description": "Créer des produits" },
+          { "name": "user:list", "description": "Récupérer la liste des utilisateurs" },
+          { "name": "user:get", "description": "Récupérer un utilisateur" },
+          { "name": "user:update", "description": "Modifier un utilisateur" },
+          { "name": "user:delete", "description": "Supprimer un utilisateur" },
+          { "name": "edit:product", "description": "Modifier des produits" },
+          { "name": "delete:product", "description": "Supprimer des produits" },
+          { "name": "store:list", "description": "Voir toutes les boutiques" },
+          { "name": "store:get", "description": "Voir le détail d'une boutique" },
+          { "name": "store:activate", "description": "Activer une boutique" },
+          { "name": "store:deactivate", "description": "Désactiver une boutique" }
         ]
       },
       {
@@ -30,14 +25,11 @@
         "value": "Manager",
         "homepage": "/manager/dashboard",
         "features": [
-          {
-            "name": "create:product",
-            "description": "Créer des produits"
-          },
-          {
-            "name": "edit:product",
-            "description": "Modifier des produits"
-          }
+          { "name": "create:product", "description": "Créer des produits" },
+          { "name": "edit:product", "description": "Modifier des produits" },
+          { "name": "store:request", "description": "Demander la création d'une boutique" },
+          { "name": "store:list_own", "description": "Voir mes propres boutiques" },
+          { "name": "store:get", "description": "Voir le détail d'une boutique" }
         ]
       },
       {
@@ -45,18 +37,12 @@
         "value": "Customer",
         "homepage": "/customer/dashboard",
         "features": [
-          {
-            "name": "get:products",
-            "description": "Voir les produits"
-          },
-          {
-            "name": "create:order",
-            "description": "Créer des commandes"
-          },
-          {
-            "name": "get:orders",
-            "description": "Voir mes commandes"
-          }
+          { "name": "get:products", "description": "Voir les produits" },
+          { "name": "create:order", "description": "Créer des commandes" },
+          { "name": "get:orders", "description": "Voir mes commandes" },
+          { "name": "store:request", "description": "Demander la création d'une boutique" },
+          { "name": "store:list_own", "description": "Voir mes propres boutiques" },
+          { "name": "store:get", "description": "Voir le détail d'une boutique" }
         ]
       }
     ],
@@ -125,7 +111,8 @@
         "phone": "+33123456789",
         "email": "centerville@store.com",
         "userId": "65f1c1a5e1c2a9b001000001",
-        "isActive": true
+        "isActive": true,
+        "status": "approved"
       },
       {
         "name": "Magasin Quartier Nord",
@@ -133,7 +120,8 @@
         "phone": "+33987654321",
         "email": "nord@store.com",
         "userId": "65f1c1a5e1c2a9b001000002",
-        "isActive": true
+        "isActive": true,
+        "status": "approved"
       },
       {
         "name": "Magasin Sud",
@@ -141,7 +129,8 @@
         "phone": "+33555666777",
         "email": "sud@store.com",
         "userId": "65f1c1a5e1c2a9b001000003",
-        "isActive": false
+        "isActive": false,
+        "status": "approved"
       }
     ],
     "products": [

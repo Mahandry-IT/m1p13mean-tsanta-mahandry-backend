@@ -315,6 +315,305 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Boutiques",
+      "item": [
+        {
+          "name": "1) Login Admin (pour tests admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "const token = response.data.token;",
+                  "pm.environment.set(\"adminToken\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"noreply.app2620@gmail.com\",\r\n    \"password\": \"9LLIg7g5mibV3zacYdtapv7aK\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{LOCAL}}/auth/login",
+              "host": ["{{LOCAL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2) Login Manager (pour tests manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "const token = response.data.token;",
+                  "pm.environment.set(\"managerToken\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"owner.centre@example.com\",\r\n    \"password\": \"ChangeMe123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{LOCAL}}/auth/login",
+              "host": ["{{LOCAL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3) Demander création boutique (Manager)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response.data && response.data.id) {",
+                  "    pm.environment.set(\"storeId\", response.data.id);",
+                  "    console.log('storeId sauvegardé:', response.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{managerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Ma Nouvelle Boutique\",\r\n    \"address\": \"456 Rue du Commerce, Paris\",\r\n    \"phone\": \"+33612345678\",\r\n    \"email\": \"maboutique@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{LOCAL}}/stores/request",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores", "request"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4) Liste toutes les boutiques (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4b) Liste boutiques - pending (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores?status=pending&page=1&limit=10",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores"],
+              "query": [
+                { "key": "status", "value": "pending" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4c) Liste boutiques - approved (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores?status=approved&page=1&limit=10",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores"],
+              "query": [
+                { "key": "status", "value": "approved" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5) Mes boutiques (Manager)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{managerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores/my",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores", "my"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6) Détail d'une boutique",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores/{{storeId}}",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores", "{{storeId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7) Activer une boutique (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores/{{storeId}}/activate",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores", "{{storeId}}", "activate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "8) Désactiver une boutique (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{adminToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL}}/stores/{{storeId}}/deactivate",
+              "host": ["{{LOCAL}}"],
+              "path": ["stores", "{{storeId}}", "deactivate"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [
@@ -344,7 +643,7 @@
   "variable": [
     {
       "key": "LOCAL",
-      "value": ""
+      "value": "http://localhost:3000/api"
     },
     {
       "key": "PROD",
@@ -352,6 +651,18 @@
     },
     {
       "key": "TOKEN",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "managerToken",
+      "value": ""
+    },
+    {
+      "key": "storeId",
       "value": ""
     }
   ]

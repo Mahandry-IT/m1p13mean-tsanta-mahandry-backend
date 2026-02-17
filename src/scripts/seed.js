@@ -1,11 +1,9 @@
-// scripts/seed.js
 require('dotenv').config();
 const mongoose = require('mongoose');
-const { env } = require('./env');
+const { env } = require('../config/env');
 const DatabaseSeeder = require('../utils/seeder');
 const logger = require('../utils/logger');
 
-// Configuration
 const MONGODB_URI = env.MONGODB_URI;
 const SEED_FILE = env.SEED_FILE;
 
@@ -51,7 +49,7 @@ async function main() {
         }
 
     } catch (error) {
-        logger.error('💥 Erreur:', error);
+        logger.error('Erreur:', error);
         process.exit(1);
     } finally {
         await mongoose.disconnect();

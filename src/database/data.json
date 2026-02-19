@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "seeds": {
     "roles": [
       {
@@ -17,7 +17,9 @@
           { "name": "store:list", "description": "Voir toutes les boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "store:activate", "description": "Activer une boutique" },
-          { "name": "store:deactivate", "description": "Désactiver une boutique" }
+          { "name": "store:deactivate", "description": "Désactiver une boutique" },
+          { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
         ]
       },
       {
@@ -29,7 +31,9 @@
           { "name": "edit:product", "description": "Modifier des produits" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
-          { "name": "store:get", "description": "Voir le détail d'une boutique" }
+          { "name": "store:get", "description": "Voir le détail d'une boutique" },
+          { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
         ]
       },
       {

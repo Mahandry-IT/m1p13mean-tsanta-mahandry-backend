@@ -10,7 +10,8 @@
     "db:seed": "node scripts/seed.js seed",
     "db:reset": "node scripts/seed.js reset",
     "db:status": "node scripts/seed.js status",
-    "db:clear": "node scripts/seed.js clear"
+    "db:clear": "node scripts/seed.js clear",
+    "export:routes": "node src/scripts/exportRoutes.js"
   },
   "repository": {
     "type": "git",

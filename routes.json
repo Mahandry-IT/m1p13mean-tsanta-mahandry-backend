@@ -1,0 +1,102 @@
+{
+  "generatedAt": "2026-02-20T11:12:51.508Z",
+  "basePath": "/api",
+  "count": 19,
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/auth/activate/:token",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/change-password",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register/manager",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/register/user",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/reset-password",
+      "file": "src/routes/auth.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "file": "src/routes/index.routes.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/stores/:id/activate",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/stores/:id/deactivate",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/stores/:id",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/stores/my",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/stores/request",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/stores",
+      "file": "src/routes/store.routes.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/users/:id",
+      "file": "src/routes/user.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users/:id",
+      "file": "src/routes/user.routes.js"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/users/:id",
+      "file": "src/routes/user.routes.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/users/profile",
+      "file": "src/routes/user.routes.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/users",
+      "file": "src/routes/user.routes.js"
+    }
+  ]
+}

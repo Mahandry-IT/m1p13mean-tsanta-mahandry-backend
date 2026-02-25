@@ -141,7 +141,7 @@ async function login({ email, password }) {
     // Enregistrer le token de nouveau mot de passe en base pour la réactivation
     const decodedReg = jwt.decode(token);
     const expiredAtReg = decodedReg?.exp ? new Date(decodedReg.exp * 1000) : new Date(Date.now() + 3600 * 1000);
-    await Token.create({ userId: user._id, type: 'new_password', token, expiredAt: expiredAtReg, isActive: true });
+    await Token.create({ userId: user._id, type: 'password_reset', token, expiredAt: expiredAtReg, isActive: true });
 
     const activationLink = getActivationLink('/auth/new-password', { email, token: encodeURIComponent(token) } );
     try {

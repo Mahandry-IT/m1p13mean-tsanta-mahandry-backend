@@ -8,7 +8,7 @@ const tokenSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['password_reset', 'activation', 'new_password'],
+    enum: ['password_reset', 'activation'],
     required: true
   },
   token: {

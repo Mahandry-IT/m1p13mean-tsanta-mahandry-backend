@@ -9,7 +9,7 @@ const { sendEmail } = require('../utils/mailer');
 
 function getActivationLink(path, field, value) {
   const origin = (env.CORS_ORIGINS && env.CORS_ORIGINS[0]) || ('http://localhost:' + env.PORT);
-  const base = origin.replace(/\/$/, '') + '/api/auth';
+  const base = origin.replace(/\/$/, '');
   const url = new URL(path, base);
   if (field && typeof field === 'object') {
     Object.entries(field).forEach(([k, v]) => {
@@ -66,7 +66,7 @@ async function register({ username, email, password}, role = '6990aefb7053d5bc90
   await Token.create({ userId: user._id, type: 'activation', token, expiredAt: expiredAtReg, isActive: true });
 
   // Envoyer email d'activation
-  const activationLink = getActivationLink('/activate', 'token', encodeURIComponent(token));
+  const activationLink = getActivationLink('/auth/activate', 'token', encodeURIComponent(token));
   try {
     await sendEmail({
       to: user.email,
@@ -138,7 +138,7 @@ async function login({ email, password }) {
         { expiresIn: env.JWT_EXPIRES_IN }
     );
 
-    const activationLink = getActivationLink('/new-password', { email, token: encodeURIComponent(token) } );
+    const activationLink = getActivationLink('/auth/new-password', { email, token: encodeURIComponent(token) } );
     try {
       await sendEmail({
         to: user.email,
@@ -308,7 +308,7 @@ async function reset({email}) {
   const expiredAtReset = decodedReset?.exp ? new Date(decodedReset.exp * 1000) : new Date(Date.now() + 3600 * 1000);
   await Token.create({ userId: user._id, type: 'password_reset', token, expiredAt: expiredAtReset, isActive: true });
 
-  const activationLink = getActivationLink('/new-password', { email, token: encodeURIComponent(token) } );
+  const activationLink = getActivationLink('/auth/reset-password', { email, token: encodeURIComponent(token) } );
   try {
     await sendEmail({
       to: email,

@@ -66,7 +66,7 @@ async function register({ username, email, password}, role = '6990aefb7053d5bc90
   await Token.create({ userId: user._id, type: 'activation', token, expiredAt: expiredAtReg, isActive: true });
 
   // Envoyer email d'activation
-  const activationLink = getActivationLink('/auth/activate', 'token', encodeURIComponent(token));
+  const activationLink = getActivationLink('/auth/activate', { email, token: encodeURIComponent(token) }, encodeURIComponent(token));
   try {
     await sendEmail({
       to: user.email,

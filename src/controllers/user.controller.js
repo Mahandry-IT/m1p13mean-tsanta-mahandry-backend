@@ -1,11 +1,24 @@
 const UserService = require('../services/user.service');
 const { success, error } = require('../utils/response');
+const { getPagination } = require('../utils/pagination');
 
 module.exports = {
   async list(req, res) {
     try {
-      const users = await UserService.list();
-      return success(res, users.map(u => u.toJSON()));
+      const { page, limit } = getPagination(req.query, { defaultPage: 1, defaultLimit: 20, maxLimit: 100 });
+      const filters = {
+        page,
+        limit,
+        status: req.query.status,
+        roleId: req.query.roleId,
+        q: req.query.q,
+      };
+
+      const result = await UserService.listPaginated(filters);
+      return success(res, {
+        users: result.users.map(u => u.toJSON()),
+        pagination: result.pagination
+      });
     } catch (e) {
       return error(res, e.message || 'Erreur récupération utilisateurs');
     }
@@ -26,6 +39,14 @@ module.exports = {
       return success(res, result.toJSON(), 'Création réussie', 201);
     } catch (e) {
       return error(res, e.message || 'Erreur création de profil', e.status || 400);
+    }
+  },
+  async checkProfile(req, res) {
+    try {
+      const result = await UserService.checkProfile(req.body);
+      return success(res, result, 'Vous possédez déjà un profil');
+    } catch (e){
+      return error(res, e.message || 'Erreur vérification de profil', e.status || 400);
     }
   },
   async update(req, res) {

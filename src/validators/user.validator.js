@@ -29,8 +29,16 @@ const userCreatedProfileSchema = Joi.object({
     gender: Joi.string().valid('Homme', 'Femme', 'Non défini').required()
 });
 
+const checkProfileSchema = Joi.object({
+    email: Joi.string()
+        .email({ tlds: { allow: false }, ignoreLength: true })
+        .messages({ 'string.email': 'Email invalide, vérifiez le format (ex: nom@domaine.tld)' })
+        .required()
+});
+
 module.exports = {
     userUpdateSchema,
     userIdParamSchema,
+    checkProfileSchema,
     userCreatedProfileSchema
 };

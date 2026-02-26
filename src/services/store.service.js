@@ -1,4 +1,5 @@
 const Store = require('../models/store.model');
+const { getPagination, buildPaginationMeta } = require('../utils/pagination');
 
 // Créer une boutique 
 async function requestStore(userId, data) {
@@ -34,9 +35,7 @@ async function listAll(filters = {}) {
     if (filters.status) query.status = filters.status;
     if (filters.isActive !== undefined) query.isActive = filters.isActive;
 
-    const page = filters.page || 1;
-    const limit = filters.limit || 20;
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = getPagination(filters, { defaultPage: 1, defaultLimit: 20, maxLimit: 100 });
 
     const [stores, total] = await Promise.all([
         Store.find(query)
@@ -49,12 +48,7 @@ async function listAll(filters = {}) {
 
     return {
         stores,
-        pagination: {
-            total,
-            page,
-            limit,
-            totalPages: Math.ceil(total / limit)
-        }
+        pagination: buildPaginationMeta({ total, page, limit })
     };
 }
 

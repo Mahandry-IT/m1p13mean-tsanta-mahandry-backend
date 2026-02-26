@@ -1,11 +1,24 @@
 const UserService = require('../services/user.service');
 const { success, error } = require('../utils/response');
+const { getPagination } = require('../utils/pagination');
 
 module.exports = {
   async list(req, res) {
     try {
-      const users = await UserService.list();
-      return success(res, users.map(u => u.toJSON()));
+      const { page, limit } = getPagination(req.query, { defaultPage: 1, defaultLimit: 20, maxLimit: 100 });
+      const filters = {
+        page,
+        limit,
+        status: req.query.status,
+        roleId: req.query.roleId,
+        q: req.query.q,
+      };
+
+      const result = await UserService.listPaginated(filters);
+      return success(res, {
+        users: result.users.map(u => u.toJSON()),
+        pagination: result.pagination
+      });
     } catch (e) {
       return error(res, e.message || 'Erreur récupération utilisateurs');
     }

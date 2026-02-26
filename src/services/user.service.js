@@ -82,4 +82,10 @@ async function create(userId, profileData, file) {
   return user;
 }
 
-module.exports = { list, listPaginated, getById, create, update, remove };
+async function checkProfile({email}) {
+  const user = await User.findOne({email});
+  const value = (!user && !user.profile);
+  return { hasProfile: value}
+}
+
+module.exports = { list, listPaginated, getById, create, update, remove, checkProfile };

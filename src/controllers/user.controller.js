@@ -41,6 +41,14 @@ module.exports = {
       return error(res, e.message || 'Erreur création de profil', e.status || 400);
     }
   },
+  async checkProfile(req, res) {
+    try {
+      const result = await UserService.checkProfile(req.body);
+      return success(res, result, 'Vous possédez déjà un profil');
+    } catch (e){
+      return error(res, e.message || 'Erreur vérification de profil', e.status || 400);
+    }
+  },
   async update(req, res) {
     try {
       const user = await UserService.update(req.params.id, req.body);

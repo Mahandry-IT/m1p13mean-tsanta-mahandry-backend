@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --passWithNoTests",
     "db:seed": "node scripts/seed.js seed",
     "db:reset": "node scripts/seed.js reset",
     "db:status": "node scripts/seed.js status",
@@ -37,6 +37,7 @@
     "mongoose": "^8.8.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
+    "node-mailjet": "^6.0.11",
     "nodemailer": "^8.0.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"

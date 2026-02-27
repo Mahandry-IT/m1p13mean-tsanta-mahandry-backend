@@ -3,5 +3,6 @@ module.exports = {
     Store: require('./store.model'),
     Product: require('./product.model'),
     User: require('./user.model'),
-    Order: require('./order.model')
+    Order: require('./order.model'),
+    Menu: require('./menu.model')
 };

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
-const { Role, Store, Product, User } = require('../models');
+const { Role, Store, Product, User, Menu } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
 const bcrypt = require('bcryptjs');
@@ -340,28 +340,109 @@ class DatabaseSeeder {
     }
 
     /**
+     * Seed les menus
+     * Format attendu (dans data.json):
+     * {
+     *   label, path, icon, order,
+     *   roles: ["<roleIdString>", ...],
+     *   parentPath: "/admin" | null
+     * }
+     */
+    async seedMenus(menus) {
+        logger.info('\n\ud83d\udcc3 Seed des menus...');
+
+        // Si l'index existe encore, il empêche des labels identiques (ex: "Produits").
+        try {
+            const indexes = await Menu.collection.indexes();
+            const hasLegacyUniqueLabel = indexes.some((i) => i.name === 'label_1' && i.unique);
+            if (hasLegacyUniqueLabel) {
+                await Menu.collection.dropIndex('label_1');
+                logger.info('  🧹 Index legacy supprimé: label_1 (unique)');
+            }
+        } catch (e) {
+            // Ne pas bloquer le seed si l'index n'existe pas / pas de droits.
+            logger.warn(`  ⚠️  Impossible de vérifier/supprimer l'index legacy label_1: ${e.message}`);
+        }
+
+        let created = 0;
+        let updated = 0;
+
+        // 1) Upsert des menus sans parentId (on le fixe en 2e passe)
+        const pathToMenuId = new Map();
+
+        for (const m of menus) {
+            const roleIds = Array.isArray(m.roles) ? m.roles : [];
+
+            // Les _id de Role sont des strings dans ce projet -> on les stocke dans Menu en ObjectId.
+            // On fait donc une conversion stable via createFromHexString.
+            const roleObjectIds = roleIds.map((rid) => mongoose.Types.ObjectId.createFromHexString(rid));
+
+            const payload = {
+                label: m.label,
+                path: m.path,
+                icon: m.icon,
+                order: m.order ?? 0,
+                permissions: { roles: roleObjectIds },
+                parentId: null
+            };
+
+            const existing = await Menu.findOne({ path: m.path });
+            if (existing) {
+                await Menu.findByIdAndUpdate(existing._id, payload, { runValidators: true });
+                updated++;
+                pathToMenuId.set(m.path, existing._id);
+                logger.info(`  \ud83d\udd04 Menu mis \u00e0 jour: ${m.path}`);
+            } else {
+                const createdMenu = await Menu.create(payload);
+                created++;
+                pathToMenuId.set(m.path, createdMenu._id);
+                logger.info(`  \u2705 Menu cr\u00e9\u00e9: ${m.path}`);
+            }
+        }
+
+        // 2) Deuxième passe: mise à jour des parentId
+        for (const m of menus) {
+            const parentPath = m.parentPath ?? null;
+            if (!parentPath) continue;
+
+            const childId = pathToMenuId.get(m.path);
+            const parentId = pathToMenuId.get(parentPath);
+
+            if (!childId) continue;
+            if (!parentId) {
+                logger.warn(`  \u26a0\ufe0f parentPath introuvable (${parentPath}) pour le menu ${m.path}`);
+                continue;
+            }
+
+            await Menu.findByIdAndUpdate(childId, { parentId }, { runValidators: true });
+        }
+
+        logger.info(`\u2705 Menus: ${created} cr\u00e9\u00e9s, ${updated} mis \u00e0 jour`);
+    }
+
+    /**
      * Exécute le seeding complet
      */
     async seed() {
         try {
-            logger.info('\n🌱 Début du seeding de la base de données...\n');
+            logger.info('\n\ud83c\udf31 D\u00e9but du seeding de la base de donn\u00e9es...\n');
 
-            // Charger les données
+            // Charger les donn\u00e9es
             await this.loadSeedData();
 
             const version = this.seedData.version;
 
-            // Vérifier si déjà appliqué
+            // V\u00e9rifiez si d\u00e9j\u00e0 appliqu\u00e9
             const alreadyApplied = await this.isMigrationApplied(version);
             if (alreadyApplied) {
-                logger.info(`ℹ️  Migration version ${version} déjà appliquée. Abandon.`);
+                logger.info(`\u2139\ufe0f  Migration version ${version} d\u00e9j\u00e0 appliqu\u00e9e. Abandon.`);
                 return;
             }
 
             // Marquer comme en cours
             await this.recordMigration(version, 'pending');
 
-            // Exécuter les seeds dans l'ordre
+            // Ex\u00e9cuter les seeds dans l'ordre
             if (this.seedData.seeds.roles) {
                 await this.seedRoles(this.seedData.seeds.roles);
             }
@@ -383,12 +464,16 @@ class DatabaseSeeder {
                 await this.seedProductStoreData(this.seedData.seeds.productStoreData);
             }
 
-            // Marquer comme réussi
+            if (this.seedData.seeds.menus) {
+                await this.seedMenus(this.seedData.seeds.menus);
+            }
+
+            // Marquer comme r\u00e9ussi
             await this.recordMigration(version, 'success');
 
-            logger.info('\n✅ Seeding terminé avec succès!\n');
+            logger.info('\n\u2705 Seeding termin\u00e9 avec succ\u00e8s!\n');
         } catch (error) {
-            logger.error('\n❌ Erreur lors du seeding:', error);
+            logger.error('\n\u274c Erreur lors du seeding:', error);
 
             if (this.seedData && this.seedData.version) {
                 await this.recordMigration(this.seedData.version, 'failed', error.message);
@@ -402,15 +487,16 @@ class DatabaseSeeder {
      * Réinitialise complètement la base de données
      */
     async reset() {
-        logger.info('\n⚠️  RESET de la base de données...\n');
+        logger.info('\n\u26a0\ufe0f  RESET de la base de donn\u00e9es...\n');
 
         await Role.deleteMany({});
         await Store.deleteMany({});
         await Product.deleteMany({});
         await User.deleteMany({});
+        await Menu.deleteMany({});
         await Migration.deleteMany({});
 
-        logger.info('✅ Base de données réinitialisée\n');
+        logger.info('\u2705 Base de donn\u00e9es r\u00e9initialis\u00e9e\n');
     }
 
     /**
@@ -439,3 +525,4 @@ class DatabaseSeeder {
 }
 
 module.exports = DatabaseSeeder;
+

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('../utils/logger');
 
 const orderItemSchema = new mongoose.Schema({
     detailId: {
@@ -65,10 +66,36 @@ const orderSchema = new mongoose.Schema({
     total: {
         type: mongoose.Decimal128,
         required: true
+    },
+    history: [{
+        action: String,
+        statusFrom: String,
+        statusTo: String,
+        by: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        at: { type: Date, default: Date.now }
+    }],
+    // ✅ Nouveau champ
+    orderNumber: {
+        type: String,
+        unique: true
     }
 }, {
     timestamps: true
 });
+orderSchema.pre('save', async function(next) {
+    if (!this.orderNumber) {
+        // Exemple de format : CMD-2026-0001
+        const year = new Date().getFullYear();
+        const randomPart = Math.floor(1000 + Math.random() * 9000); // 4 chiffres aléatoires
+        this.orderNumber = `CMD-${year}-${randomPart}`;
+    }
+
+    if (this.isModified('items')) {
+        this.calculateTotals();
+    }
+    next();
+});
+
 
 function arrayMinLength(val) {
     return val.length > 0;
@@ -80,13 +107,17 @@ orderSchema.index({ createdAt: -1 });
 
 // Méthode pour calculer les totaux
 orderSchema.methods.calculateTotals = function() {
-    this.subtotal = this.items.reduce((sum, item) => {
-        return sum + parseFloat(item.totalPrice.toString());
-    }, 0);
+  this.subtotal = mongoose.Types.Decimal128.fromString(
+    this.items.reduce((sum, item) => sum + parseFloat(item.totalPrice.toString()), 0).toString()
+  );
 
-    this.tax = this.subtotal * 0.20; // 20% TVA exemple
-    this.total = this.subtotal + this.tax;
+  const tax = parseFloat(this.subtotal.toString()) * 0.20;
+  this.tax = mongoose.Types.Decimal128.fromString(tax.toString());
+
+  const total = parseFloat(this.subtotal.toString()) + tax;
+  this.total = mongoose.Types.Decimal128.fromString(total.toString());
 };
+
 
 // Hook pre-save pour calculer automatiquement
 orderSchema.pre('save', function(next) {
@@ -95,5 +126,16 @@ orderSchema.pre('save', function(next) {
     }
     next();
 });
+orderSchema.methods.addHistory = function(action, from, to, userId) {
+    logger.info("user id ve ? :" + userId);
+  this.history.push({
+    action,
+    statusFrom: from,
+    statusTo: to,
+    by: new mongoose.Types.ObjectId(userId),
+    at: new Date()
+  });
+};
+
 
 module.exports = mongoose.model('Order', orderSchema);

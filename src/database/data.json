@@ -19,7 +19,14 @@
           { "name": "store:activate", "description": "Activer une boutique" },
           { "name": "store:deactivate", "description": "Désactiver une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
-          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" },
+          { "name": "order:add", "description": "Ajouter au panier" },
+          { "name": "order:view", "description": "Voir panier" },
+          { "name": "order:confirm", "description": "Confirmer commande" },
+          { "name": "order:cancel", "description": "Annuler commande" },
+          { "name": "order:list_own", "description": "Voir commandes" },
+          { "name": "order:get", "description": "Voir détail commande" },
+          { "name": "order:update_status", "description": "Changer statut commande" }
         ]
       },
       {
@@ -33,7 +40,10 @@
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
-          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" },
+          { "name": "order:view", "description": "Voir commandes boutique" },
+          { "name": "order:get", "description": "Voir détail commande" },
+          { "name": "order:update_status", "description": "Changer statut commande" }
         ]
       },
       {
@@ -42,8 +52,12 @@
         "homepage": "/customer/dashboard",
         "features": [
           { "name": "get:products", "description": "Voir les produits" },
-          { "name": "create:order", "description": "Créer des commandes" },
-          { "name": "get:orders", "description": "Voir mes commandes" },
+          { "name": "order:add", "description": "Ajouter au panier" },
+          { "name": "order:view", "description": "Voir son panier" },
+          { "name": "order:confirm", "description": "Confirmer commande" },
+          { "name": "order:cancel", "description": "Annuler commande" },
+          { "name": "order:list_own", "description": "Voir ses commandes" },
+          { "name": "order:get", "description": "Voir détail commande" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" }
@@ -105,6 +119,20 @@
           "phone": "+33555666777",
           "birthday": "1988-11-03T00:00:00.000Z",
           "gender": "Homme"
+        }
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000004",
+        "username": "customer-tsanta",
+        "email": "tsantarandriamihary@gmail.com",
+        "password": "tsanta123!",
+        "roleId": "6990aefb7053d5bc9001e427",
+        "profile": {
+          "firstName": "Tsanta",
+          "lastName": "Bernardette",
+          "phone": "+33555666777",
+          "birthday": "1988-11-03T00:00:00.000Z",
+          "gender": "Femme"
         }
       }
     ],

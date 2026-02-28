@@ -1,5 +1,5 @@
 {
-  "version": "1.0.3",
+  "version": "1.0.0",
   "seeds": {
     "roles": [
       {
@@ -24,7 +24,8 @@
           { "name": "menu:list", "description": "Lister les menus" },
           { "name": "menu:get", "description": "Voir un menu" },
           { "name": "menu:update", "description": "Modifier un menu" },
-          { "name": "menu:delete", "description": "Supprimer un menu" }
+          { "name": "menu:delete", "description": "Supprimer un menu" },
+          { "name": "role:list", "description": "Liste des rôles" }
         ]
       },
       {
@@ -276,7 +277,7 @@
       },
       {
         "label": "Utilisateurs",
-        "path": "/admin/users",
+        "path": "/users/list",
         "icon": "group",
         "order": 10,
         "roles": ["6990aefb7053d5bc9001e424"],

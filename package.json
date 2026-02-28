@@ -7,10 +7,10 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "jest --runInBand --passWithNoTests",
-    "db:seed": "node scripts/seed.js seed",
-    "db:reset": "node scripts/seed.js reset",
-    "db:status": "node scripts/seed.js status",
-    "db:clear": "node scripts/seed.js clear"
+    "db:seed": "node src/scripts/seed.js seed",
+    "db:reset": "node src/scripts/seed.js reset",
+    "db:status": "node src/scripts/seed.js status",
+    "db:clear": "node src/scripts/seed.js clear"
   },
   "repository": {
     "type": "git",

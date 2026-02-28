@@ -84,7 +84,7 @@ async function create(userId, profileData, file) {
 
 async function checkProfile({email}) {
   const user = await User.findOne({email});
-  const value = (!user && !user.profile);
+  const value = !!(user && user.profile);
   return { hasProfile: value}
 }
 

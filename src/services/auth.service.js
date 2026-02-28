@@ -207,6 +207,7 @@ async function login({ email, password }) {
   const publicUser = {
     username: user.username,
     email: user.email,
+    roleId: user.roleId,
     profile: user.profile ? user.profile : null,
     lastLoginAt: user.lastLoginAt
   };

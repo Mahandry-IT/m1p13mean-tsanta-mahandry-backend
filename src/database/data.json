@@ -1,11 +1,11 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.0",
   "seeds": {
     "roles": [
       {
         "_id": "6990aefb7053d5bc9001e424",
         "value": "Administrator",
-        "homepage": "/admin/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "user:list", "description": "Récupérer la liste des utilisateurs" },
@@ -32,7 +32,7 @@
       {
         "_id": "6990aefb7053d5bc9001e425",
         "value": "Manager",
-        "homepage": "/manager/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "edit:product", "description": "Modifier des produits" },
@@ -49,7 +49,7 @@
       {
         "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
-        "homepage": "/customer/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "get:products", "description": "Voir les produits" },
           { "name": "order:add", "description": "Ajouter au panier" },
@@ -273,6 +273,123 @@
           { "price": 299.99, "updatedAt": "2024-02-01T00:00:00Z" }
         ],
         "promotions": []
+      }
+    ],
+    "menus": [
+      {
+        "label": "Tableau de bord",
+        "path": "/dashboard",
+        "icon": "dashboard",
+        "order": 10,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425",
+          "6990aefb7053d5bc9001e427"
+        ],
+        "parentPath": null
+      },
+
+      {
+        "label": "Administration",
+        "path": "/admin",
+        "icon": "admin_panel_settings",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": null
+      },
+      {
+        "label": "Utilisateurs",
+        "path": "/users/list",
+        "icon": "group",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Boutiques",
+        "path": "/admin/stores",
+        "icon": "storefront",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Stocks",
+        "path": "/admin/stocks",
+        "icon": "inventory_2",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Produits",
+        "path": "/admin/products",
+        "icon": "shopping_bag",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Profil",
+        "path": "/admin/profile",
+        "icon": "account_circle",
+        "order": 50,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425",
+          "6990aefb7053d5bc9001e427"
+        ],
+        "parentPath": "/admin"
+      },
+
+      {
+        "label": "Espace manager",
+        "path": "/manager",
+        "icon": "supervisor_account",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Mes boutiques",
+        "path": "/manager/stores",
+        "icon": "storefront",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+      {
+        "label": "Produits",
+        "path": "/manager/products",
+        "icon": "shopping_bag",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+
+      {
+        "label": "Espace client",
+        "path": "/customer",
+        "icon": "person",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/customer/products",
+        "icon": "shopping_bag",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
+      },
+      {
+        "label": "Mes commandes",
+        "path": "/customer/orders",
+        "icon": "receipt_long",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
       }
     ]
   }

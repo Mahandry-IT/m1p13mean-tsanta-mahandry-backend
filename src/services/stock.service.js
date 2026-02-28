@@ -42,7 +42,7 @@ async function addStockMovement(productId, storeId, userId, movementData) {
 
     // Trouver les données de cette boutique dans le produit
     const storeDataIndex = product.storeData.findIndex(
-        sd => sd.storeId.toString() === storeId
+        sd => sd.storeId.equals(storeId)
     );
 
     if (storeDataIndex === -1) {

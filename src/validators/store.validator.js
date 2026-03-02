@@ -27,8 +27,7 @@ const storeIdParamSchema = Joi.object({
 
 // Validation pour les filtres de liste (query params)
 const storeListQuerySchema = Joi.object({
-    status: Joi.string().valid('pending', 'approved', 'rejected').optional(),
-    isActive: Joi.boolean().optional(),
+    status: Joi.string().valid('pending', 'active', 'inactive', 'rejected').optional(),
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(20)
 });

@@ -64,4 +64,20 @@ router.patch(
     StoreController.deactivate
 );
 
+// modifier
+router.put(
+    '/:id',
+    auth, // authentifie l'utilisateur
+    StoreController.update
+);
+
+// rejeter
+router.patch(
+    '/:id/reject', 
+    auth, 
+    authorize('store:reject'), 
+    validate.params(storeIdParamSchema),
+    StoreController.reject
+);
+
 module.exports = router;

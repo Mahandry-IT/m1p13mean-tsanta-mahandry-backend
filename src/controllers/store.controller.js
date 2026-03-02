@@ -39,8 +39,20 @@ module.exports = {
     async listMine(req, res) {
         try {
             const userId = req.user?.userId || req.user?._id || req.user?.id;
-            const stores = await StoreService.listByUser(userId);
-            return success(res, stores.map(s => s.toJSON()));
+
+            const { page, limit } = getPagination(req.query, {
+                defaultPage: 1,
+                defaultLimit: 20,
+                maxLimit: 100
+            });
+
+            const result = await StoreService.listByUser(userId, { page, limit });
+
+            return success(res, {
+                stores: result.stores.map(s => s.toJSON()),
+                pagination: result.pagination
+            });
+
         } catch (e) {
             return error(res, e.message || 'Erreur récupération de vos boutiques');
         }
@@ -74,6 +86,28 @@ module.exports = {
             return success(res, store.toJSON(), 'Boutique désactivée avec succès');
         } catch (e) {
             return error(res, e.message || 'Erreur désactivation boutique', e.status || 400);
+        }
+    },
+
+    // PUT /api/stores/:id
+    async update(req, res) {
+        try {
+            const userId = req.user?.userId || req.user?._id || req.user?.id;
+            const storeId = req.params.id;
+            const store = await StoreService.updateStore(userId, storeId, req.body);
+            return success(res, store.toJSON(), 'Boutique modifiée avec succès');
+        } catch (e) {
+            return error(res, e.message || 'Erreur modification boutique', e.status || 400);
+        }
+    },
+
+    // PATCH /api/stores/:id/reject — rejeter boutique
+    async reject(req, res) {
+        try {
+            const store = await StoreService.reject(req.params.id);
+            return success(res, store.toJSON(), 'Boutique rejetée avec succès');
+        } catch (e) {
+            return error(res, e.message || 'Erreur rejet boutique', e.status || 400);
         }
     }
 };

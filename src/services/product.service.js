@@ -28,10 +28,10 @@ async function listPaginated(filters = {}) {
   // filtres directs (optionnels)
   if (filters.productId) match._id = String(filters.productId);
 
-  // Produits "achetables" uniquement (storeData non vide)
+  // Produits "achetables" uniquement: au moins une entrée storeData avec un prix
   const onlyBuyable = String(filters.onlyBuyable || '').toLowerCase() === 'true';
   if (onlyBuyable) {
-    match.storeData = { $exists: true, $ne: [] };
+    match.storeData = { $elemMatch: { currentPrice: { $ne: null } } };
   }
 
   // Filtre boutique (optionnel)

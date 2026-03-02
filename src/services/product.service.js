@@ -1,0 +1,183 @@
+const mongoose = require('mongoose');
+const Product = require('../models/product.model');
+const { upload } = require('../utils/upload');
+
+function escRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Listing paginé avec recherche multi-champs.
+ * - Recherche sur Product.name, Product.description
+ * - Recherche sur catégories et types via lookup sur collections Category / Type.
+ */
+async function listPaginated(filters = {}) {
+  const page = Math.max(1, Number(filters.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(filters.limit) || 20));
+  const skip = (page - 1) * limit;
+
+  const q = (filters.q || '').toString().trim();
+  const hasQ = Boolean(q);
+
+  const match = {};
+
+  // filtres directs (optionnels)
+  if (filters.productId) match._id = String(filters.productId);
+
+  // pipeline aggregation pour permettre la recherche sur Category/Type
+  const pipeline = [
+    { $match: match },
+
+    // Join Category
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'categories.categoryId',
+        foreignField: '_id',
+        as: '_categories',
+      },
+    },
+
+    // Join Type
+    {
+      $lookup: {
+        from: 'types',
+        localField: 'categories.typeIds',
+        foreignField: '_id',
+        as: '_types',
+      },
+    },
+  ];
+
+  if (hasQ) {
+    const re = new RegExp(escRegex(q), 'i');
+    pipeline.push({
+      $match: {
+        $or: [
+          { name: re },
+          { description: re },
+          { '_categories.name': re },
+          { '_categories.slug': re },
+          { '_types.name': re },
+          { '_types.slug': re },
+        ],
+      },
+    });
+  }
+
+  // Sort (optionnel)
+  const sortBy = (filters.sortBy || 'createdAt').toString();
+  const sortDir = String(filters.sortDir || 'desc').toLowerCase() === 'asc' ? 1 : -1;
+  pipeline.push({ $sort: { [sortBy]: sortDir } });
+
+  pipeline.push({
+    $facet: {
+      data: [
+        { $skip: skip },
+        { $limit: limit },
+        {
+          $project: {
+            _categories: 0,
+            _types: 0,
+          },
+        },
+      ],
+      meta: [{ $count: 'total' }],
+    },
+  });
+
+  const agg = await Product.aggregate(pipeline);
+  const data = agg?.[0]?.data || [];
+  const total = agg?.[0]?.meta?.[0]?.total || 0;
+
+  return {
+    products: data,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+      hasPrev: page > 1,
+      hasNext: page * limit < total,
+    },
+  };
+}
+
+async function getById(id) {
+  return Product.findById(id);
+}
+
+async function uploadProductImages(files = []) {
+  const arr = Array.isArray(files) ? files : [];
+  if (arr.length === 0) return [];
+
+  // upload en parallèle (attention: peut être lourd si beaucoup de fichiers)
+  const results = await Promise.all(
+    arr
+      .filter((f) => f && f.buffer)
+      .map((file) => upload({ folder: 'products', resource_type: 'image', file }))
+  );
+
+  return results.map((r) => ({
+    imageId: new mongoose.Types.ObjectId(),
+    link: r.secure_url,
+  }));
+}
+
+async function create(payload, files = []) {
+  // Le schema Product impose _id string -> si absent, on en génère un ObjectId string
+  const data = { ...payload };
+  if (!data._id) data._id = new mongoose.Types.ObjectId().toString();
+
+  const uploadedImages = await uploadProductImages(files);
+
+  // Si le body contient déjà images (liens) on les garde, et on ajoute les upload
+  data.images = Array.isArray(data.images) ? data.images : [];
+  data.images = [
+    ...data.images.map((img) => ({ ...img, imageId: new mongoose.Types.ObjectId() })),
+    ...uploadedImages,
+  ];
+
+  const doc = await Product.create(data);
+  return doc;
+}
+
+async function update(id, payload, files = []) {
+  const uploadedImages = await uploadProductImages(files);
+
+  const data = { ...payload };
+
+  if (uploadedImages.length) {
+    // Si images est fourni dans le body, on considère que ça remplace, puis on append les nouvelles
+    // Sinon on append aux images existantes
+    if (Array.isArray(data.images)) {
+      data.images = [
+        ...data.images.map((img) => ({ ...img, imageId: new mongoose.Types.ObjectId() })),
+        ...uploadedImages,
+      ];
+    } else {
+      const existing = await Product.findById(id).select('images');
+      if (!existing) return null;
+      data.images = [
+        ...(existing.images || []).map((img) => ({ ...img, imageId: new mongoose.Types.ObjectId() })),
+        ...uploadedImages,
+      ];
+    }
+  }
+
+  const doc = await Product.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  return doc;
+}
+
+async function remove(id) {
+  const doc = await Product.findByIdAndDelete(id);
+  return doc;
+}
+
+module.exports = {
+  listPaginated,
+  getById,
+  create,
+  update,
+  remove,
+};

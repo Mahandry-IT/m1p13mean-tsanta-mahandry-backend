@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.0",
   "seeds": {
     "roles": [
       {
@@ -18,6 +18,7 @@
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "store:activate", "description": "Activer une boutique" },
           { "name": "store:deactivate", "description": "Désactiver une boutique" },
+          { "name": "store:reject", "description": "Rejeter une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
           { "name": "stock:view", "description": "Voir les stocks et mouvements" },
           { "name": "order:add", "description": "Ajouter au panier" },
@@ -164,10 +165,8 @@
         "address": "123 Rue Principale, Paris",
         "phone": "+33123456789",
         "email": "centerville@store.com",
-        "userEmail": "owner.centre@example.com",
         "userId": "65f1c1a5e1c2a9b001000001",
-        "isActive": true,
-        "status": "approved"
+        "status": "active"
       },
       {
         "name": "Magasin Quartier Nord",
@@ -176,8 +175,7 @@
         "email": "nord@store.com",
         "userEmail": "owner.nord@example.com",
         "userId": "65f1c1a5e1c2a9b001000002",
-        "isActive": true,
-        "status": "approved"
+        "status": "active"
       },
       {
         "name": "Magasin Sud",
@@ -186,8 +184,7 @@
         "email": "sud@store.com",
         "userEmail": "owner.sud@example.com",
         "userId": "65f1c1a5e1c2a9b001000003",
-        "isActive": false,
-        "status": "approved"
+        "status": "active"
       }
     ],
     "products": [
@@ -366,7 +363,7 @@
         "label": "Utilisateurs",
         "path": "/users/list",
         "icon": "group",
-        "order": 10,
+        "order": 20,
         "roles": ["6990aefb7053d5bc9001e424"],
         "parentPath": "/admin"
       },
@@ -374,8 +371,36 @@
         "label": "Boutiques",
         "path": "/admin/stores",
         "icon": "storefront",
-        "order": 20,
+        "order": 30,
         "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Stocks",
+        "path": "/admin/stocks",
+        "icon": "inventory_2",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Produits",
+        "path": "/admin/products",
+        "icon": "shopping_bag",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Profil",
+        "path": "/admin/profile",
+        "icon": "account_circle",
+        "order": 50,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425",
+          "6990aefb7053d5bc9001e427"
+        ],
         "parentPath": "/admin"
       },
 
@@ -396,10 +421,18 @@
         "parentPath": "/manager"
       },
       {
+        "label": "Nouvelle boutique",
+        "path": "/manager/stores/create",
+        "icon": "add_business",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+      {
         "label": "Produits",
         "path": "my-product",
         "icon": "shopping_bag",
-        "order": 20,
+        "order": 30,
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
@@ -407,7 +440,7 @@
         "label": "Promotions",
         "path": "promotions",
         "icon": "money_range",
-        "order": 30,
+        "order": 40,
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },

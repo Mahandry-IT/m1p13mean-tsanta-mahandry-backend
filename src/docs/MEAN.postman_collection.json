@@ -541,7 +541,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{LOCAL}}/stores?status=approved&page=1&limit=10",
+              "raw": "{{LOCAL}}/stores?status=active&page=1&limit=10",
               "host": [
                 "{{LOCAL}}"
               ],
@@ -551,7 +551,7 @@
               "query": [
                 {
                   "key": "status",
-                  "value": "approved"
+                  "value": "active"
                 },
                 {
                   "key": "page",

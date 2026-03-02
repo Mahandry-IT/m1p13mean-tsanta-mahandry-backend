@@ -14,40 +14,13 @@ const createProductSchema = Joi.object({
   name: Joi.string().max(50).required(),
   description: Joi.string().max(250).allow('').optional(),
   categories: Joi.array().items(productCategorySchema).default([]),
-  // En multipart/form-data, ce champ peut être absent (fichiers dans req.files)
-  images: Joi.alternatives().try(
-    imagesLinkSchema,
-    Joi.string().custom((value, helpers) => {
-      try {
-        const parsed = JSON.parse(value);
-        const { error } = imagesLinkSchema.validate(parsed);
-        if (error) return helpers.error('any.invalid');
-        return parsed;
-      } catch {
-        return helpers.error('any.invalid');
-      }
-    }, 'Parse images JSON')
-  ).optional(),
-  storeData: Joi.array().default([]),
+  storeData: Joi.array().default([]).optional(),
 });
 
 const updateProductSchema = Joi.object({
   name: Joi.string().max(50).optional(),
   description: Joi.string().max(250).allow('').optional(),
   categories: Joi.array().items(productCategorySchema).optional(),
-  images: Joi.alternatives().try(
-    imagesLinkSchema,
-    Joi.string().custom((value, helpers) => {
-      try {
-        const parsed = JSON.parse(value);
-        const { error } = imagesLinkSchema.validate(parsed);
-        if (error) return helpers.error('any.invalid');
-        return parsed;
-      } catch {
-        return helpers.error('any.invalid');
-      }
-    }, 'Parse images JSON')
-  ).optional(),
 }).min(1);
 
 const idParamSchema = Joi.object({

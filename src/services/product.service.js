@@ -154,7 +154,7 @@ async function uploadProductImages(files = []) {
   const results = await Promise.all(
     arr
       .filter((f) => f && f.buffer)
-      .map((file) => upload({ folder: 'products', resource_type: 'image', file }))
+      .map((file) => upload({ folder: 'samples/products', resource_type: 'image', file }))
   );
 
   return results.map((r) => ({

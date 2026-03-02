@@ -10,13 +10,19 @@ const Joi = require('joi');
 const router = Router();
 
 // Validation schemas
-const storeIdParamSchema = Joi.object({
-    storeId: Joi.string().required()
-});
-
 const dateRangeQuerySchema = Joi.object({
     startDate: Joi.date().optional(),
-    endDate: Joi.date().optional()
+    endDate: Joi.date().optional(),
+    storeId: Joi.string().optional()  // Pour le filtre optionnel par boutique
+}).unknown(true);
+
+// Schema pour les paramètres optionnels du manager
+const managerQuerySchema = Joi.object({
+    startDate: Joi.date().optional(),
+    endDate: Joi.date().optional(),
+    storeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
+        'string.pattern.base': 'storeId doit être un ObjectId valide'
+    })
 }).unknown(true);
 
 // Dashboard Admin
@@ -28,13 +34,12 @@ router.get(
     adminDashboardController.getDashboard
 );
 
-// Dashboard Manager
+// Dashboard Manager - Vue globale de toutes les boutiques du manager
 router.get(
-    '/manager/:storeId',
+    '/manager',
     auth,
     authorize('dashboard:manager'),
-    validate.params(storeIdParamSchema),
-    validate.query(dateRangeQuerySchema),
+    validate.query(managerQuerySchema),
     managerDashboardController.getDashboard
 );
 

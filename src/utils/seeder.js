@@ -104,19 +104,44 @@ class DatabaseSeeder {
         for (const storeData of stores) {
             const existingStore = await Store.findOne({ email: storeData.email });
 
-            // Déterminer l'utilisateur à lier: priorité à userId dans le JSON, sinon fallback via email
-            let userIdToAssign = null;
+            // Déterminer l'utilisateur à lier: priorité à userId dans le JSON,
+            // sinon via userEmail (si fourni), sinon fallback via email de la boutique.
             let relatedUser = null;
-            if (storeData.userId) {
-                relatedUser = await User.findById(storeData.userId);
+            let userIdToAssign = null;
+
+            const tryCastObjectId = (value) => {
+                if (!value) return null;
+                // Déjà un ObjectId
+                if (value instanceof mongoose.Types.ObjectId) return value;
+                // String hex 24
+                if (typeof value === 'string' && mongoose.Types.ObjectId.isValid(value)) {
+                    return mongoose.Types.ObjectId.createFromHexString(value);
+                }
+                return null;
+            };
+
+            // 1) userId explicite
+            const castedUserId = tryCastObjectId(storeData.userId);
+            if (castedUserId) {
+                relatedUser = await User.findById(castedUserId);
                 userIdToAssign = relatedUser ? relatedUser._id : null;
             }
+
+            // 2) userEmail explicite (si tu veux lier par email owner)
+            if (!userIdToAssign && storeData.userEmail) {
+                relatedUser = await User.findOne({ email: String(storeData.userEmail).toLowerCase().trim() });
+                userIdToAssign = relatedUser ? relatedUser._id : null;
+            }
+
+            // 3) fallback: email de la boutique
             if (!userIdToAssign) {
-                relatedUser = await User.findOne({ email: storeData.email });
+                relatedUser = await User.findOne({ email: String(storeData.email).toLowerCase().trim() });
                 userIdToAssign = relatedUser ? relatedUser._id : null;
             }
 
             const payload = { ...storeData, userId: userIdToAssign || null };
+            // On ne persiste pas userEmail dans Store
+            delete payload.userEmail;
 
             if (existingStore) {
                 await Store.findByIdAndUpdate(existingStore._id, payload);

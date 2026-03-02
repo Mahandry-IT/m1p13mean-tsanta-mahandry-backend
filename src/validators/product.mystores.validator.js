@@ -13,6 +13,10 @@ const myStoresProductsQuerySchema = Joi.object({
   // recherche simple
   q: Joi.string().allow('').optional(),
 
+  // filtres catégorie/type (optionnels)
+  categoryId: objectId.optional(),
+  typeId: objectId.optional(),
+
   // tri
   sortBy: Joi.string().valid('createdAt', 'updatedAt', 'name', 'description').optional(),
   sortDir: Joi.string().valid('asc', 'desc', 'ASC', 'DESC').optional(),

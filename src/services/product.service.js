@@ -6,6 +6,10 @@ function escRegex(str) {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+async function list() {
+  return Product.find({}, { _id: 1, name: 1 }).lean(false);
+}
+
 /**
  * Listing paginé avec recherche multi-champs.
  * - Recherche sur Product.name, Product.description
@@ -213,10 +217,36 @@ async function remove(id) {
   return doc;
 }
 
+async function removeStoreData(productId, storeId) {
+  if (!productId) {
+    const err = new Error('productId manquant');
+    err.status = 400;
+    throw err;
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(String(storeId))) {
+    const err = new Error('storeId invalide');
+    err.status = 400;
+    throw err;
+  }
+
+  const storeObjId = new mongoose.Types.ObjectId(String(storeId));
+
+  const doc = await Product.findByIdAndUpdate(
+    productId,
+    { $pull: { storeData: { storeId: storeObjId } } },
+    { new: true }
+  );
+
+  return doc;
+}
+
 module.exports = {
   listPaginated,
+  list,
   getById,
   create,
   update,
   remove,
+  removeStoreData,
 };

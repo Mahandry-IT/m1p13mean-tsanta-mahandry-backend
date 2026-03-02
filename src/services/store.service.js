@@ -1,5 +1,6 @@
 const Store = require('../models/store.model');
 const { getPagination, buildPaginationMeta } = require('../utils/pagination');
+const Role = require("../models/role.model");
 
 // Créer une boutique 
 async function requestStore(userId, data) {
@@ -103,10 +104,15 @@ async function deactivate(id) {
     return store;
 }
 
+async function list() {
+    return Store.find({}, { _id: 1, name: 1 }).lean(false);
+}
+
 module.exports = {
     requestStore,
     listAll,
     listByUser,
+    list,
     getById,
     activate,
     deactivate

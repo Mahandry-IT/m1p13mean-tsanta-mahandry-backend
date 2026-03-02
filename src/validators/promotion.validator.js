@@ -51,6 +51,11 @@ const suggestPromotionQuerySchema = Joi.object({
   storeId: objectId.required(),
 });
 
+const listPromotionsByStoreQuerySchema = Joi.object({
+  storeId: objectId.required(),
+  isActive: Joi.boolean().optional(),
+});
+
 module.exports = {
   createPromotionSchema,
   updatePromotionSchema,
@@ -58,6 +63,6 @@ module.exports = {
   promotionIdParamSchema,
   listPromotionsQuerySchema,
   getPromotionQuerySchema,
-    suggestPromotionQuerySchema
+  suggestPromotionQuerySchema,
+  listPromotionsByStoreQuerySchema,
 };
-

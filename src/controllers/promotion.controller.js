@@ -74,5 +74,14 @@ module.exports = {
       return error(res, e.message || 'Erreur suggestion promotion', e.status || 400);
     }
   },
-};
 
+  // GET /api/promotions/by-store?storeId=...&isActive=...
+  async listByStore(req, res) {
+    try {
+      const result = await PromotionService.listByStore(req.query);
+      return success(res, result, 'Promotions récupérées (par boutique)');
+    } catch (e) {
+      return error(res, e.message || 'Erreur récupération promotions (par boutique)', e.status || 400);
+    }
+  },
+};

@@ -21,6 +21,7 @@ const updateProductSchema = Joi.object({
   name: Joi.string().max(50).optional(),
   description: Joi.string().max(250).allow('').optional(),
   categories: Joi.array().items(productCategorySchema).optional(),
+  storeData: Joi.array().default([]).optional()
 }).min(1);
 
 const idParamSchema = Joi.object({

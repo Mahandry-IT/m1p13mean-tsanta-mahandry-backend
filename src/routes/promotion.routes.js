@@ -10,12 +10,14 @@ const {
   promotionIdParamSchema,
   listPromotionsQuerySchema,
   getPromotionQuerySchema,
-  suggestPromotionQuerySchema
+  suggestPromotionQuerySchema,
+  listPromotionsByStoreQuerySchema
 } = require('../validators/promotion.validator');
 
 const router = Router();
 
 // Suggestion promotion (non persistée)
+router.get('/by-store', auth, authorize('promotion:manage'), validate.query(listPromotionsByStoreQuerySchema), PromotionController.listByStore);
 router.get('/suggest', auth, authorize('promotion:manage'), validate.query(suggestPromotionQuerySchema), PromotionController.suggest);
 
 // CRUD promotions - réservé manager (via feature)

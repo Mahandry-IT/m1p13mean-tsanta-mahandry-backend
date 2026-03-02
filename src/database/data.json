@@ -159,6 +159,7 @@
         "address": "123 Rue Principale, Paris",
         "phone": "+33123456789",
         "email": "centerville@store.com",
+        "userEmail": "owner.centre@example.com",
         "userId": "65f1c1a5e1c2a9b001000001",
         "isActive": true,
         "status": "approved"
@@ -168,6 +169,7 @@
         "address": "456 Avenue du Nord, Lyon",
         "phone": "+33987654321",
         "email": "nord@store.com",
+        "userEmail": "owner.nord@example.com",
         "userId": "65f1c1a5e1c2a9b001000002",
         "isActive": true,
         "status": "approved"
@@ -177,6 +179,7 @@
         "address": "789 Boulevard du Sud, Marseille",
         "phone": "+33555666777",
         "email": "sud@store.com",
+        "userEmail": "owner.sud@example.com",
         "userId": "65f1c1a5e1c2a9b001000003",
         "isActive": false,
         "status": "approved"
@@ -323,7 +326,7 @@
         ]
       },
       {
-        "productId": "6990aefb7053d5bc9001e42a",
+        "productId": "6990aefb7053d5bc9001e42c",
         "storeEmail": "centerville@store.com",
         "currentPrice": 299.99,
         "priceHistory": [
@@ -371,25 +374,6 @@
         "roles": ["6990aefb7053d5bc9001e424"],
         "parentPath": "/admin"
       },
-      {
-        "label": "Catégories",
-        "path": "/categories",
-        "icon": "category",
-        "order": 30,
-        "roles": ["6990aefb7053d5bc9001e424"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Type",
-        "path": "/types",
-        "icon": "topic",
-        "order": 40,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425"
-        ],
-        "parentPath": "/admin"
-      },
 
       {
         "label": "Espace manager",
@@ -415,6 +399,15 @@
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
+      {
+        "label": "Promotions",
+        "path": "promotions",
+        "icon": "money_range",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+
 
       {
         "label": "Espace client",
@@ -440,12 +433,30 @@
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
+
+
+      {
+        "label": "Catégories",
+        "path": "/categories",
+        "icon": "category",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Type",
+        "path": "/types",
+        "icon": "topic",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
       {
         "label": "Produits",
         "path": "/products",
         "icon": "shopping_bag",
         "order": 50,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "roles": ["6990aefb7053d5bc9001e424"],
         "parentPath": null
       }
     ],

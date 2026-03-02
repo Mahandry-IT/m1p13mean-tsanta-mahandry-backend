@@ -4,10 +4,22 @@ const Store = require('../models/store.model');
 const Product = require('../models/product.model');
 const mongoose = require('mongoose');
 const { getPagination, buildPaginationMeta } = require('../utils/pagination');
+const {User} = require("../models");
 
 module.exports = {
-  // GET /api/products
+
+  // GET /api/products/list — liste boutiques
   async list(req, res) {
+    try {
+      const result = await ProductService.list();
+      return success(res, result);
+    } catch (e) {
+      return error(res, e.message || 'Erreur récupération produits');
+    }
+  },
+
+  // GET /api/products
+  async listAll(req, res) {
     try {
       const result = await ProductService.listPaginated(req.query);
       return success(res, result, 'Produits récupérés');
@@ -66,8 +78,6 @@ module.exports = {
       if (!email) return error(res, "Email manquant dans le token", 401);
 
       // 1) retrouver l'utilisateur via l'email (token)
-      // Les boutiques sont rattachées au userId dans ce projet
-      const User = require('../models/user.model');
       const user = await User.findOne({ email }).select('_id');
       if (!user) return error(res, 'Utilisateur introuvable', 404);
 
@@ -76,6 +86,8 @@ module.exports = {
       // filtres
       const storeId = req.query.storeId;
       const q = (req.query.q || '').toString().trim();
+      const categoryId = req.query.categoryId;
+      const typeId = req.query.typeId;
 
       // 2) stores possédées
       const ownedStores = await Store.find({ userId: user._id }).select('_id').lean();
@@ -97,15 +109,46 @@ module.exports = {
         storeIdsFilter = [storeObjId];
       }
 
+      // --- Filtres categoryId/typeId (même logique que ProductService.listPaginated)
+      const hasCategoryId = Boolean(categoryId);
+      const hasTypeId = Boolean(typeId);
+
+      let categoryObjectId;
+      let typeObjectId;
+
+      if (hasCategoryId) {
+        if (!mongoose.Types.ObjectId.isValid(String(categoryId))) {
+          return error(res, 'categoryId invalide', 400);
+        }
+        categoryObjectId = new mongoose.Types.ObjectId(String(categoryId));
+      }
+
+      if (hasTypeId) {
+        if (!mongoose.Types.ObjectId.isValid(String(typeId))) {
+          return error(res, 'typeId invalide', 400);
+        }
+        typeObjectId = new mongoose.Types.ObjectId(String(typeId));
+      }
+
       const filter = {
         'storeData.storeId': { $in: storeIdsFilter },
       };
+
+      if (hasCategoryId && hasTypeId) {
+        filter.categories = { $elemMatch: { categoryId: categoryObjectId, typeIds: typeObjectId } };
+      } else if (hasCategoryId) {
+        filter['categories.categoryId'] = categoryObjectId;
+      } else if (hasTypeId) {
+        filter['categories.typeIds'] = typeObjectId;
+      }
 
       // Recherche full text si q
       const projection = {};
       const sort = {};
 
       if (q) {
+        // NB: ProductService.listPaginated fait une recherche Regex + lookup sur Category/Type.
+        // Ici on reste cohérent avec le code existant: $text (name/description). Les filtres categoryId/typeId couvrent déjà les catégories.
         filter.$text = { $search: q };
         projection.score = { $meta: 'textScore' };
         sort.score = { $meta: 'textScore' };
@@ -129,6 +172,30 @@ module.exports = {
       return success(res, { products, pagination: buildPaginationMeta({ total, page, limit }) }, 'Produits de vos boutiques');
     } catch (e) {
       return error(res, e.message || 'Erreur récupération produits de vos boutiques', e.status || 400);
+    }
+  },
+
+  // DELETE /api/products/my-stores/:idp/:idb
+  async removeMyStoreProduct(req, res) {
+    try {
+      const email = req.user?.email;
+      if (!email) return error(res, 'Email manquant dans le token', 401);
+
+      const user = await User.findOne({ email }).select('_id');
+      if (!user) return error(res, 'Utilisateur introuvable', 404);
+
+      const { idp, idb } = req.params;
+
+      // Vérifie que la boutique appartient à l'utilisateur
+      const store = await Store.findOne({ _id: idb, userId: user._id }).select('_id').lean();
+      if (!store) return error(res, 'Accès refusé à cette boutique', 403);
+
+      const updated = await ProductService.removeStoreData(idp, idb);
+      if (!updated) return error(res, 'Produit introuvable', 404);
+
+      return success(res, { id: updated._id, storeId: idb }, 'Relation produit-boutique supprimée');
+    } catch (e) {
+      return error(res, e.message || 'Erreur suppression produit boutique', e.status || 400);
     }
   },
 };

@@ -7,7 +7,8 @@ const { createCategorySchema, updateCategorySchema, idParamSchema } = require('.
 
 const router = Router();
 
-router.get('/', auth, authorize('category:view'), CategoryController.list);
+router.get('/', auth, authorize('category:view'), CategoryController.listAll);
+router.get('/list', auth, authorize('category:view'), CategoryController.list);
 router.post('/', auth, authorize('category:manage'), validate.body(createCategorySchema), CategoryController.create);
 
 router.get('/:id', auth, authorize('category:view'), validate.params(idParamSchema), CategoryController.getById);

@@ -11,7 +11,11 @@ async function getById(id) {
   return doc;
 }
 
-async function list(filters = {}) {
+async function list() {
+  return Category.find({}, { _id: 1, name: 1 }).lean(false);
+}
+
+async function listAll(filters = {}) {
   const { page, limit, skip } = getPagination(filters, {
     defaultPage: 1,
     defaultLimit: 20,
@@ -61,5 +65,5 @@ async function remove(id) {
   return doc;
 }
 
-module.exports = { create, getById, list, update, remove };
+module.exports = { create, getById, list, listAll, update, remove };
 

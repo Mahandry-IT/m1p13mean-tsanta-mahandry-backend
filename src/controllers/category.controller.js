@@ -16,7 +16,17 @@ module.exports = {
   // GET /api/categories
   async list(req, res) {
     try {
-      const result = await CategoryService.list(req.query);
+      const result = await CategoryService.list();
+      return success(res, result, 'Catégories récupérées');
+    } catch (e) {
+      return error(res, e.message || 'Erreur récupération catégories', e.status || 400);
+    }
+  },
+
+  // GET /api/categories
+  async listAll(req, res) {
+    try {
+      const result = await CategoryService.listAll(req.query);
       return success(res, result, 'Catégories récupérées');
     } catch (e) {
       return error(res, e.message || 'Erreur récupération catégories', e.status || 400);

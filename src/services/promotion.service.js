@@ -389,6 +389,47 @@ async function suggestPromotion({ storeId } = {}) {
   };
 }
 
+async function listByStore({ storeId, isActive } = {}) {
+  if (!storeId || !mongoose.Types.ObjectId.isValid(String(storeId))) {
+    const err = new Error('storeId invalide');
+    err.status = 400;
+    throw err;
+  }
+
+  const activeFilter = normalizeBoolean(isActive);
+  const storeObjId = new mongoose.Types.ObjectId(String(storeId));
+
+  // On charge uniquement les storeData de la boutique ciblée pour limiter la charge
+  const products = await Product.find({ 'storeData.storeId': storeObjId })
+    .select('_id name storeData')
+    .lean();
+
+  const promotions = [];
+
+  for (const p of products) {
+    const sd = (p.storeData || []).find((x) => String(x.storeId) === String(storeId));
+    if (!sd) continue;
+
+    for (const promo of (sd.promotions || [])) {
+      if (activeFilter !== undefined && Boolean(promo.isActive) !== activeFilter) continue;
+
+      promotions.push({
+        productId: p._id,
+        productName: p.name,
+        storeId: sd.storeId,
+        promotionId: promo.promotionId,
+        discount: promo.discount,
+        description: promo.description,
+        startDate: promo.startDate,
+        endDate: promo.endDate,
+        isActive: promo.isActive,
+        ended: isPromotionEnded(promo),
+      });
+    }
+  }
+
+  return { promotions };
+}
 
 module.exports = {
   create,
@@ -396,6 +437,7 @@ module.exports = {
   getById,
   update,
   remove,
-  suggestPromotion
+  suggestPromotion,
+  listByStore,
 };
 

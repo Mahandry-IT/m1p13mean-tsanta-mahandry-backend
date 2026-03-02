@@ -372,41 +372,18 @@
         "parentPath": "/admin"
       },
       {
-        "label": "Stocks",
-        "path": "/admin/stocks",
-        "icon": "inventory_2",
+        "label": "Catégories",
+        "path": "/categories",
+        "icon": "category",
         "order": 30,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Profil",
-        "path": "/admin/profile",
-        "icon": "account_circle",
-        "order": 50,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425",
-          "6990aefb7053d5bc9001e427"
-        ],
+        "roles": ["6990aefb7053d5bc9001e424"],
         "parentPath": "/admin"
       },
       {
         "label": "Type",
-        "path": "/admin/types",
+        "path": "/types",
         "icon": "topic",
-        "order": 60,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425"
-        ],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Catégories",
-        "path": "/admin/categories",
-        "icon": "category",
-        "order": 70,
+        "order": 40,
         "roles": [
           "6990aefb7053d5bc9001e424",
           "6990aefb7053d5bc9001e425"
@@ -432,7 +409,7 @@
       },
       {
         "label": "Produits",
-        "path": "/manager/products",
+        "path": "my-product",
         "icon": "shopping_bag",
         "order": 20,
         "roles": ["6990aefb7053d5bc9001e425"],

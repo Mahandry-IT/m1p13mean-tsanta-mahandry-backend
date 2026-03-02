@@ -31,13 +31,9 @@ const storeSchema = new mongoose.Schema({
         ref: 'User',
         default: null
     },
-    isActive: {
-        type: Boolean,
-        default: false   
-    },
     status: {
         type: String,
-        enum: ['pending', 'approved', 'rejected'],
+        enum: ['pending', 'active', 'inactive', 'rejected'],
         default: 'pending'
     }
 }, {
@@ -55,7 +51,6 @@ storeSchema.methods.toJSON = function () {
         address: this.address,
         phone: this.phone,
         email: this.email,
-        isActive: this.isActive,
         status: this.status,
         userId: this.userId,
         createdAt: this.createdAt,

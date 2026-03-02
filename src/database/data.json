@@ -18,6 +18,7 @@
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "store:activate", "description": "Activer une boutique" },
           { "name": "store:deactivate", "description": "Désactiver une boutique" },
+          { "name": "store:reject", "description": "Rejeter une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
           { "name": "stock:view", "description": "Voir les stocks et mouvements" }
         ]
@@ -115,8 +116,7 @@
         "phone": "+33123456789",
         "email": "centerville@store.com",
         "userId": "65f1c1a5e1c2a9b001000001",
-        "isActive": true,
-        "status": "approved"
+        "status": "active"
       },
       {
         "name": "Magasin Quartier Nord",
@@ -124,8 +124,7 @@
         "phone": "+33987654321",
         "email": "nord@store.com",
         "userId": "65f1c1a5e1c2a9b001000002",
-        "isActive": true,
-        "status": "approved"
+        "status": "active"
       },
       {
         "name": "Magasin Sud",
@@ -133,8 +132,7 @@
         "phone": "+33555666777",
         "email": "sud@store.com",
         "userId": "65f1c1a5e1c2a9b001000003",
-        "isActive": false,
-        "status": "approved"
+        "status": "active"
       }
     ],
     "products": [
@@ -245,6 +243,131 @@
           { "price": 299.99, "updatedAt": "2024-02-01T00:00:00Z" }
         ],
         "promotions": []
+      }
+    ],
+    "menus": [
+      {
+        "label": "Tableau de bord",
+        "path": "/dashboard",
+        "icon": "dashboard",
+        "order": 10,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425",
+          "6990aefb7053d5bc9001e427"
+        ],
+        "parentPath": null
+      },
+
+      {
+        "label": "Administration",
+        "path": "/admin",
+        "icon": "admin_panel_settings",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": null
+      },
+      {
+        "label": "Utilisateurs",
+        "path": "/users/list",
+        "icon": "group",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Boutiques",
+        "path": "/admin/stores",
+        "icon": "group",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Stocks",
+        "path": "/admin/stocks",
+        "icon": "inventory_2",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Produits",
+        "path": "/admin/products",
+        "icon": "shopping_bag",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Profil",
+        "path": "/admin/profile",
+        "icon": "account_circle",
+        "order": 50,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425",
+          "6990aefb7053d5bc9001e427"
+        ],
+        "parentPath": "/admin"
+      },
+
+      {
+        "label": "Espace manager",
+        "path": "/manager",
+        "icon": "supervisor_account",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Mes boutiques",
+        "path": "/manager/stores",
+        "icon": "storefront",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+      {
+        "label": "Nouvelle boutique",
+        "path": "/manager/stores/create",
+        "icon": "add_business",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+      {
+        "label": "Produits",
+        "path": "/manager/products",
+        "icon": "shopping_bag",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+
+      {
+        "label": "Espace client",
+        "path": "/customer",
+        "icon": "person",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/customer/products",
+        "icon": "shopping_bag",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
+      },
+      {
+        "label": "Mes commandes",
+        "path": "/customer/orders",
+        "icon": "receipt_long",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
       }
     ]
   }

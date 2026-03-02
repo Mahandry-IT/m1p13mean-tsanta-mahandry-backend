@@ -509,13 +509,26 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{LOCAL}}/stores?status=approved&page=1&limit=10",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores"],
+              "raw": "{{LOCAL}}/stores?status=active&page=1&limit=10",
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores"
+              ],
               "query": [
-                { "key": "status", "value": "approved" },
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" }
+                {
+                  "key": "status",
+                  "value": "active"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             }
           },

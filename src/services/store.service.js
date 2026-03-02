@@ -2,16 +2,6 @@ const Store = require('../models/store.model');
 
 // Créer une boutique 
 async function requestStore(userId, data) {
-    // Vérifier si cet utilisateur a déjà une boutique pending ou approved
-    const existing = await Store.findOne({
-        userId,
-        status: { $in: ['pending', 'approved'] }
-    });
-    if (existing) {
-        const err = new Error('Vous avez déjà une boutique en cours ou approuvée');
-        err.status = 409;
-        throw err;
-    }
 
     const store = new Store({
         name: data.name,
@@ -19,7 +9,6 @@ async function requestStore(userId, data) {
         phone: data.phone,
         email: data.email,
         userId,
-        isActive: false,
         status: 'pending'
     });
 
@@ -58,10 +47,29 @@ async function listAll(filters = {}) {
     };
 }
 
+
 // Lister mes boutiques 
-async function listByUser(userId) {
-    const stores = await Store.find({ userId }).sort({ createdAt: -1 });
-    return stores;
+async function listByUser(userId, filters = {}) {
+    const query = { userId };
+
+    const { page, limit, skip } = getPagination(filters, {
+        defaultPage: 1,
+        defaultLimit: 20,
+        maxLimit: 100
+    });
+
+    const [stores, total] = await Promise.all([
+        Store.find(query)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit),
+        Store.countDocuments(query)
+    ]);
+
+    return {
+        stores,
+        pagination: buildPaginationMeta({ total, page, limit })
+    };
 }
 
 //boutique by id
@@ -78,14 +86,20 @@ async function activate(id) {
         err.status = 404;
         throw err;
     }
-    if (store.status === 'approved' && store.isActive) {
+
+    if (store.status === 'active') {
         const err = new Error('La boutique est déjà active');
         err.status = 409;
         throw err;
     }
 
-    store.status = 'approved';
-    store.isActive = true;
+    if (store.status === 'rejected') {
+        const err = new Error('Impossible d’activer une boutique rejetée');
+        err.status = 400;
+        throw err;
+    }
+
+    store.status = 'active';
     await store.save();
     return store;
 }
@@ -98,14 +112,72 @@ async function deactivate(id) {
         err.status = 404;
         throw err;
     }
-    if (!store.isActive) {
-        const err = new Error('La boutique est déjà inactive');
+
+    if (store.status !== 'active') {
+        const err = new Error('Seule une boutique active peut être désactivée');
         err.status = 409;
         throw err;
     }
 
-    store.isActive = false;
+    store.status = 'inactive';
     await store.save();
+    return store;
+}
+
+// Modifier une boutique
+async function updateStore(userId, storeId, data) {
+    const store = await Store.findById(storeId);
+    if (!store) {
+        const err = new Error('Boutique introuvable');
+        err.status = 404;
+        throw err;
+    }
+
+    if (store.userId.toString() !== userId.toString()) {
+        const err = new Error('Non autorisé');
+        err.status = 403;
+        throw err;
+    }
+
+    if (store.status === 'active') {
+        const err = new Error('Impossible de modifier une boutique active');
+        err.status = 400;
+        throw err;
+    }
+
+    const updatableFields = ['name', 'address', 'phone', 'email'];
+    updatableFields.forEach(field => {
+        if (data[field] !== undefined) store[field] = data[field];
+    });
+
+    // 🔥 Si elle était rejetée → nouvelle soumission
+    if (store.status === 'rejected') {
+        store.status = 'pending';
+    }
+
+    await store.save();
+    return store;
+}
+
+// Rejeter une boutique
+async function reject(id) {
+    const store = await Store.findById(id);
+
+    if (!store) {
+        const err = new Error('Boutique introuvable');
+        err.status = 404;
+        throw err;
+    }
+
+    if (store.status !== 'pending') {
+        const err = new Error('Seule une boutique en attente peut être rejetée');
+        err.status = 409;
+        throw err;
+    }
+
+    store.status = 'rejected';
+    await store.save();
+
     return store;
 }
 
@@ -115,5 +187,7 @@ module.exports = {
     listByUser,
     getById,
     activate,
-    deactivate
+    deactivate,
+    updateStore,
+    reject
 };

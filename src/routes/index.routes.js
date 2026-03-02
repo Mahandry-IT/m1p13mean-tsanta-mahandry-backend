@@ -7,6 +7,7 @@ const orderRoutes = require('./order.routes');
 const orderPDFRoutes = require('./orderPDF.routes');
 const menuRoutes = require('./menu.routes');
 const roleRoutes = require('./role.routes');
+const dashboardRoutes = require('./dashboard.routes');
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/stocks', stockRoutes);
 router.use('/orders', orderRoutes);
 router.use('/ordersPDF', orderPDFRoutes);
 router.use('/menus', menuRoutes);
+router.use('/dashboards', dashboardRoutes);
 
 module.exports = router;

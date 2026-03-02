@@ -13,8 +13,11 @@ const router = Router();
 // Listing paginé + recherche
 router.get('/', auth, authorize('product:view'), validate.query(listQuerySchema), ProductController.listAll);
 
+// Produits achetables uniquement (storeData non vide)
+router.get('/buy-product', auth, authorize('product:view'), validate.query(listQuerySchema), ProductController.buyProduct);
+
 // Produits de toutes mes boutiques (owner)
-router.get('/my-stores', auth, authorize('product:manage'), validate.query(myStoresProductsQuerySchema), ProductController.listMyStoresProducts);
+router.get('/my-stores', auth, authorize('product:list'), validate.query(myStoresProductsQuerySchema), ProductController.listMyStoresProducts);
 router.get('/list', auth, authorize('product:manage'), ProductController.list);
 
 router.delete('/my-stores/:idp/:idb', auth, authorize('product:manage'), validate.params(deleteMyStoreProductParamsSchema), ProductController.removeMyStoreProduct);

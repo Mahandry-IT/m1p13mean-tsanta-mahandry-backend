@@ -198,4 +198,14 @@ module.exports = {
       return error(res, e.message || 'Erreur suppression produit boutique', e.status || 400);
     }
   },
+
+  // GET /api/products/buy-product
+  async buyProduct(req, res) {
+    try {
+      const result = await ProductService.listPaginated({ ...req.query, onlyBuyable: true });
+      return success(res, result, 'Produits disponibles à l\'achat');
+    } catch (e) {
+      return error(res, e.message || 'Erreur récupération produits', e.status || 400);
+    }
+  },
 };

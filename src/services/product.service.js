@@ -28,6 +28,22 @@ async function listPaginated(filters = {}) {
   // filtres directs (optionnels)
   if (filters.productId) match._id = String(filters.productId);
 
+  // Produits "achetables" uniquement (storeData non vide)
+  const onlyBuyable = String(filters.onlyBuyable || '').toLowerCase() === 'true';
+  if (onlyBuyable) {
+    match.storeData = { $exists: true, $ne: [] };
+  }
+
+  // Filtre boutique (optionnel)
+  if (filters.storeId) {
+    if (!mongoose.Types.ObjectId.isValid(String(filters.storeId))) {
+      const err = new Error('storeId invalide');
+      err.status = 400;
+      throw err;
+    }
+    match['storeData.storeId'] = new mongoose.Types.ObjectId(String(filters.storeId));
+  }
+
   // Filtres categories/types
   // NOTE: dans Product, categories.categoryId et categories.typeIds sont des ObjectId
   const hasCategoryId = Boolean(filters.categoryId);

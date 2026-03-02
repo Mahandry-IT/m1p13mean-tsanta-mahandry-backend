@@ -12,7 +12,7 @@ const imagesLinkSchema = Joi.array().items(Joi.object({ link: Joi.string().uri()
 const createProductSchema = Joi.object({
   _id: Joi.string().optional(),
   name: Joi.string().max(50).required(),
-  description: Joi.string().max(50).allow('').optional(),
+  description: Joi.string().max(250).allow('').optional(),
   categories: Joi.array().items(productCategorySchema).default([]),
   // En multipart/form-data, ce champ peut être absent (fichiers dans req.files)
   images: Joi.alternatives().try(
@@ -33,7 +33,7 @@ const createProductSchema = Joi.object({
 
 const updateProductSchema = Joi.object({
   name: Joi.string().max(50).optional(),
-  description: Joi.string().max(50).allow('').optional(),
+  description: Joi.string().max(250).allow('').optional(),
   categories: Joi.array().items(productCategorySchema).optional(),
   images: Joi.alternatives().try(
     imagesLinkSchema,

@@ -123,7 +123,7 @@ const productSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        maxlength: 50
+        maxlength: 250
     },
     categories: {
         type: [productCategorySchema],

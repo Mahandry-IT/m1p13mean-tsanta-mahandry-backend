@@ -10,6 +10,7 @@ const roleRoutes = require('./role.routes');
 const categoryRoutes = require('./category.routes');
 const typeRoutes = require('./type.routes');
 const productRoutes = require('./product.routes');
+const promotionRoutes = require('./promotion.routes');
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/menus', menuRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/types', typeRoutes);
 router.use('/products', productRoutes);
+router.use('/promotions', promotionRoutes);
 
 module.exports = router;

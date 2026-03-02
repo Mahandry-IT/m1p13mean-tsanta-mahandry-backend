@@ -56,7 +56,8 @@
           { "name": "type:view", "description": "Voir les types" },
           { "name": "type:manage", "description": "Gérer les types" },
           { "name": "product:view", "description": "Lister/voir les produits" },
-          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" }
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
+          { "name": "promotion:manage", "description": "Gérer les promotions" }
         ]
       },
       {

@@ -27,7 +27,11 @@
           { "name": "order:list_own", "description": "Voir commandes" },
           { "name": "order:get", "description": "Voir détail commande" },
           { "name": "order:update_status", "description": "Changer statut commande" },
-          { "name": "role:list", "description": "Voir la liste des rôles" }
+          { "name": "role:list", "description": "Voir la liste des rôles" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" }
         ]
       },
       {
@@ -44,7 +48,11 @@
           { "name": "stock:view", "description": "Voir les stocks et mouvements" },
           { "name": "order:view", "description": "Voir commandes boutique" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" }
         ]
       },
       {
@@ -61,7 +69,9 @@
           { "name": "order:get", "description": "Voir détail commande" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
-          { "name": "store:get", "description": "Voir le détail d'une boutique" }
+          { "name": "store:get", "description": "Voir le détail d'une boutique" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "type:view", "description": "Voir les types" }
         ]
       }
     ],
@@ -173,7 +183,7 @@
         "description": "Ordinateur portable haute performance",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Ordinateurs portables" },
               { "name": "PC" }
@@ -191,7 +201,7 @@
         "description": "Smartphone Apple dernière génération",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Smartphones" },
               { "name": "Apple" }
@@ -392,6 +402,18 @@
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       }
+    ],
+    "categories": [
+      { "name": "Électronique", "slug": "electronique", "description": "", "isActive": true },
+      { "name": "Mobilier", "slug": "mobilier", "description": "", "isActive": true }
+    ],
+    "types": [
+      { "categorySlug": "electronique", "name": "Ordinateurs portables", "slug": "ordinateurs-portables", "isActive": true },
+      { "categorySlug": "electronique", "name": "PC", "slug": "pc", "isActive": true },
+      { "categorySlug": "electronique", "name": "Smartphones", "slug": "smartphones", "isActive": true },
+      { "categorySlug": "electronique", "name": "Apple", "slug": "apple", "isActive": true },
+      { "categorySlug": "mobilier", "name": "Chaises", "slug": "chaises", "isActive": true },
+      { "categorySlug": "mobilier", "name": "Bureau", "slug": "bureau", "isActive": true }
     ]
   }
 }

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.6",
   "seeds": {
     "roles": [
       {
@@ -31,7 +31,9 @@
           { "name": "category:view", "description": "Voir les catégories" },
           { "name": "category:manage", "description": "Gérer les catégories" },
           { "name": "type:view", "description": "Voir les types" },
-          { "name": "type:manage", "description": "Gérer les types" }
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" }
         ]
       },
       {
@@ -52,7 +54,9 @@
           { "name": "category:view", "description": "Voir les catégories" },
           { "name": "category:manage", "description": "Gérer les catégories" },
           { "name": "type:view", "description": "Voir les types" },
-          { "name": "type:manage", "description": "Gérer les types" }
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" }
         ]
       },
       {
@@ -71,7 +75,8 @@
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "category:view", "description": "Voir les catégories" },
-          { "name": "type:view", "description": "Voir les types" }
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" }
         ]
       }
     ],

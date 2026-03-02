@@ -99,9 +99,15 @@ async function listPaginated(filters = {}) {
   }
 
   // Sort (optionnel)
-  const sortBy = (filters.sortBy || 'createdAt').toString();
-  const sortDir = String(filters.sortDir || 'desc').toLowerCase() === 'asc' ? 1 : -1;
-  pipeline.push({ $sort: { [sortBy]: sortDir } });
+  const allowedSortBy = new Set(['createdAt', 'updatedAt', 'name', 'description']);
+  const requestedSortBy = (filters.sortBy || 'createdAt').toString();
+  const sortBy = allowedSortBy.has(requestedSortBy) ? requestedSortBy : 'createdAt';
+
+  const sortDirRaw = String(filters.sortDir || 'desc').toLowerCase();
+  const sortDir = sortDirRaw === 'asc' ? 1 : -1;
+
+  // Tri secondaire sur _id pour stabiliser l'ordre quand les valeurs sont identiques
+  pipeline.push({ $sort: { [sortBy]: sortDir, _id: 1 } });
 
   pipeline.push({
     $facet: {

@@ -60,6 +60,8 @@ const listQuerySchema = Joi.object({
   q: Joi.string().allow('').optional(),
   sortBy: Joi.string().allow('').optional(),
   sortDir: Joi.string().valid('asc', 'desc', 'ASC', 'DESC').optional(),
+  categoryId: objectId.optional(),
+  typeId: objectId.optional(),
 });
 
 module.exports = {

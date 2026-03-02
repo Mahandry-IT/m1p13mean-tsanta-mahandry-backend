@@ -24,12 +24,45 @@ async function listPaginated(filters = {}) {
   // filtres directs (optionnels)
   if (filters.productId) match._id = String(filters.productId);
 
+  // Filtres categories/types
+  // NOTE: dans Product, categories.categoryId et categories.typeIds sont des ObjectId
+  const hasCategoryId = Boolean(filters.categoryId);
+  const hasTypeId = Boolean(filters.typeId);
+
+  let categoryObjectId;
+  let typeObjectId;
+
+  if (hasCategoryId) {
+    if (!mongoose.Types.ObjectId.isValid(String(filters.categoryId))) {
+      const err = new Error('categoryId invalide');
+      err.status = 400;
+      throw err;
+    }
+    categoryObjectId = new mongoose.Types.ObjectId(String(filters.categoryId));
+  }
+
+  if (hasTypeId) {
+    if (!mongoose.Types.ObjectId.isValid(String(filters.typeId))) {
+      const err = new Error('typeId invalide');
+      err.status = 400;
+      throw err;
+    }
+    typeObjectId = new mongoose.Types.ObjectId(String(filters.typeId));
+  }
+
+  if (hasCategoryId && hasTypeId) {
+    match.categories = { $elemMatch: { categoryId: categoryObjectId, typeIds: typeObjectId } };
+  } else if (hasCategoryId) {
+    match['categories.categoryId'] = categoryObjectId;
+  } else if (hasTypeId) {
+    match['categories.typeIds'] = typeObjectId;
+  }
+
   // pipeline aggregation pour permettre la recherche sur Category/Type
   const pipeline = [
     { $match: match },
 
-    // Join Category
-    {
+   {
       $lookup: {
         from: 'categories',
         localField: 'categories.categoryId',

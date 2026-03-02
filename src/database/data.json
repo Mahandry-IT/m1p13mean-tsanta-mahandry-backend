@@ -379,14 +379,6 @@
         "parentPath": "/admin"
       },
       {
-        "label": "Produits",
-        "path": "/admin/products",
-        "icon": "shopping_bag",
-        "order": 40,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
         "label": "Profil",
         "path": "/admin/profile",
         "icon": "account_circle",
@@ -395,6 +387,28 @@
           "6990aefb7053d5bc9001e424",
           "6990aefb7053d5bc9001e425",
           "6990aefb7053d5bc9001e427"
+        ],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Type",
+        "path": "/admin/types",
+        "icon": "topic",
+        "order": 60,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425"
+        ],
+        "parentPath": "/admin"
+      },
+      {
+        "label": "Catégories",
+        "path": "/admin/categories",
+        "icon": "category",
+        "order": 70,
+        "roles": [
+          "6990aefb7053d5bc9001e424",
+          "6990aefb7053d5bc9001e425"
         ],
         "parentPath": "/admin"
       },
@@ -447,11 +461,18 @@
         "order": 20,
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
+      },
+      {
+        "label": "Produits",
+        "path": "/products",
+        "icon": "shopping_bag",
+        "order": 50,
+        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
+        "parentPath": null
       }
     ],
     "categories": [
-      { "name": "Électronique", "slug": "electronique", "description": "", "isActive": true },
-      { "name": "Mobilier", "slug": "mobilier", "description": "", "isActive": true }
+      { "name": "Électronique", "slug": "electronique", "description": "", "isActive": true }
     ],
     "types": [
       { "categorySlug": "electronique", "name": "Ordinateurs portables", "slug": "ordinateurs-portables", "isActive": true },

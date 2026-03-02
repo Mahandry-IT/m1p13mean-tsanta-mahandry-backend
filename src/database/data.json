@@ -185,7 +185,7 @@
       {
         "_id": "6990aefb7053d5bc9001e428",
         "name": "Laptop Dell XPS 15",
-        "description": "Ordinateur portable haute performance",
+        "description": "Ordinateur portable haut de gamme conçu pour la performance et la mobilité, doté d’un écran haute résolution, d’une puissance de calcul avancée et d’un design premium adapté aux professionnels et créateurs.",
         "categories": [
           {
             "name": "Electronique",
@@ -196,14 +196,15 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/dell-xps-1.jpg" },
-          { "link": "https://example.com/dell-xps-2.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_1_byrvwq.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436945/Laptop_Dell_XPS_15_2_x7thaz.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_3_h9srch.png" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e429",
         "name": "iPhone 15 Pro",
-        "description": "Smartphone Apple dernière génération",
+        "description": "Smartphone premium conçu par Apple, offrant des performances exceptionnelles, un système photo avancé et un design en titane élégant pour une expérience mobile fluide et haut de gamme.",
         "categories": [
           {
             "name": "Electronique",
@@ -214,24 +215,64 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/iphone-15-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437110/iPhone_15_Pro_1_f3wyjv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437111/iPhone_15_Pro_2_linm10.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437108/iPhone_15_Pro_3_hdgm4p.png" }
         ]
       },
       {
-        "_id": "6990aefb7053d5bc9001e42a",
-        "name": "Chaise de Bureau Ergonomique",
-        "description": "Confort optimal pour longues sessions",
+        "_id": "6990aefb7053d5bc9001e42b",
+        "name": "MacBook Air M2 13 pouces",
+        "description": "Ultrabook léger et silencieux équipé de la puce Apple M2, offrant une autonomie remarquable, des performances fluides et un design fin idéal pour le travail nomade et la productivité quotidienne.",
         "categories": [
           {
-            "name": "Mobilier",
+            "name": "Electronique",
             "types": [
-              { "name": "Chaises" },
-              { "name": "Bureau" }
+              { "name": "Ordinateurs portables" },
+              { "name": "Apple" }
             ]
           }
         ],
         "images": [
-          { "link": "https://example.com/chair-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437400/MacBook_Air_M2_13_pouces_1_k09cqo.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437401/MacBook_Air_M2_13_pouces_2_d2ya1l.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437403/MacBook_Air_M2_13_pouces_3_naadil.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42c",
+        "name": "Samsung Galaxy S24",
+        "description": "Smartphone Android de dernière génération offrant un écran immersif, un appareil photo haute précision et des performances puissantes, idéal pour les utilisateurs exigeants en mobilité et multimédia.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "Smartphones" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437849/Samsung_Galaxy_S24_1_ynczow.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437843/Samsung_Galaxy_S24_2_xtman2.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437845/Samsung_Galaxy_S24_3_y9iovf.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42d",
+        "name": "PC Gamer Fixe Ryzen 7",
+        "description": "PC de bureau haute performance équipé d’un processeur Ryzen 7, conçu pour le gaming intensif, le streaming et la création de contenu, avec une puissance graphique et une évolutivité optimales.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "PC" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438107/PC_Gamer_Fixe_Ryzen_7_1_gwqrt5.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438102/PC_Gamer_Fixe_Ryzen_7_2_yi4vsv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438104/PC_Gamer_Fixe_Ryzen_7_3_okx6sb.png" }
         ]
       }
     ],
@@ -416,9 +457,7 @@
       { "categorySlug": "electronique", "name": "Ordinateurs portables", "slug": "ordinateurs-portables", "isActive": true },
       { "categorySlug": "electronique", "name": "PC", "slug": "pc", "isActive": true },
       { "categorySlug": "electronique", "name": "Smartphones", "slug": "smartphones", "isActive": true },
-      { "categorySlug": "electronique", "name": "Apple", "slug": "apple", "isActive": true },
-      { "categorySlug": "mobilier", "name": "Chaises", "slug": "chaises", "isActive": true },
-      { "categorySlug": "mobilier", "name": "Bureau", "slug": "bureau", "isActive": true }
+      { "categorySlug": "electronique", "name": "Apple", "slug": "apple", "isActive": true }
     ]
   }
 }

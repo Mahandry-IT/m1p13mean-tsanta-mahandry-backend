@@ -1,11 +1,11 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.0",
   "seeds": {
     "roles": [
       {
         "_id": "6990aefb7053d5bc9001e424",
         "value": "Administrator",
-        "homepage": "/admin/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "user:list", "description": "Récupérer la liste des utilisateurs" },
@@ -20,13 +20,20 @@
           { "name": "store:deactivate", "description": "Désactiver une boutique" },
           { "name": "store:reject", "description": "Rejeter une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
-          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" },
+          { "name": "order:add", "description": "Ajouter au panier" },
+          { "name": "order:view", "description": "Voir panier" },
+          { "name": "order:confirm", "description": "Confirmer commande" },
+          { "name": "order:cancel", "description": "Annuler commande" },
+          { "name": "order:list_own", "description": "Voir commandes" },
+          { "name": "order:get", "description": "Voir détail commande" },
+          { "name": "order:update_status", "description": "Changer statut commande" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e425",
         "value": "Manager",
-        "homepage": "/manager/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "edit:product", "description": "Modifier des produits" },
@@ -34,17 +41,24 @@
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" },
           { "name": "stock:add_movement", "description": "Ajouter un mouvement de stock" },
-          { "name": "stock:view", "description": "Voir les stocks et mouvements" }
+          { "name": "stock:view", "description": "Voir les stocks et mouvements" },
+          { "name": "order:view", "description": "Voir commandes boutique" },
+          { "name": "order:get", "description": "Voir détail commande" },
+          { "name": "order:update_status", "description": "Changer statut commande" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
-        "homepage": "/customer/dashboard",
+        "homepage": "/dashboard",
         "features": [
           { "name": "get:products", "description": "Voir les produits" },
-          { "name": "create:order", "description": "Créer des commandes" },
-          { "name": "get:orders", "description": "Voir mes commandes" },
+          { "name": "order:add", "description": "Ajouter au panier" },
+          { "name": "order:view", "description": "Voir son panier" },
+          { "name": "order:confirm", "description": "Confirmer commande" },
+          { "name": "order:cancel", "description": "Annuler commande" },
+          { "name": "order:list_own", "description": "Voir ses commandes" },
+          { "name": "order:get", "description": "Voir détail commande" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
           { "name": "store:get", "description": "Voir le détail d'une boutique" }
@@ -106,6 +120,20 @@
           "phone": "+33555666777",
           "birthday": "1988-11-03T00:00:00.000Z",
           "gender": "Homme"
+        }
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000004",
+        "username": "customer-tsanta",
+        "email": "tsantarandriamihary@gmail.com",
+        "password": "tsanta123!",
+        "roleId": "6990aefb7053d5bc9001e427",
+        "profile": {
+          "firstName": "Tsanta",
+          "lastName": "Bernardette",
+          "phone": "+33555666777",
+          "birthday": "1988-11-03T00:00:00.000Z",
+          "gender": "Femme"
         }
       }
     ],
@@ -278,8 +306,8 @@
       {
         "label": "Boutiques",
         "path": "/admin/stores",
-        "icon": "group",
-        "order": 10,
+        "icon": "storefront",
+        "order": 30,
         "roles": ["6990aefb7053d5bc9001e424"],
         "parentPath": "/admin"
       },
@@ -287,7 +315,7 @@
         "label": "Stocks",
         "path": "/admin/stocks",
         "icon": "inventory_2",
-        "order": 30,
+        "order": 40,
         "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
         "parentPath": "/admin"
       },
@@ -295,7 +323,7 @@
         "label": "Produits",
         "path": "/admin/products",
         "icon": "shopping_bag",
-        "order": 40,
+        "order": 50,
         "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
         "parentPath": "/admin"
       },
@@ -303,7 +331,7 @@
         "label": "Profil",
         "path": "/admin/profile",
         "icon": "account_circle",
-        "order": 50,
+        "order": 60,
         "roles": [
           "6990aefb7053d5bc9001e424",
           "6990aefb7053d5bc9001e425",

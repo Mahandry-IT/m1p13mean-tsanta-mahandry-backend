@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "861959b7-0428-49f2-adac-b5410adcbe90",
+    "_postman_id": "7bcb2bac-7c68-424f-a285-8a4678583903",
     "name": "MEAN",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "39761596"
@@ -239,7 +239,7 @@
             "auth": {
               "type": "noauth"
             },
-            "method": "GET",
+            "method": "PATCH",
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/auth/activate/{{TOKEN}}",
@@ -290,7 +290,7 @@
         {
           "name": "2) New Password",
           "request": {
-            "method": "POST",
+            "method": "PATCH",
             "header": [],
             "body": {
               "mode": "raw",
@@ -350,8 +350,13 @@
             },
             "url": {
               "raw": "{{LOCAL}}/auth/login",
-              "host": ["{{LOCAL}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -387,8 +392,13 @@
             },
             "url": {
               "raw": "{{LOCAL}}/auth/login",
-              "host": ["{{LOCAL}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -436,8 +446,13 @@
             },
             "url": {
               "raw": "{{LOCAL}}/stores/request",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores", "request"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores",
+                "request"
+              ]
             }
           },
           "response": []
@@ -459,8 +474,12 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores"
+              ]
             }
           },
           "response": []
@@ -482,12 +501,25 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores?status=pending&page=1&limit=10",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores"],
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores"
+              ],
               "query": [
-                { "key": "status", "value": "pending" },
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" }
+                {
+                  "key": "status",
+                  "value": "pending"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             }
           },
@@ -551,8 +583,13 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores/my",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores", "my"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores",
+                "my"
+              ]
             }
           },
           "response": []
@@ -574,8 +611,13 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores/{{storeId}}",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores", "{{storeId}}"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores",
+                "{{storeId}}"
+              ]
             }
           },
           "response": []
@@ -597,8 +639,14 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores/{{storeId}}/activate",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores", "{{storeId}}", "activate"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores",
+                "{{storeId}}",
+                "activate"
+              ]
             }
           },
           "response": []
@@ -620,8 +668,14 @@
             "header": [],
             "url": {
               "raw": "{{LOCAL}}/stores/{{storeId}}/deactivate",
-              "host": ["{{LOCAL}}"],
-              "path": ["stores", "{{storeId}}", "deactivate"]
+              "host": [
+                "{{LOCAL}}"
+              ],
+              "path": [
+                "stores",
+                "{{storeId}}",
+                "deactivate"
+              ]
             }
           },
           "response": []

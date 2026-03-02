@@ -1,5 +1,6 @@
 const StoreService = require('../services/store.service');
 const { success, error } = require('../utils/response');
+const { getPagination } = require('../utils/pagination');
 
 module.exports = {
 
@@ -17,11 +18,12 @@ module.exports = {
     // GET /api/stores — liste boutiques avec filtres
     async listAll(req, res) {
         try {
+            const { page, limit } = getPagination(req.query, { defaultPage: 1, defaultLimit: 20, maxLimit: 100 });
             const filters = {
                 status: req.query.status,
                 isActive: req.query.isActive !== undefined ? req.query.isActive === 'true' : undefined,
-                page: parseInt(req.query.page) || 1,
-                limit: parseInt(req.query.limit) || 20
+                page,
+                limit
             };
             const result = await StoreService.listAll(filters);
             return success(res, {

@@ -1,9 +1,44 @@
 const User = require('../models/user.model');
 const { upload } = require('../utils/upload');
-const { env } = require('../config/env');
+const { getPagination, buildPaginationMeta } = require('../utils/pagination');
 
 async function list() {
   return User.find().lean(false);
+}
+
+async function listPaginated(filters = {}) {
+  const query = {};
+
+  // filtres optionnels
+  if (filters.status) query.status = filters.status;
+  if (filters.roleId) query.roleId = filters.roleId;
+
+  // recherche simple (username/email)
+  if (filters.q) {
+    const q = String(filters.q).trim();
+    if (q) {
+      query.$or = [
+        { username: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } },
+      ];
+    }
+  }
+
+  const { page, limit, skip } = getPagination(filters, { defaultPage: 1, defaultLimit: 20, maxLimit: 100 });
+
+  const [users, total] = await Promise.all([
+    User.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(false),
+    User.countDocuments(query)
+  ]);
+
+  return {
+    users,
+    pagination: buildPaginationMeta({ total, page, limit })
+  };
 }
 
 async function getById(id) {
@@ -47,4 +82,10 @@ async function create(userId, profileData, file) {
   return user;
 }
 
-module.exports = { list, getById, create, update, remove };
+async function checkProfile({email}) {
+  const user = await User.findOne({email});
+  const value = !!(user && user.profile);
+  return { hasProfile: value}
+}
+
+module.exports = { list, listPaginated, getById, create, update, remove, checkProfile };

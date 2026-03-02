@@ -2,8 +2,13 @@ const Joi = require('joi');
 const parsePhoneNumberFromString = require("libphonenumber-js");
 
 const userUpdateSchema = Joi.object({
-    name: Joi.string().min(2).max(100).optional(),
-    roles: Joi.array().items(Joi.string()).optional()
+    username: Joi.string().min(2).max(50).optional(),
+    email: Joi.string()
+        .email({ tlds: { allow: false }, ignoreLength: true })
+        .messages({ 'string.email': 'Email invalide, vérifiez le format (ex: nom@domaine.tld)' })
+        .optional(),
+    roleId: Joi.string().hex().length(24).optional(),
+    status: Joi.string().valid('active', 'inactive', 'suspended', 'pending').optional(),
 }).min(1);
 
 const userIdParamSchema = Joi.object({
@@ -29,8 +34,16 @@ const userCreatedProfileSchema = Joi.object({
     gender: Joi.string().valid('Homme', 'Femme', 'Non défini').required()
 });
 
+const checkProfileSchema = Joi.object({
+    email: Joi.string()
+        .email({ tlds: { allow: false }, ignoreLength: true })
+        .messages({ 'string.email': 'Email invalide, vérifiez le format (ex: nom@domaine.tld)' })
+        .required()
+});
+
 module.exports = {
     userUpdateSchema,
     userIdParamSchema,
+    checkProfileSchema,
     userCreatedProfileSchema
 };

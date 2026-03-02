@@ -26,7 +26,8 @@
           { "name": "order:cancel", "description": "Annuler commande" },
           { "name": "order:list_own", "description": "Voir commandes" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "role:list", "description": "Voir la liste des rôles" }
         ]
       },
       {

@@ -49,6 +49,7 @@ function validate(source, schema) {
     const data = req[source];
     const { error, value } = schema.validate(data, { abortEarly: false, stripUnknown: true });
     if (error) {
+      console.error(formatJoiErrors(error));
       return res.status(400).json({ success: false, message: 'Validation échouée', details: formatJoiErrors(error) });
     }
     // Assigner les valeurs nettoyées

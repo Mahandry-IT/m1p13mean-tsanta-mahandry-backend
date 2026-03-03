@@ -27,7 +27,15 @@
           { "name": "order:cancel", "description": "Annuler commande" },
           { "name": "order:list_own", "description": "Voir commandes" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "role:list", "description": "Voir la liste des rôles" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" }
         ]
       },
       {
@@ -44,13 +52,21 @@
           { "name": "stock:view", "description": "Voir les stocks et mouvements" },
           { "name": "order:view", "description": "Voir commandes boutique" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" },
+          { "name": "promotion:manage", "description": "Gérer les promotions" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
-        "homepage": "/dashboard",
+        "homepage": "/buy-product",
         "features": [
           { "name": "get:products", "description": "Voir les produits" },
           { "name": "order:add", "description": "Ajouter au panier" },
@@ -61,7 +77,13 @@
           { "name": "order:get", "description": "Voir détail commande" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
-          { "name": "store:get", "description": "Voir le détail d'une boutique" }
+          { "name": "store:get", "description": "Voir le détail d'une boutique" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" }
         ]
       }
     ],
@@ -80,97 +102,129 @@
           "gender": "Non défini"
         }
       },
+
       {
         "_id": "65f1c1a5e1c2a9b001000001",
-        "username": "owner-centre",
-        "email": "owner.centre@example.com",
+        "username": "MamyRakoto",
+        "email": "mamy.rakotoarivelo@gmail.com",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!",
+        "password": "Wn89g9sEVWRI",
         "profile": {
-          "firstName": "Jean",
-          "lastName": "Dupont",
-          "phone": "+33123456789",
-          "birthday": "1985-01-15T00:00:00.000Z",
+          "firstName": "Mamy",
+          "lastName": "Rakotoarivelo",
+          "phone": "+261341234567",
+          "birthday": "1990-04-12T00:00:00.000Z",
           "gender": "Homme"
         }
       },
       {
         "_id": "65f1c1a5e1c2a9b001000002",
-        "username": "owner-nord",
-        "email": "owner.nord@example.com",
+        "username": "FanjaRandria",
+        "email": "fanja.randrianasolo@gmail.com",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!",
+        "password": "zqj0N9apXV81",
         "profile": {
-          "firstName": "Claire",
-          "lastName": "Martin",
-          "phone": "+33987654321",
-          "birthday": "1992-06-22T00:00:00.000Z",
+          "firstName": "Fanja",
+          "lastName": "Randrianasolo",
+          "phone": "+261331112233",
+          "birthday": "1993-09-03T00:00:00.000Z",
           "gender": "Femme"
         }
       },
       {
         "_id": "65f1c1a5e1c2a9b001000003",
-        "username": "owner-sud",
-        "email": "owner.sud@example.com",
+        "username": "TahinaRaz",
+        "email": "tahina.razanadrakoto@gmail.com",
         "roleId": "6990aefb7053d5bc9001e425",
-        "password": "ChangeMe123!",
+        "password": "Uy6TcF77sg02",
         "profile": {
-          "firstName": "Lucas",
-          "lastName": "Bernard",
-          "phone": "+33555666777",
-          "birthday": "1988-11-03T00:00:00.000Z",
+          "firstName": "Tahina",
+          "lastName": "Razanadrakoto",
+          "phone": "+261321998877",
+          "birthday": "1989-11-18T00:00:00.000Z",
           "gender": "Homme"
         }
       },
+
       {
         "_id": "65f1c1a5e1c2a9b001000004",
-        "username": "customer-tsanta",
+        "username": "TsantaRandria",
         "email": "tsantarandriamihary@gmail.com",
-        "password": "tsanta123!",
+        "password": "j8jvyO59bE29",
         "roleId": "6990aefb7053d5bc9001e427",
         "profile": {
           "firstName": "Tsanta",
-          "lastName": "Bernardette",
-          "phone": "+33555666777",
-          "birthday": "1988-11-03T00:00:00.000Z",
+          "lastName": "Randriamihary",
+          "phone": "+261377969564",
+          "birthday": "1998-02-09T00:00:00.000Z",
           "gender": "Femme"
+        }
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000005",
+        "username": "KantoAndria",
+        "email": "kanto.andriamalala@gmail.com",
+        "password": "Nq38o8kaibbi",
+        "roleId": "6990aefb7053d5bc9001e427",
+        "profile": {
+          "firstName": "Kanto",
+          "lastName": "Andriamalala",
+          "phone": "+261381234890",
+          "birthday": "1999-07-21T00:00:00.000Z",
+          "gender": "Femme"
+        }
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b001000006",
+        "username": "HeryRakoto",
+        "email": "hery.rakotomalala@gmail.com",
+        "password": "acJ892bJqI4z",
+        "roleId": "6990aefb7053d5bc9001e427",
+        "profile": {
+          "firstName": "Hery",
+          "lastName": "Rakotomalala",
+          "phone": "+261341119900",
+          "birthday": "1997-12-04T00:00:00.000Z",
+          "gender": "Homme"
         }
       }
     ],
+
     "stores": [
       {
-        "name": "Magasin Centre-Ville",
-        "address": "123 Rue Principale, Paris",
-        "phone": "+33123456789",
-        "email": "centerville@store.com",
-        "userId": "65f1c1a5e1c2a9b001000001",
+        "name": "Ankoay",
+        "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
+        "phone": "+261341234567",
+        "email": "ankoay.akoor@gmail.com",
+        "userEmail": "mamy.rakotoarivelo@gmail.com",
         "status": "active"
       },
       {
-        "name": "Magasin Quartier Nord",
-        "address": "456 Avenue du Nord, Lyon",
-        "phone": "+33987654321",
-        "email": "nord@store.com",
-        "userId": "65f1c1a5e1c2a9b001000002",
+        "name": "Ivanjo",
+        "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
+        "phone": "+261331112233",
+        "email": "ivanjo.akoor@gmail.com",
+        "userEmail": "fanja.randrianasolo@gmail.com",
         "status": "active"
       },
       {
-        "name": "Magasin Sud",
-        "address": "789 Boulevard du Sud, Marseille",
-        "phone": "+33555666777",
-        "email": "sud@store.com",
-        "userId": "65f1c1a5e1c2a9b001000003",
+        "name": "Tahina",
+        "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
+        "phone": "+261321998877",
+        "email": "tahina.akoor@gmail.com",
+        "userEmail": "tahina.razanadrakoto@gmail.com",
         "status": "active"
       }
     ],
+
     "products": [
       {
         "_id": "6990aefb7053d5bc9001e428",
         "name": "Laptop Dell XPS 15",
-        "description": "Ordinateur portable haute performance",
+        "description": "Ordinateur portable haut de gamme conçu pour la performance et la mobilité, doté d’un écran haute résolution, d’une puissance de calcul avancée et d’un design premium adapté aux professionnels et créateurs.",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Ordinateurs portables" },
               { "name": "PC" }
@@ -178,17 +232,18 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/dell-xps-1.jpg" },
-          { "link": "https://example.com/dell-xps-2.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_1_byrvwq.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436945/Laptop_Dell_XPS_15_2_x7thaz.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_3_h9srch.png" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e429",
         "name": "iPhone 15 Pro",
-        "description": "Smartphone Apple dernière génération",
+        "description": "Smartphone premium conçu par Apple, offrant des performances exceptionnelles, un système photo avancé et un design en titane élégant pour une expérience mobile fluide et haut de gamme.",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Smartphones" },
               { "name": "Apple" }
@@ -196,83 +251,402 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/iphone-15-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437110/iPhone_15_Pro_1_f3wyjv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437111/iPhone_15_Pro_2_linm10.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437108/iPhone_15_Pro_3_hdgm4p.png" }
         ]
       },
       {
-        "_id": "6990aefb7053d5bc9001e42a",
-        "name": "Chaise de Bureau Ergonomique",
-        "description": "Confort optimal pour longues sessions",
+        "_id": "6990aefb7053d5bc9001e42b",
+        "name": "MacBook Air M2 13 pouces",
+        "description": "Ultrabook léger et silencieux équipé de la puce Apple M2, offrant une autonomie remarquable, des performances fluides et un design fin idéal pour le travail nomade et la productivité quotidienne.",
         "categories": [
           {
-            "name": "Mobilier",
+            "name": "Electronique",
             "types": [
-              { "name": "Chaises" },
-              { "name": "Bureau" }
+              { "name": "Ordinateurs portables" },
+              { "name": "Apple" }
             ]
           }
         ],
         "images": [
-          { "link": "https://example.com/chair-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437400/MacBook_Air_M2_13_pouces_1_k09cqo.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437401/MacBook_Air_M2_13_pouces_2_d2ya1l.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437403/MacBook_Air_M2_13_pouces_3_naadil.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42c",
+        "name": "Samsung Galaxy S24",
+        "description": "Smartphone Android de dernière génération offrant un écran immersif, un appareil photo haute précision et des performances puissantes, idéal pour les utilisateurs exigeants en mobilité et multimédia.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "Smartphones" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437849/Samsung_Galaxy_S24_1_ynczow.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437843/Samsung_Galaxy_S24_2_xtman2.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437845/Samsung_Galaxy_S24_3_y9iovf.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42d",
+        "name": "PC Gamer Fixe Ryzen 7",
+        "description": "PC de bureau haute performance équipé d’un processeur Ryzen 7, conçu pour le gaming intensif, le streaming et la création de contenu, avec une puissance graphique et une évolutivité optimales.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "PC" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438107/PC_Gamer_Fixe_Ryzen_7_1_gwqrt5.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438102/PC_Gamer_Fixe_Ryzen_7_2_yi4vsv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438104/PC_Gamer_Fixe_Ryzen_7_3_okx6sb.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42e",
+        "name": "Jus de fruit passion 1L",
+        "description": "Jus de fruit passion 100% naturel, sans sucre ajouté, en bouteille de 1 litre. Parfait pour une boisson rafraîchissante et pleine de saveurs exotiques, idéale pour les moments de détente ou les repas en famille.",
+        "categories": [
+          { "name": "Alimentation", "types": [{ "name": "Boissons" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521116/ceres-passion_hnibdw.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42f",
+        "name": "Riz de luxe Makalioka 5kg ",
+        "description": "Riz blanc de qualité supérieure, variété Makalioka, conditionné en sac de 5 kg. Idéal pour les repas quotidiens ou les occasions spéciales, offrant une texture moelleuse et un goût délicieux à chaque bouchée.",
+        "categories": [
+          { "name": "Alimentation", "types": [{ "name": "epicerie" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521204/riz-de-luxe-makalioka-5kg_zvjy0n.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e430",
+        "name": "Café Arabica grain 250g",
+        "description": "Café Arabica en grains, conditionné en paquet de 250g. Parfait pour les amateurs de café qui apprécient une saveur riche et aromatique, idéal pour préparer un café frais et savoureux à la maison ou au bureau.",
+        "categories": [
+          { "name": "Alimentation", "types": [{ "name": "Boissons" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521389/caf%C3%A9-arabica-250g_loupv4.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e431",
+        "name": "Shampoing Aloe Vera 400ml",
+        "description": "Shampoing douceur à l'aloe vera, adapté à tous types de cheveux, conditionné en flacon de 400ml. Formulé pour nettoyer en douceur tout en nourrissant les cheveux, laissant une sensation de fraîcheur et de vitalité après chaque utilisation.",
+        "categories": [
+          { "name": "Beaute", "types": [{ "name": "Cheveux" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521497/shampooing-pour-tous-types-de-ch_1_rsutjo.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521494/shampooing-pour-tous-types-de-ch_2_nrdbee.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521498/shampooing-pour-tous-types-de-ch_3_lzo5oj.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e432",
+        "name": "Savon Douche Vanille 500ml",
+        "description": "Savon douche parfum vanille, conditionné en flacon de 500ml. Formulé pour nettoyer et hydrater la peau en douceur, offrant une expérience sensorielle agréable grâce à son parfum gourmand de vanille.",
+        "categories": [
+          { "name": "Beaute", "types": [{ "name": "Corps" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521697/savon-douche-vanille-500ml_1_paigyj.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521696/savon-douche-vanille_2_clp5xo.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e433",
+        "name": "T-shirt Cotton Basic",
+        "description": "T-shirt coton, coupe classique, disponible en couleur blanche. Confortable et polyvalent, idéal pour un look décontracté au quotidien, offrant une sensation de douceur et de respirabilité grâce à sa composition en coton de qualité.",
+        "categories": [
+          { "name": "Mode", "types": [{ "name": "vetements" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521845/T-shirt-coton_1_rif1co.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772521846/T-shirt-coton_2_kpzycb.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e434",
+        "name": "Chaussures Sneakers Urban",
+        "description": "Sneakers urbaines confort. Design moderne et polyvalent, parfaites pour un style décontracté en ville, offrant un confort optimal grâce à leur semelle rembourrée et leur tige respirante.",
+        "categories": [
+          { "name": "Mode", "types": [{ "name": "Chaussures" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772522031/urban_1_unj3qj.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772522029/urban_2_bhu7bh.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e435",
+        "name": "JBL Live 770NC",
+        "description": "Casque audio sans fil JBL Live 770NC avec réduction de bruit active, offrant un son puissant et immersif, une autonomie longue durée et un confort optimal pour une expérience d'écoute exceptionnelle.",
+        "categories": [
+          { "name": "electronique", "types": [{ "name": "Audio" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772522228/JBL-live-700NC_i8cpto.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e436",
+        "name": "Clé USB 64GB SanDisk",
+        "description": "Clé USB SanDisk de 64GB, offrant une solution de stockage portable et fiable pour vos fichiers, photos et vidéos. Avec des vitesses de transfert rapides et une conception compacte.",
+        "categories": [
+          { "name": "electronique", "types": [{ "name": "Accessoires" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772522319/sandisk-64gb-usb-flash_palult.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e437",
+        "name": "Bouilloire Électrique 1.7L",
+        "description": "Bouilloire électrique d'une capacité de 1.7L, idéale pour faire bouillir de l'eau rapidement et en toute sécurité. Avec des fonctionnalités pratiques telles que l'arrêt automatique et une résistance cachée pour un nettoyage facile.",
+        "categories": [
+          { "name": "Maison", "types": [{ "name": "Cuisine" }] }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772522421/tefal-boilloire_dnppqh.png" }
         ]
       }
     ],
+
     "productStoreData": [
       {
         "productId": "6990aefb7053d5bc9001e428",
-        "storeEmail": "centerville@store.com",
-        "currentPrice": 1299.99,
+        "storeEmail": "ankoay.akoor@gmail.com",
+        "currentPrice": 5799000,
         "priceHistory": [
-          { "price": 1499.99, "updatedAt": "2024-01-01T00:00:00Z" },
-          { "price": 1299.99, "updatedAt": "2024-01-15T00:00:00Z" }
+          { "price": 5999000, "updatedAt": "2026-01-10T00:00:00Z" },
+          { "price": 5799000, "updatedAt": "2026-02-05T00:00:00Z" }
         ],
         "promotions": [
           {
-            "discount": 200.00,
-            "description": "Soldes d'hiver",
-            "startDate": "2024-01-01T00:00:00Z",
-            "endDate": "2024-01-31T23:59:59Z",
+            "discount": 50,
+            "description": "Promo rentrée",
+            "startDate": "2026-09-01T00:00:00Z",
+            "endDate": "2026-09-30T23:59:59Z",
             "isActive": false
           }
         ]
       },
       {
-        "productId": "6990aefb7053d5bc9001e428",
-        "storeEmail": "nord@store.com",
-        "currentPrice": 1349.99,
-        "priceHistory": [
-          { "price": 1349.99, "updatedAt": "2024-01-01T00:00:00Z" }
-        ],
-        "promotions": []
-      },
-      {
         "productId": "6990aefb7053d5bc9001e429",
-        "storeEmail": "centerville@store.com",
-        "currentPrice": 1199.99,
+        "storeEmail": "ankoay.akoor@gmail.com",
+        "currentPrice": 6299000,
         "priceHistory": [
-          { "price": 1199.99, "updatedAt": "2024-01-01T00:00:00Z" }
+          { "price": 6499000, "updatedAt": "2026-01-12T00:00:00Z" },
+          { "price": 6299000, "updatedAt": "2026-03-01T00:00:00Z" }
         ],
         "promotions": [
           {
-            "discount": 100.00,
-            "description": "Promotion printemps",
-            "startDate": "2024-02-01T00:00:00Z",
-            "endDate": "2024-02-28T23:59:59Z",
+            "discount": 75,
+            "description": "Promo week-end",
+            "startDate": "2027-06-10T00:00:00Z",
+            "endDate": "2027-06-12T23:59:59Z",
             "isActive": true
           }
         ]
       },
       {
-        "productId": "6990aefb7053d5bc9001e42a",
-        "storeEmail": "centerville@store.com",
-        "currentPrice": 299.99,
+        "productId": "6990aefb7053d5bc9001e42b",
+        "storeEmail": "ankoay.akoor@gmail.com",
+        "currentPrice": 4999000,
         "priceHistory": [
-          { "price": 349.99, "updatedAt": "2024-01-01T00:00:00Z" },
-          { "price": 299.99, "updatedAt": "2024-02-01T00:00:00Z" }
+          { "price": 5199000, "updatedAt": "2026-02-01T00:00:00Z" },
+          { "price": 4999000, "updatedAt": "2026-02-20T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e42c",
+        "storeEmail": "ankoay.akoor@gmail.com",
+        "currentPrice": 3999000,
+        "priceHistory": [
+          { "price": 4099000, "updatedAt": "2026-01-05T00:00:00Z" },
+          { "price": 3999000, "updatedAt": "2026-01-28T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 30,
+            "description": "Coupon",
+            "startDate": "2026-11-01T00:00:00Z",
+            "endDate": "2026-11-15T23:59:59Z",
+            "isActive": false
+          }
+        ]
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e42d",
+        "storeEmail": "ankoay.akoor@gmail.com",
+        "currentPrice": 4599000,
+        "priceHistory": [
+          { "price": 4799000, "updatedAt": "2026-03-01T00:00:00Z" },
+          { "price": 4599000, "updatedAt": "2026-03-03T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+
+      {
+        "productId": "6990aefb7053d5bc9001e42e",
+        "storeEmail": "ivanjo.akoor@gmail.com",
+        "currentPrice": 8500,
+        "priceHistory": [
+          { "price": 9000, "updatedAt": "2026-01-08T00:00:00Z" },
+          { "price": 8500, "updatedAt": "2026-02-07T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 10,
+            "description": "Promo boisson",
+            "startDate": "2027-12-01T00:00:00Z",
+            "endDate": "2027-12-20T23:59:59Z",
+            "isActive": true
+          }
+        ]
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e42f",
+        "storeEmail": "ivanjo.akoor@gmail.com",
+        "currentPrice": 68000,
+        "priceHistory": [
+          { "price": 70000, "updatedAt": "2026-01-15T00:00:00Z" },
+          { "price": 68000, "updatedAt": "2026-03-02T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e430",
+        "storeEmail": "ivanjo.akoor@gmail.com",
+        "currentPrice": 24000,
+        "priceHistory": [
+          { "price": 26000, "updatedAt": "2026-02-10T00:00:00Z" },
+          { "price": 24000, "updatedAt": "2026-03-01T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 15,
+            "description": "Promo café",
+            "startDate": "2026-10-01T00:00:00Z",
+            "endDate": "2026-10-31T23:59:59Z",
+            "isActive": false
+          }
+        ]
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e431",
+        "storeEmail": "ivanjo.akoor@gmail.com",
+        "currentPrice": 18000,
+        "priceHistory": [
+          { "price": 19500, "updatedAt": "2026-01-20T00:00:00Z" },
+          { "price": 18000, "updatedAt": "2026-02-01T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e432",
+        "storeEmail": "ivanjo.akoor@gmail.com",
+        "currentPrice": 16500,
+        "priceHistory": [
+          { "price": 17500, "updatedAt": "2026-02-05T00:00:00Z" },
+          { "price": 16500, "updatedAt": "2026-03-03T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 5,
+            "description": "Mini promo",
+            "startDate": "2027-03-01T00:00:00Z",
+            "endDate": "2027-03-10T23:59:59Z",
+            "isActive": true
+          }
+        ]
+      },
+
+      {
+        "productId": "6990aefb7053d5bc9001e433",
+        "storeEmail": "tahina.akoor@gmail.com",
+        "currentPrice": 25000,
+        "priceHistory": [
+          { "price": 27000, "updatedAt": "2026-01-05T00:00:00Z" },
+          { "price": 25000, "updatedAt": "2026-01-25T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e434",
+        "storeEmail": "tahina.akoor@gmail.com",
+        "currentPrice": 98000,
+        "priceHistory": [
+          { "price": 105000, "updatedAt": "2026-02-01T00:00:00Z" },
+          { "price": 98000, "updatedAt": "2026-03-03T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 20,
+            "description": "Promo chaussures",
+            "startDate": "2026-12-01T00:00:00Z",
+            "endDate": "2026-12-31T23:59:59Z",
+            "isActive": false
+          }
+        ]
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e435",
+        "storeEmail": "tahina.akoor@gmail.com",
+        "currentPrice": 155000,
+        "priceHistory": [
+          { "price": 165000, "updatedAt": "2026-01-18T00:00:00Z" },
+          { "price": 155000, "updatedAt": "2026-02-25T00:00:00Z" }
+        ],
+        "promotions": []
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e436",
+        "storeEmail": "tahina.akoor@gmail.com",
+        "currentPrice": 12000,
+        "priceHistory": [
+          { "price": 13000, "updatedAt": "2026-01-02T00:00:00Z" },
+          { "price": 12000, "updatedAt": "2026-02-04T00:00:00Z" }
+        ],
+        "promotions": [
+          {
+            "discount": 3,
+            "description": "Promo accessoires",
+            "startDate": "2027-08-01T00:00:00Z",
+            "endDate": "2027-08-15T23:59:59Z",
+            "isActive": true
+          }
+        ]
+      },
+      {
+        "productId": "6990aefb7053d5bc9001e437",
+        "storeEmail": "tahina.akoor@gmail.com",
+        "currentPrice": 89000,
+        "priceHistory": [
+          { "price": 95000, "updatedAt": "2026-02-12T00:00:00Z" },
+          { "price": 89000, "updatedAt": "2026-03-01T00:00:00Z" }
         ],
         "promotions": []
       }
     ],
+
     "menus": [
       {
         "label": "Tableau de bord",
@@ -281,8 +655,7 @@
         "order": 10,
         "roles": [
           "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425",
-          "6990aefb7053d5bc9001e427"
+          "6990aefb7053d5bc9001e425"
         ],
         "parentPath": null
       },
@@ -309,34 +682,6 @@
         "icon": "storefront",
         "order": 30,
         "roles": ["6990aefb7053d5bc9001e424"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Stocks",
-        "path": "/admin/stocks",
-        "icon": "inventory_2",
-        "order": 40,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Produits",
-        "path": "/admin/products",
-        "icon": "shopping_bag",
-        "order": 50,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Profil",
-        "path": "/admin/profile",
-        "icon": "account_circle",
-        "order": 60,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425",
-          "6990aefb7053d5bc9001e427"
-        ],
         "parentPath": "/admin"
       },
 
@@ -366,12 +711,21 @@
       },
       {
         "label": "Produits",
-        "path": "/manager/products",
+        "path": "my-product",
         "icon": "shopping_bag",
         "order": 30,
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
+      {
+        "label": "Promotions",
+        "path": "promotions",
+        "icon": "money_range",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+
 
       {
         "label": "Espace client",
@@ -382,21 +736,74 @@
         "parentPath": null
       },
       {
-        "label": "Produits",
-        "path": "/customer/products",
-        "icon": "shopping_bag",
+        "label": "Mes commandes",
+        "path": "/customer/orders",
+        "icon": "receipt_long",
         "order": 10,
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
+
+
       {
-        "label": "Mes commandes",
-        "path": "/customer/orders",
-        "icon": "receipt_long",
-        "order": 20,
+        "label": "Catégories",
+        "path": "/categories",
+        "icon": "category",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Type",
+        "path": "/types",
+        "icon": "topic",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/products",
+        "icon": "shopping_bag",
+        "order": 50,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/buy-product",
+        "icon": "shopping_bag",
+        "order": 60,
         "roles": ["6990aefb7053d5bc9001e427"],
-        "parentPath": "/customer"
+        "parentPath": null
       }
+    ],
+    "categories": [
+      { "name": "Électronique", "slug": "electronique", "description": "", "isActive": true },
+      { "name": "Alimentation", "slug": "alimentation", "description": "", "isActive": true },
+      { "name": "Beauté", "slug": "beaute", "description": "", "isActive": true },
+      { "name": "Mode", "slug": "mode", "description": "", "isActive": true },
+      { "name": "Maison", "slug": "maison", "description": "", "isActive": true }
+    ],
+
+    "types": [
+      { "categorySlug": "electronique", "name": "Ordinateurs portables", "slug": "ordinateurs-portables", "isActive": true },
+      { "categorySlug": "electronique", "name": "PC", "slug": "pc", "isActive": true },
+      { "categorySlug": "electronique", "name": "Smartphones", "slug": "smartphones", "isActive": true },
+      { "categorySlug": "electronique", "name": "Apple", "slug": "apple", "isActive": true },
+      { "categorySlug": "electronique", "name": "Audio", "slug": "audio", "isActive": true },
+      { "categorySlug": "electronique", "name": "Accessoires", "slug": "accessoires", "isActive": true },
+
+      { "categorySlug": "alimentation", "name": "Boissons", "slug": "boissons", "isActive": true },
+      { "categorySlug": "alimentation", "name": "Épicerie", "slug": "epicerie", "isActive": true },
+
+      { "categorySlug": "beaute", "name": "Cheveux", "slug": "cheveux", "isActive": true },
+      { "categorySlug": "beaute", "name": "Corps", "slug": "corps", "isActive": true },
+
+      { "categorySlug": "mode", "name": "Vêtements", "slug": "vetements", "isActive": true },
+      { "categorySlug": "mode", "name": "Chaussures", "slug": "chaussures", "isActive": true },
+
+      { "categorySlug": "maison", "name": "Cuisine", "slug": "cuisine", "isActive": true }
     ]
   }
 }

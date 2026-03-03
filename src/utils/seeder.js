@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
-const { Role, Store, Product, User, Menu } = require('../models');
+const { Role, Store, Product, User, Menu, Category, Type } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
 const bcrypt = require('bcryptjs');
@@ -104,19 +104,47 @@ class DatabaseSeeder {
         for (const storeData of stores) {
             const existingStore = await Store.findOne({ email: storeData.email });
 
-            // Déterminer l'utilisateur à lier: priorité à userId dans le JSON, sinon fallback via email
-            let userIdToAssign = null;
             let relatedUser = null;
+            let userIdToAssign = null;
+
+            const tryCastObjectId = (value) => {
+                if (!value) return null;
+                if (value instanceof mongoose.Types.ObjectId) return value;
+                if (typeof value === 'string' && mongoose.Types.ObjectId.isValid(value)) {
+                    return mongoose.Types.ObjectId.createFromHexString(value);
+                }
+                return null;
+            };
+
+            // 1) userId explicite
+            // Supporte: ObjectId, string hex 24, ou bien un _id string (schema User n'impose pas ObjectId)
             if (storeData.userId) {
-                relatedUser = await User.findById(storeData.userId);
+                // a) si c'est castable en ObjectId -> findById normal
+                const castedUserId = tryCastObjectId(storeData.userId);
+                if (castedUserId) {
+                    relatedUser = await User.findById(castedUserId);
+                } else {
+                    // b) sinon on tente un lookup exact sur _id (string)
+                    relatedUser = await User.findOne({ _id: storeData.userId });
+                }
                 userIdToAssign = relatedUser ? relatedUser._id : null;
             }
+
+            // 2) userEmail explicite
+            if (!userIdToAssign && storeData.userEmail) {
+                relatedUser = await User.findOne({ email: String(storeData.userEmail).toLowerCase().trim() });
+                userIdToAssign = relatedUser ? relatedUser._id : null;
+            }
+
+            // 3) fallback: email de la boutique
             if (!userIdToAssign) {
-                relatedUser = await User.findOne({ email: storeData.email });
+                relatedUser = await User.findOne({ email: String(storeData.email).toLowerCase().trim() });
                 userIdToAssign = relatedUser ? relatedUser._id : null;
             }
 
             const payload = { ...storeData, userId: userIdToAssign || null };
+            // On ne persiste pas userEmail dans Store
+            delete payload.userEmail;
 
             if (existingStore) {
                 await Store.findByIdAndUpdate(existingStore._id, payload);
@@ -132,7 +160,7 @@ class DatabaseSeeder {
                 const userInfo = relatedUser && relatedUser.email ? `${relatedUser.email} (${userIdToAssign.toString()})` : userIdToAssign.toString();
                 logger.info(`     ↪️  Lié à l'utilisateur ${userInfo}`);
             } else {
-                logger.info('     ↪️  Aucun utilisateur correspondant trouvé, userId = null');
+                logger.info(`     ↪️  Aucun utilisateur correspondant trouvé, userId = null (store.userId=${storeData.userId || 'n/a'}, store.userEmail=${storeData.userEmail || 'n/a'})`);
             }
         }
 
@@ -147,27 +175,75 @@ class DatabaseSeeder {
         let created = 0;
         let updated = 0;
 
-        for (const productData of products) {
-            // Générer des IDs pour les sous-documents
-            const categoriesWithIds = productData.categories.map(cat => ({
-                ...cat,
-                categoryId: new mongoose.Types.ObjectId(),
-                types: cat.types.map(type => ({
-                    ...type,
-                    typeId: new mongoose.Types.ObjectId()
-                }))
-            }));
+        const toSlug = (value) => String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
 
-            const imagesWithIds = productData.images.map(img => ({
+        // Cache simples
+        const categoryCache = new Map(); // slug -> Category
+        const typeCache = new Map(); // categoryId::typeSlug -> Type
+
+        const getCategoryBySlug = async (slug) => {
+            if (!slug) return null;
+            if (categoryCache.has(slug)) return categoryCache.get(slug);
+            const cat = await Category.findOne({ slug });
+            categoryCache.set(slug, cat || null);
+            return cat || null;
+        };
+
+        const getTypeByCategoryAndSlug = async (categoryId, typeSlug) => {
+            const key = `${String(categoryId)}::${typeSlug}`;
+            if (typeCache.has(key)) return typeCache.get(key);
+            const t = await Type.findOne({ categoryId, slug: typeSlug });
+            typeCache.set(key, t || null);
+            return t || null;
+        };
+
+        for (const productData of products) {
+            const imagesWithIds = (productData.images || []).map(img => ({
                 ...img,
                 imageId: new mongoose.Types.ObjectId()
+            }));
+
+            // Convertir categories(name/types.name) -> [{categoryId, typeIds}]
+            const categoriesMap = new Map(); // categoryId(str) -> Set(typeId)
+
+            for (const c of (productData.categories || [])) {
+                const categorySlug = toSlug(c?.name);
+                const categoryDoc = await getCategoryBySlug(categorySlug);
+                if (!categoryDoc) {
+                    logger.warn(`  ⚠️  Catégorie inconnue pour le produit ${productData.name}: ${c?.name}`);
+                    continue;
+                }
+
+                const catKey = String(categoryDoc._id);
+                if (!categoriesMap.has(catKey)) categoriesMap.set(catKey, new Set());
+
+                for (const t of (c.types || [])) {
+                    const typeSlug = toSlug(t?.name);
+                    const typeDoc = await getTypeByCategoryAndSlug(categoryDoc._id, typeSlug);
+                    if (!typeDoc) {
+                        logger.warn(`  ⚠️  Type inconnu pour le produit ${productData.name}: ${c?.name} -> ${t?.name}`);
+                        continue;
+                    }
+                    categoriesMap.get(catKey).add(String(typeDoc._id));
+                }
+            }
+
+            const categories = Array.from(categoriesMap.entries()).map(([catId, typeIdSet]) => ({
+                categoryId: new mongoose.Types.ObjectId(catId),
+                typeIds: Array.from(typeIdSet).map((tid) => new mongoose.Types.ObjectId(tid))
             }));
 
             const result = await Product.findOneAndUpdate(
                 { _id: productData._id },
                 {
                     ...productData,
-                    categories: categoriesWithIds,
+                    categories,
                     images: imagesWithIds,
                     storeData: productData.storeData || []
                 },
@@ -421,6 +497,126 @@ class DatabaseSeeder {
     }
 
     /**
+     * Seed des catégories
+     */
+    async seedCategories(categories) {
+        logger.info('\n🏷️ Seed des catégories...');
+        let created = 0;
+        let updated = 0;
+
+        for (const c of categories) {
+            const payload = {
+                name: c.name,
+                slug: c.slug,
+                description: c.description ?? '',
+                isActive: c.isActive ?? true,
+            };
+
+            const existing = await Category.findOne({ slug: payload.slug });
+            if (existing) {
+                await Category.findByIdAndUpdate(existing._id, payload, { runValidators: true });
+                updated++;
+                logger.info(`  🔄 Catégorie mise à jour: ${payload.slug}`);
+            } else {
+                await Category.create(payload);
+                created++;
+                logger.info(`  ✅ Catégorie créée: ${payload.slug}`);
+            }
+        }
+
+        logger.info(`✅ Catégories: ${created} créées, ${updated} mises à jour`);
+    }
+
+    /**
+     * Seed des types (type de catégorie)
+     * Attendu: [{ categorySlug, name, slug, isActive }]
+     */
+    async seedTypes(types) {
+        logger.info('\n🧩 Seed des types...');
+        let created = 0;
+        let updated = 0;
+
+        for (const t of types) {
+            const category = await Category.findOne({ slug: t.categorySlug });
+            if (!category) {
+                logger.warn(`  ⚠️  Catégorie introuvable (slug=${t.categorySlug}) pour le type ${t.name}. Skipping.`);
+                continue;
+            }
+
+            const payload = {
+                categoryId: category._id,
+                name: t.name,
+                slug: t.slug,
+                isActive: t.isActive ?? true,
+            };
+
+            const existing = await Type.findOne({ categoryId: category._id, slug: payload.slug });
+            if (existing) {
+                await Type.findByIdAndUpdate(existing._id, payload, { runValidators: true });
+                updated++;
+                logger.info(`  🔄 Type mis à jour: ${t.categorySlug}/${payload.slug}`);
+            } else {
+                await Type.create(payload);
+                created++;
+                logger.info(`  ✅ Type créé: ${t.categorySlug}/${payload.slug}`);
+            }
+        }
+
+        logger.info(`✅ Types: ${created} créés, ${updated} mis à jour`);
+    }
+
+    /**
+     * Construit automatiquement categories/types depuis les products legacy (embed)
+     * si categories/types ne sont pas fournis dans data.json
+     */
+    buildCategoriesAndTypesFromProducts(products = []) {
+        const toSlug = (value) => String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        const categoryMap = new Map(); // slug -> {name,slug,description,isActive}
+        const typeKeySet = new Set();
+        const types = [];
+
+        for (const p of products) {
+            const cats = Array.isArray(p.categories) ? p.categories : [];
+            for (const c of cats) {
+                const cName = c?.name;
+                if (!cName) continue;
+                const cSlug = toSlug(cName);
+                if (!cSlug) continue;
+
+                if (!categoryMap.has(cSlug)) {
+                    categoryMap.set(cSlug, { name: cName, slug: cSlug, description: '', isActive: true });
+                }
+
+                const tps = Array.isArray(c.types) ? c.types : [];
+                for (const t of tps) {
+                    const tName = t?.name;
+                    if (!tName) continue;
+                    const tSlug = toSlug(tName);
+                    if (!tSlug) continue;
+
+                    const key = `${cSlug}::${tSlug}`;
+                    if (typeKeySet.has(key)) continue;
+                    typeKeySet.add(key);
+
+                    types.push({ categorySlug: cSlug, name: tName, slug: tSlug, isActive: true });
+                }
+            }
+        }
+
+        return {
+            categories: Array.from(categoryMap.values()),
+            types,
+        };
+    }
+
+    /**
      * Exécute le seeding complet
      */
     async seed() {
@@ -456,6 +652,25 @@ class DatabaseSeeder {
                 await this.seedStores(this.seedData.seeds.stores);
             }
 
+            // Catégories / Types
+            const hasCategories = Array.isArray(this.seedData.seeds.categories) && this.seedData.seeds.categories.length > 0;
+            const hasTypes = Array.isArray(this.seedData.seeds.types) && this.seedData.seeds.types.length > 0;
+
+            // Si non fourni, on les construit depuis les produits legacy
+            if (!hasCategories || !hasTypes) {
+                const built = this.buildCategoriesAndTypesFromProducts(this.seedData.seeds.products || []);
+                if (!hasCategories) this.seedData.seeds.categories = built.categories;
+                if (!hasTypes) this.seedData.seeds.types = built.types;
+            }
+
+            if (this.seedData.seeds.categories) {
+                await this.seedCategories(this.seedData.seeds.categories);
+            }
+
+            if (this.seedData.seeds.types) {
+                await this.seedTypes(this.seedData.seeds.types);
+            }
+
             if (this.seedData.seeds.products) {
                 await this.seedProducts(this.seedData.seeds.products);
             }
@@ -487,16 +702,18 @@ class DatabaseSeeder {
      * Réinitialise complètement la base de données
      */
     async reset() {
-        logger.info('\n\u26a0\ufe0f  RESET de la base de donn\u00e9es...\n');
+        logger.info('\n⚠️  RESET de la base de données...\n');
 
         await Role.deleteMany({});
         await Store.deleteMany({});
         await Product.deleteMany({});
         await User.deleteMany({});
         await Menu.deleteMany({});
+        await Category.deleteMany({});
+        await Type.deleteMany({});
         await Migration.deleteMany({});
 
-        logger.info('\u2705 Base de donn\u00e9es r\u00e9initialis\u00e9e\n');
+        logger.info('✅ Base de données réinitialisée\n');
     }
 
     /**
@@ -525,4 +742,3 @@ class DatabaseSeeder {
 }
 
 module.exports = DatabaseSeeder;
-

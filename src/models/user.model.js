@@ -143,6 +143,7 @@ userSchema.methods.toJSON = function () {
         phone: this.profile?.phone || null,
         birthday: this.profile?.birthday || null,
         gender: this.profile?.gender || 'Non défini',
+        avatarUrl: this.profile?.avatarUrl || null
     },
     status: this.status,
     lastLoginAt: this.lastLoginAt || null,

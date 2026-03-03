@@ -42,7 +42,7 @@ async function listAll(filters = {}) {
 }
 
 
-// Lister mes boutiques 
+// Lister mes boutiques
 async function listByUser(userId, filters = {}) {
     const query = { userId };
 
@@ -175,10 +175,15 @@ async function reject(id) {
     return store;
 }
 
+async function list() {
+    return Store.find({}, { _id: 1, name: 1 }).lean(false);
+}
+
 module.exports = {
     requestStore,
     listAll,
     listByUser,
+    list,
     getById,
     activate,
     deactivate,

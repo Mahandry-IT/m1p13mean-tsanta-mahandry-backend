@@ -8,6 +8,10 @@ const orderPDFRoutes = require('./orderPDF.routes');
 const menuRoutes = require('./menu.routes');
 const roleRoutes = require('./role.routes');
 const dashboardRoutes = require('./dashboard.routes');
+const categoryRoutes = require('./category.routes');
+const typeRoutes = require('./type.routes');
+const productRoutes = require('./product.routes');
+const promotionRoutes = require('./promotion.routes');
 
 const router = Router();
 
@@ -24,5 +28,9 @@ router.use('/orders', orderRoutes);
 router.use('/ordersPDF', orderPDFRoutes);
 router.use('/menus', menuRoutes);
 router.use('/dashboards', dashboardRoutes);
+router.use('/categories', categoryRoutes);
+router.use('/types', typeRoutes);
+router.use('/products', productRoutes);
+router.use('/promotions', promotionRoutes);
 
 module.exports = router;

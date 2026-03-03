@@ -46,7 +46,57 @@ async function getById(id) {
 }
 
 async function update(id, data) {
-  const user = await User.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+  const user = await User.findById(id);
+  if (!user) return null;
+
+  // Champs User
+  if (data.username !== undefined) user.username = data.username;
+  if (data.email !== undefined) user.email = data.email;
+  if (data.roleId !== undefined) user.roleId = data.roleId;
+  if (data.status !== undefined) user.status = data.status;
+
+  // Champs Profile (merge)
+  if (data.profile && typeof data.profile === 'object') {
+    user.profile = {
+      ...(user.profile?.toObject?.() || user.profile || {}),
+      ...data.profile,
+      avatarUrl: user.profile?.avatarUrl ?? null,
+    };
+  }
+
+  await user.save();
+  return user;
+}
+
+async function updateByEmail(email, data, file) {
+  if (!email) return null;
+  const normalizedEmail = String(email).toLowerCase().trim();
+  const user = await User.findOne({ email: normalizedEmail });
+  if (!user) return null;
+
+  // Champs User (même logique que update)
+  if (data.username !== undefined) user.username = data.username;
+
+  // avatar optionnel
+  if (file && file.buffer) {
+    const result = await upload({ folder: 'avatars', resource_type: 'image', file });
+    user.profile = {
+      ...(user.profile?.toObject?.() || user.profile || {}),
+      avatarUrl: result.secure_url,
+    };
+  }
+
+  // Champs Profile (merge)
+  if (data.profile && typeof data.profile === 'object') {
+    user.profile = {
+      ...(user.profile?.toObject?.() || user.profile || {}),
+      ...data.profile,
+      // si on vient d'uploader un avatar, on le garde
+      avatarUrl: user.profile?.avatarUrl ?? null,
+    };
+  }
+
+  await user.save();
   return user;
 }
 
@@ -88,4 +138,9 @@ async function checkProfile({email}) {
   return { hasProfile: value}
 }
 
-module.exports = { list, listPaginated, getById, create, update, remove, checkProfile };
+async function getByEmail(email) {
+  if (!email) return null;
+  return User.findOne({ email: String(email).toLowerCase().trim() }).lean(false);
+}
+
+module.exports = { list, listPaginated, getById, getByEmail, create, update, updateByEmail, remove, checkProfile };

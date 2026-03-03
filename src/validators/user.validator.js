@@ -1,14 +1,28 @@
 const Joi = require('joi');
 const parsePhoneNumberFromString = require("libphonenumber-js");
 
+const userProfileUpdateSchema = Joi.object({
+    firstName: Joi.string().min(2).max(100).optional(),
+    lastName: Joi.string().min(2).max(100).optional(),
+    phone: Joi.string()
+        .custom((value, helpers) => {
+            if (value === undefined) return value;
+            if (!value) return value;
+            const phone = parsePhoneNumberFromString(value);
+            if (!phone || !phone.isValid()) {
+                return helpers.error('any.invalid');
+            }
+            return phone.number;
+        }, 'Validation téléphone internationale')
+        .messages({ 'any.invalid': 'Numéro de téléphone invalide, utilisez un format international (ex: +261 33 12 345 67)' })
+        .optional(),
+    birthday: Joi.date().iso().optional(),
+    gender: Joi.string().valid('Homme', 'Femme', 'Non défini').optional()
+}).min(1);
+
 const userUpdateSchema = Joi.object({
     username: Joi.string().min(2).max(50).optional(),
-    email: Joi.string()
-        .email({ tlds: { allow: false }, ignoreLength: true })
-        .messages({ 'string.email': 'Email invalide, vérifiez le format (ex: nom@domaine.tld)' })
-        .optional(),
-    roleId: Joi.string().hex().length(24).optional(),
-    status: Joi.string().valid('active', 'inactive', 'suspended', 'pending').optional(),
+    profile: userProfileUpdateSchema.optional(),
 }).min(1);
 
 const userIdParamSchema = Joi.object({

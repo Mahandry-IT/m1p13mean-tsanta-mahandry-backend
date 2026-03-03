@@ -9,6 +9,11 @@ const { upload } = require('../middlewares/upload.middleware');
 const router = Router();
 
 router.get('/', auth, authorize('user:list'), UserController.list);
+
+// Utilisateur courant (email issu du token)
+router.get('/me', auth, UserController.getMe);
+router.put('/me', auth, upload.single('avatar'), validate.body(userUpdateSchema), UserController.updateMe);
+
 router.post('/profile', auth, upload.single('avatar'), validate.body(userCreatedProfileSchema), UserController.create);
 router.post('/check-profile', auth, validate.body(checkProfileSchema), UserController.checkProfile);
 router.get('/:id', auth, authorize('user:get'), validate.params(userIdParamSchema), UserController.getById);

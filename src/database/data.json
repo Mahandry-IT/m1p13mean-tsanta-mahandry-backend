@@ -83,7 +83,9 @@
           { "name": "product:view", "description": "Lister/voir les produits" },
           { "name": "category:view", "description": "Voir les catégories" },
           { "name": "type:view", "description": "Voir les types" },
-          { "name": "product:list", "description": "Récupérer la liste des produits" }
+          { "name": "product:list", "description": "Récupérer la liste des produits" },
+          { "name": "favorite:list", "description": "Récupérer la liste des favoris" },
+          { "name": "favorite:manage", "description": "Gérer les favoris" }
         ]
       }
     ],
@@ -743,6 +745,14 @@
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
+      {
+        "label": "Mes favoris",
+        "path": "/favorites",
+        "icon": "favorite",
+        "order": 20,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
+      },
 
 
       {
@@ -762,7 +772,7 @@
         "parentPath": null
       },
       {
-        "label": "Produits",
+        "label": "Mes Produits",
         "path": "/products",
         "icon": "shopping_bag",
         "order": 50,
@@ -770,7 +780,7 @@
         "parentPath": null
       },
       {
-        "label": "Produits",
+        "label": "Les Produits",
         "path": "/buy-product",
         "icon": "shopping_bag",
         "order": 60,

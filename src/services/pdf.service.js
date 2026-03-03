@@ -101,9 +101,9 @@ module.exports = {
          =========================
         */
         doc.font('Helvetica-Bold');
-        doc.text(`Sous-total: ${Number(order.subtotal).toFixed(2)} €`, 350, positionY + 20, { align: 'right' });
-        doc.text(`Taxes: ${Number(order.tax).toFixed(2)} €`, 350, positionY + 40, { align: 'right' });
-        doc.text(`TOTAL: ${Number(order.total).toFixed(2)} €`, 350, positionY + 60, { align: 'right' });
+        doc.text(`Sous-total: ${Number(order.subtotal).toFixed(2)} Ar`, 350, positionY + 20, { align: 'right' });
+        doc.text(`Taxes: ${Number(order.tax).toFixed(2)} Ar`, 350, positionY + 40, { align: 'right' });
+        doc.text(`TOTAL: ${Number(order.total).toFixed(2)} Ar`, 350, positionY + 60, { align: 'right' });
 
         /*
          =========================

@@ -104,16 +104,12 @@ class DatabaseSeeder {
         for (const storeData of stores) {
             const existingStore = await Store.findOne({ email: storeData.email });
 
-            // Déterminer l'utilisateur à lier: priorité à userId dans le JSON,
-            // sinon via userEmail (si fourni), sinon fallback via email de la boutique.
             let relatedUser = null;
             let userIdToAssign = null;
 
             const tryCastObjectId = (value) => {
                 if (!value) return null;
-                // Déjà un ObjectId
                 if (value instanceof mongoose.Types.ObjectId) return value;
-                // String hex 24
                 if (typeof value === 'string' && mongoose.Types.ObjectId.isValid(value)) {
                     return mongoose.Types.ObjectId.createFromHexString(value);
                 }
@@ -121,13 +117,20 @@ class DatabaseSeeder {
             };
 
             // 1) userId explicite
-            const castedUserId = tryCastObjectId(storeData.userId);
-            if (castedUserId) {
-                relatedUser = await User.findById(castedUserId);
+            // Supporte: ObjectId, string hex 24, ou bien un _id string (schema User n'impose pas ObjectId)
+            if (storeData.userId) {
+                // a) si c'est castable en ObjectId -> findById normal
+                const castedUserId = tryCastObjectId(storeData.userId);
+                if (castedUserId) {
+                    relatedUser = await User.findById(castedUserId);
+                } else {
+                    // b) sinon on tente un lookup exact sur _id (string)
+                    relatedUser = await User.findOne({ _id: storeData.userId });
+                }
                 userIdToAssign = relatedUser ? relatedUser._id : null;
             }
 
-            // 2) userEmail explicite (si tu veux lier par email owner)
+            // 2) userEmail explicite
             if (!userIdToAssign && storeData.userEmail) {
                 relatedUser = await User.findOne({ email: String(storeData.userEmail).toLowerCase().trim() });
                 userIdToAssign = relatedUser ? relatedUser._id : null;
@@ -157,7 +160,7 @@ class DatabaseSeeder {
                 const userInfo = relatedUser && relatedUser.email ? `${relatedUser.email} (${userIdToAssign.toString()})` : userIdToAssign.toString();
                 logger.info(`     ↪️  Lié à l'utilisateur ${userInfo}`);
             } else {
-                logger.info('     ↪️  Aucun utilisateur correspondant trouvé, userId = null');
+                logger.info(`     ↪️  Aucun utilisateur correspondant trouvé, userId = null (store.userId=${storeData.userId || 'n/a'}, store.userEmail=${storeData.userEmail || 'n/a'})`);
             }
         }
 
@@ -739,4 +742,3 @@ class DatabaseSeeder {
 }
 
 module.exports = DatabaseSeeder;
-

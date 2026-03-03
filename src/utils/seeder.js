@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
-const { Role, Store, Product, User, Menu, Category, Type } = require('../models');
+const { Role, Store, Product, User, Menu, Category, Type, Order } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
 const bcrypt = require('bcryptjs');
@@ -339,6 +339,58 @@ class DatabaseSeeder {
     }
 
     /**
+     * Seed des commandes
+     */
+    async seedOrders(orders) {
+        logger.info('\n📋 Seed des commandes...');
+        let created = 0;
+        let updated = 0;
+
+        for (const orderData of orders) {
+            // Vérifier que l'utilisateur existe
+            const user = await User.findById(orderData.userId);
+            if (!user) {
+                logger.warn(`  ⚠️  Utilisateur introuvable (${orderData.userId}) pour la commande ${orderData._id}`);
+                continue;
+            }
+
+            // Traiter les items avec IDs
+            const itemsWithIds = orderData.items.map(item => ({
+                ...item,
+                itemId: new mongoose.Types.ObjectId(),
+                productId: new mongoose.Types.ObjectId(item.productId),
+                storeId: new mongoose.Types.ObjectId(item.storeId),
+                unitPrice: mongoose.Types.Decimal128.fromString(item.unitPrice.toString()),
+                totalPrice: mongoose.Types.Decimal128.fromString(item.totalPrice.toString())
+            }));
+
+            const orderPayload = {
+                ...orderData,
+                userId: new mongoose.Types.ObjectId(orderData.userId),
+                items: itemsWithIds,
+                subtotal: mongoose.Types.Decimal128.fromString(orderData.subtotal.toString()),
+                total: mongoose.Types.Decimal128.fromString(orderData.total.toString()),
+                createdAt: new Date(orderData.createdAt),
+                updatedAt: new Date(orderData.updatedAt)
+            };
+
+            const existing = await Order.findById(orderData._id);
+            
+            if (existing) {
+                await Order.findByIdAndUpdate(orderData._id, orderPayload);
+                updated++;
+                logger.info(`  🔄 Commande mise à jour: ${orderData._id}`);
+            } else {
+                await Order.create(orderPayload);
+                created++;
+                logger.info(`  ✅ Commande créée: ${orderData._id}`);
+            }
+        }
+
+        logger.info(`✅ Commandes: ${created} créées, ${updated} mises à jour`);
+    }
+
+    /**
      * Seed des utilisateurs (utilise roleId)
      */
     async seedUsers(users) {
@@ -673,10 +725,13 @@ class DatabaseSeeder {
 
             if (this.seedData.seeds.products) {
                 await this.seedProducts(this.seedData.seeds.products);
+            }            if (this.seedData.seeds.productStoreData) {
+                await this.seedProductStoreData(this.seedData.seeds.productStoreData);
             }
 
-            if (this.seedData.seeds.productStoreData) {
-                await this.seedProductStoreData(this.seedData.seeds.productStoreData);
+            // Seed des commandes après les produits et utilisateurs
+            if (this.seedData.seeds.orders) {
+                await this.seedOrders(this.seedData.seeds.orders);
             }
 
             if (this.seedData.seeds.menus) {

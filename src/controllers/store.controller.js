@@ -35,6 +35,17 @@ module.exports = {
         }
     },
 
+    // GET /api/stores/list — liste boutiques
+    async list(req, res) {
+        try {
+
+            const result = await StoreService.list();
+            return success(res, result);
+        } catch (e) {
+            return error(res, e.message || 'Erreur récupération boutiques');
+        }
+    },
+
     // GET /api/stores/my — mes boutiques
     async listMine(req, res) {
         try {

@@ -1,30 +1,5 @@
 const mongoose = require('mongoose');
 
-const typeSchema = new mongoose.Schema({
-    typeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: () => new mongoose.Types.ObjectId()
-    },
-    name: {
-        type: String,
-        required: true,
-        maxlength: 50
-    }
-}, { _id: false });
-
-const categorySchema = new mongoose.Schema({
-    categoryId: {
-        type: mongoose.Schema.Types.ObjectId,
-        default: () => new mongoose.Types.ObjectId()
-    },
-    name: {
-        type: String,
-        required: true,
-        maxlength: 50
-    },
-    types: [typeSchema]
-}, { _id: false });
-
 const imageSchema = new mongoose.Schema({
     imageId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -121,6 +96,21 @@ const storeDataSchema = new mongoose.Schema({
     stockMovements: [stockMovementSchema]
 }, { _id: false });
 
+const productCategorySchema = new mongoose.Schema(
+    {
+        categoryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+            required: true
+        },
+        typeIds: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Type'
+        }]
+    },
+    { _id: false }
+);
+
 const productSchema = new mongoose.Schema({
     _id: {
         type: String,
@@ -133,9 +123,12 @@ const productSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        maxlength: 50
+        maxlength: 250
     },
-    categories: [categorySchema],
+    categories: {
+        type: [productCategorySchema],
+        default: []
+    },
     images: [imageSchema],
     storeData: [storeDataSchema]
 }, {
@@ -143,7 +136,8 @@ const productSchema = new mongoose.Schema({
 });
 
 productSchema.index({ 'storeData.storeId': 1 });
-productSchema.index({ 'categories.name': 1 });
+productSchema.index({ 'categories.categoryId': 1 });
+productSchema.index({ 'categories.typeIds': 1 });
 productSchema.index({ name: 'text', description: 'text' });
 
 module.exports = mongoose.model('Product', productSchema);

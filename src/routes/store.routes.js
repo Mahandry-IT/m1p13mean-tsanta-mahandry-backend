@@ -22,6 +22,14 @@ router.post(
 
 // mes boutiques
 router.get(
+    '/list',
+    auth,
+    authorize('store:list_own'),
+    StoreController.list
+);
+
+// mes boutiques
+router.get(
     '/my',
     auth,
     authorize('store:list_own'),

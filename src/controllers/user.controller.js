@@ -58,6 +58,18 @@ module.exports = {
       return error(res, e.message || 'Erreur mise à jour', e.status || 400);
     }
   },
+  async updateMe(req, res) {
+    try {
+      const email = req.user?.email;
+      if (!email) return error(res, 'Email manquant dans le token', 401);
+
+      const user = await UserService.updateByEmail(email, req.body, req.file);
+      if (!user) return error(res, 'Utilisateur introuvable', 404);
+      return success(res, user.toJSON(), 'Mise à jour réussie');
+    } catch (e) {
+      return error(res, e.message || 'Erreur mise à jour', e.status || 400);
+    }
+  },
   async remove(req, res) {
     try {
       const ok = await UserService.remove(req.params.id);
@@ -65,6 +77,19 @@ module.exports = {
       return success(res, null, 'Suppression réussie', 204);
     } catch (e) {
       return error(res, e.message || 'Erreur suppression');
+    }
+  },
+  async getMe(req, res) {
+    try {
+      const email = req.user?.email;
+      if (!email) return error(res, 'Email manquant dans le token', 401);
+
+      const user = await UserService.getByEmail(email);
+      if (!user) return error(res, 'Utilisateur introuvable', 404);
+
+      return success(res, user.toJSON(), 'Utilisateur récupéré');
+    } catch (e) {
+      return error(res, e.message || 'Erreur récupération utilisateur', e.status || 400);
     }
   }
 };

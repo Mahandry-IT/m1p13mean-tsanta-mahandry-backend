@@ -27,7 +27,15 @@
           { "name": "order:cancel", "description": "Annuler commande" },
           { "name": "order:list_own", "description": "Voir commandes" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "role:list", "description": "Voir la liste des rôles" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" }
         ]
       },
       {
@@ -44,13 +52,21 @@
           { "name": "stock:view", "description": "Voir les stocks et mouvements" },
           { "name": "order:view", "description": "Voir commandes boutique" },
           { "name": "order:get", "description": "Voir détail commande" },
-          { "name": "order:update_status", "description": "Changer statut commande" }
+          { "name": "order:update_status", "description": "Changer statut commande" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "category:manage", "description": "Gérer les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "type:manage", "description": "Gérer les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" },
+          { "name": "promotion:manage", "description": "Gérer les promotions" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
-        "homepage": "/dashboard",
+        "homepage": "/buy-product",
         "features": [
           { "name": "get:products", "description": "Voir les produits" },
           { "name": "order:add", "description": "Ajouter au panier" },
@@ -61,7 +77,13 @@
           { "name": "order:get", "description": "Voir détail commande" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
           { "name": "store:list_own", "description": "Voir mes propres boutiques" },
-          { "name": "store:get", "description": "Voir le détail d'une boutique" }
+          { "name": "store:get", "description": "Voir le détail d'une boutique" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "product:view", "description": "Lister/voir les produits" },
+          { "name": "category:view", "description": "Voir les catégories" },
+          { "name": "type:view", "description": "Voir les types" },
+          { "name": "product:list", "description": "Récupérer la liste des produits" }
         ]
       }
     ],
@@ -131,7 +153,7 @@
         "profile": {
           "firstName": "Tsanta",
           "lastName": "Bernardette",
-          "phone": "+33555666777",
+          "phone": "+261377969564",
           "birthday": "1988-11-03T00:00:00.000Z",
           "gender": "Femme"
         }
@@ -151,6 +173,7 @@
         "address": "456 Avenue du Nord, Lyon",
         "phone": "+33987654321",
         "email": "nord@store.com",
+        "userEmail": "owner.nord@example.com",
         "userId": "65f1c1a5e1c2a9b001000002",
         "status": "active"
       },
@@ -159,6 +182,7 @@
         "address": "789 Boulevard du Sud, Marseille",
         "phone": "+33555666777",
         "email": "sud@store.com",
+        "userEmail": "owner.sud@example.com",
         "userId": "65f1c1a5e1c2a9b001000003",
         "status": "active"
       }
@@ -167,10 +191,10 @@
       {
         "_id": "6990aefb7053d5bc9001e428",
         "name": "Laptop Dell XPS 15",
-        "description": "Ordinateur portable haute performance",
+        "description": "Ordinateur portable haut de gamme conçu pour la performance et la mobilité, doté d’un écran haute résolution, d’une puissance de calcul avancée et d’un design premium adapté aux professionnels et créateurs.",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Ordinateurs portables" },
               { "name": "PC" }
@@ -178,17 +202,18 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/dell-xps-1.jpg" },
-          { "link": "https://example.com/dell-xps-2.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_1_byrvwq.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436945/Laptop_Dell_XPS_15_2_x7thaz.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772436943/Laptop_Dell_XPS_15_3_h9srch.png" }
         ]
       },
       {
         "_id": "6990aefb7053d5bc9001e429",
         "name": "iPhone 15 Pro",
-        "description": "Smartphone Apple dernière génération",
+        "description": "Smartphone premium conçu par Apple, offrant des performances exceptionnelles, un système photo avancé et un design en titane élégant pour une expérience mobile fluide et haut de gamme.",
         "categories": [
           {
-            "name": "Électronique",
+            "name": "Electronique",
             "types": [
               { "name": "Smartphones" },
               { "name": "Apple" }
@@ -196,24 +221,64 @@
           }
         ],
         "images": [
-          { "link": "https://example.com/iphone-15-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437110/iPhone_15_Pro_1_f3wyjv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437111/iPhone_15_Pro_2_linm10.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437108/iPhone_15_Pro_3_hdgm4p.png" }
         ]
       },
       {
-        "_id": "6990aefb7053d5bc9001e42a",
-        "name": "Chaise de Bureau Ergonomique",
-        "description": "Confort optimal pour longues sessions",
+        "_id": "6990aefb7053d5bc9001e42b",
+        "name": "MacBook Air M2 13 pouces",
+        "description": "Ultrabook léger et silencieux équipé de la puce Apple M2, offrant une autonomie remarquable, des performances fluides et un design fin idéal pour le travail nomade et la productivité quotidienne.",
         "categories": [
           {
-            "name": "Mobilier",
+            "name": "Electronique",
             "types": [
-              { "name": "Chaises" },
-              { "name": "Bureau" }
+              { "name": "Ordinateurs portables" },
+              { "name": "Apple" }
             ]
           }
         ],
         "images": [
-          { "link": "https://example.com/chair-1.jpg" }
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437400/MacBook_Air_M2_13_pouces_1_k09cqo.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437401/MacBook_Air_M2_13_pouces_2_d2ya1l.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437403/MacBook_Air_M2_13_pouces_3_naadil.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42c",
+        "name": "Samsung Galaxy S24",
+        "description": "Smartphone Android de dernière génération offrant un écran immersif, un appareil photo haute précision et des performances puissantes, idéal pour les utilisateurs exigeants en mobilité et multimédia.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "Smartphones" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437849/Samsung_Galaxy_S24_1_ynczow.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437843/Samsung_Galaxy_S24_2_xtman2.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772437845/Samsung_Galaxy_S24_3_y9iovf.png" }
+        ]
+      },
+      {
+        "_id": "6990aefb7053d5bc9001e42d",
+        "name": "PC Gamer Fixe Ryzen 7",
+        "description": "PC de bureau haute performance équipé d’un processeur Ryzen 7, conçu pour le gaming intensif, le streaming et la création de contenu, avec une puissance graphique et une évolutivité optimales.",
+        "categories": [
+          {
+            "name": "Electronique",
+            "types": [
+              { "name": "PC" }
+            ]
+          }
+        ],
+        "images": [
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438107/PC_Gamer_Fixe_Ryzen_7_1_gwqrt5.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438102/PC_Gamer_Fixe_Ryzen_7_2_yi4vsv.png" },
+          { "link": "https://res.cloudinary.com/dplkqlpen/image/upload/v1772438104/PC_Gamer_Fixe_Ryzen_7_3_okx6sb.png" }
         ]
       }
     ],
@@ -263,7 +328,7 @@
         ]
       },
       {
-        "productId": "6990aefb7053d5bc9001e42a",
+        "productId": "6990aefb7053d5bc9001e42c",
         "storeEmail": "centerville@store.com",
         "currentPrice": 299.99,
         "priceHistory": [
@@ -281,8 +346,7 @@
         "order": 10,
         "roles": [
           "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425",
-          "6990aefb7053d5bc9001e427"
+          "6990aefb7053d5bc9001e425"
         ],
         "parentPath": null
       },
@@ -309,34 +373,6 @@
         "icon": "storefront",
         "order": 30,
         "roles": ["6990aefb7053d5bc9001e424"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Stocks",
-        "path": "/admin/stocks",
-        "icon": "inventory_2",
-        "order": 40,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Produits",
-        "path": "/admin/products",
-        "icon": "shopping_bag",
-        "order": 50,
-        "roles": ["6990aefb7053d5bc9001e424", "6990aefb7053d5bc9001e425"],
-        "parentPath": "/admin"
-      },
-      {
-        "label": "Profil",
-        "path": "/admin/profile",
-        "icon": "account_circle",
-        "order": 60,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425",
-          "6990aefb7053d5bc9001e427"
-        ],
         "parentPath": "/admin"
       },
 
@@ -366,12 +402,21 @@
       },
       {
         "label": "Produits",
-        "path": "/manager/products",
+        "path": "my-product",
         "icon": "shopping_bag",
         "order": 30,
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
+      {
+        "label": "Promotions",
+        "path": "promotions",
+        "icon": "money_range",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
+
 
       {
         "label": "Espace client",
@@ -382,21 +427,56 @@
         "parentPath": null
       },
       {
-        "label": "Produits",
-        "path": "/customer/products",
-        "icon": "shopping_bag",
+        "label": "Mes commandes",
+        "path": "/customer/orders",
+        "icon": "receipt_long",
         "order": 10,
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
+
+
       {
-        "label": "Mes commandes",
-        "path": "/customer/orders",
-        "icon": "receipt_long",
-        "order": 20,
+        "label": "Catégories",
+        "path": "/categories",
+        "icon": "category",
+        "order": 30,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Type",
+        "path": "/types",
+        "icon": "topic",
+        "order": 40,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/products",
+        "icon": "shopping_bag",
+        "order": 50,
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": null
+      },
+      {
+        "label": "Produits",
+        "path": "/buy-product",
+        "icon": "shopping_bag",
+        "order": 60,
         "roles": ["6990aefb7053d5bc9001e427"],
-        "parentPath": "/customer"
+        "parentPath": null
       }
+    ],
+    "categories": [
+      { "name": "Électronique", "slug": "electronique", "description": "", "isActive": true }
+    ],
+    "types": [
+      { "categorySlug": "electronique", "name": "Ordinateurs portables", "slug": "ordinateurs-portables", "isActive": true },
+      { "categorySlug": "electronique", "name": "PC", "slug": "pc", "isActive": true },
+      { "categorySlug": "electronique", "name": "Smartphones", "slug": "smartphones", "isActive": true },
+      { "categorySlug": "electronique", "name": "Apple", "slug": "apple", "isActive": true }
     ]
   }
 }

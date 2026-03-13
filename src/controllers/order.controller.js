@@ -83,9 +83,7 @@ module.exports = {
         } catch (e) {
             return error(res, e.message || 'Erreur annulation commande', e.status || 400);
         }
-    },
-
-    // GET /api/orders/my — mes commandes
+    },    // GET /api/orders/my — mes commandes (Customer)
     async listMyOrders(req, res) {
         try {
             const userId = req.user?.userId || req.user?._id || req.user?.id;
@@ -94,6 +92,19 @@ module.exports = {
 
             const result = await OrderService.listUserOrders(userId, { page, limit });
             return success(res, result, 'Liste de vos commandes récupérée');
+        } catch (e) {
+            return error(res, e.message || 'Erreur récupération commandes', e.status || 400);
+        }
+    },    // GET /api/orders/all — toutes les commandes des boutiques du Manager
+    async listAllOrders(req, res) {
+        try {
+            const userId = req.user?.userId || req.user?._id || req.user?.id;
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const status = req.query.status || null;
+
+            const result = await OrderService.listOrdersByManager(userId, { page, limit, status });
+            return success(res, result, 'Liste des commandes récupérée');
         } catch (e) {
             return error(res, e.message || 'Erreur récupération commandes', e.status || 400);
         }

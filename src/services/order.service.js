@@ -228,9 +228,7 @@ module.exports = {
             session.endSession();
             throw err;
         }
-    },
-
-    // Liste des commandes utilisateur
+    },    // Liste des commandes utilisateur (Customer)
     listUserOrders: async(userId, { page = 1, limit = 20 } = {}) => {
         const skip = (page - 1) * limit;
 
@@ -250,14 +248,150 @@ module.exports = {
         };
     },
 
-    // Détail commande
-    getOrderById: async(orderId, userId) => {
-        const order = await Order.findById(orderId);
-        if (!order) throw Object.assign(new Error('Commande introuvable'), { status: 404 });
-        if (order.userId.toString() !== userId.toString()) {
-            throw Object.assign(new Error('Vous ne pouvez pas accéder à cette commande'), { status: 403 });
+    /**
+     * Liste les commandes des boutiques du Manager connecté
+     * Filtre les commandes qui contiennent au moins un item d'une boutique du manager
+     * Triées par priorité de statut : pending > confirmed > shipped > delivered > cancelled
+     */
+    listOrdersByManager: async(managerId, { page = 1, limit = 20, status = null } = {}) => {
+        const Store = require('../models/store.model');
+        const skip = (page - 1) * limit;
+
+        // 1. Récupérer les boutiques du manager
+        const managerStores = await Store.find({ userId: managerId }).select('_id').lean();
+        const storeIds = managerStores.map(s => s._id);
+
+        if (storeIds.length === 0) {
+            return {
+                orders: [],
+                pagination: { total: 0, page, limit, pages: 0 }
+            };
         }
-        return order;
+
+        // 2. Construire le filtre : commandes ayant au moins un item dans une boutique du manager
+        const matchQuery = {
+            'items.storeId': { $in: storeIds }
+        };
+        if (status) {
+            matchQuery.status = status;
+        }
+
+        const [orders, totalResult] = await Promise.all([
+            Order.aggregate([
+                { $match: matchQuery },
+                {
+                    $addFields: {
+                        statusPriority: {
+                            $switch: {
+                                branches: [
+                                    { case: { $eq: ['$status', 'pending'] }, then: 1 },
+                                    { case: { $eq: ['$status', 'confirmed'] }, then: 2 },
+                                    { case: { $eq: ['$status', 'shipped'] }, then: 3 },
+                                    { case: { $eq: ['$status', 'delivered'] }, then: 4 },
+                                    { case: { $eq: ['$status', 'cancelled'] }, then: 5 }
+                                ],
+                                default: 6
+                            }
+                        },
+                        // Filtrer les items pour ne garder que ceux des boutiques du manager
+                        managerItems: {
+                            $filter: {
+                                input: '$items',
+                                as: 'item',
+                                cond: { $in: ['$$item.storeId', storeIds] }
+                            }
+                        }
+                    }
+                },
+                { $sort: { statusPriority: 1, createdAt: -1 } },
+                { $skip: skip },
+                { $limit: limit },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user'
+                    }
+                },
+                { $unwind: { path: '$user', preserveNullAndEmptyArrays: true } },
+                {
+                    $lookup: {
+                        from: 'stores',
+                        localField: 'managerItems.storeId',
+                        foreignField: '_id',
+                        as: 'stores'
+                    }
+                },                {
+                    $project: {
+                        _id: 1,
+                        orderNumber: 1,
+                        status: 1,
+                        items: '$managerItems',
+                        subtotal: 1,
+                        tax: 1,
+                        total: 1,
+                        createdAt: 1,
+                        updatedAt: 1,
+                        'user._id': 1,
+                        'user.email': 1,
+                        'user.profile.firstName': 1,
+                        'user.profile.lastName': 1,
+                        'user.profile.phone': 1,
+                        'stores._id': 1,
+                        'stores.name': 1
+                    }
+                }
+            ]),
+            Order.aggregate([
+                { $match: matchQuery },
+                { $count: 'total' }
+            ])
+        ]);
+
+        const total = totalResult[0]?.total || 0;
+
+        return {
+            orders,
+            pagination: {
+                total,
+                page,
+                limit,
+                pages: Math.ceil(total / limit)
+            }
+        };
+    },    // Détail commande (Customer = sa commande, Manager = commandes de ses boutiques)
+    getOrderById: async(orderId, userId) => {
+        const Store = require('../models/store.model');
+        
+        const order = await Order.findById(orderId)
+            .populate('userId', 'email profile')
+            .populate('items.storeId', 'name');
+            
+        if (!order) throw Object.assign(new Error('Commande introuvable'), { status: 404 });
+        
+        // Cas 1 : L'utilisateur est le propriétaire de la commande (Customer)
+        if (order.userId._id.toString() === userId.toString()) {
+            return order;
+        }
+        
+        // Cas 2 : L'utilisateur est Manager d'une boutique concernée par la commande
+        const managerStores = await Store.find({ userId }).select('_id').lean();
+        const managerStoreIds = managerStores.map(s => s._id.toString());
+        
+        const orderStoreIds = order.items.map(item => 
+            item.storeId?._id?.toString() || item.storeId?.toString()
+        );
+        
+        const hasAccessAsManager = orderStoreIds.some(storeId => 
+            managerStoreIds.includes(storeId)
+        );
+        
+        if (hasAccessAsManager) {
+            return order;
+        }
+        
+        throw Object.assign(new Error('Vous ne pouvez pas accéder à cette commande'), { status: 403 });
     },
 
     // Mettre à jour le statut (avec historique et PDF)

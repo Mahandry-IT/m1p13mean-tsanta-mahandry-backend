@@ -23,7 +23,14 @@ module.exports = {
         const fileName = `${type}_${order._id}.pdf`;
         const filePath = path.join(dirPath, fileName);
 
-        doc.pipe(fs.createWriteStream(filePath));
+        // Créer une Promise pour attendre la fin de l'écriture du fichier
+        const writeStream = fs.createWriteStream(filePath);
+        doc.pipe(writeStream);
+
+        const pdfPromise = new Promise((resolve, reject) => {
+            writeStream.on('finish', () => resolve(filePath));
+            writeStream.on('error', reject);
+        });
 
         /*
          =========================
@@ -33,7 +40,7 @@ module.exports = {
         doc
             .fontSize(22)
             .font('Helvetica-Bold')
-            .text(order.items[0]?.storeId?.name || 'Nom Boutique', { align: 'center' });
+            .text(order.items[0]?.storeId?.name || 'Ivanjo', { align: 'center' });
 
 
         doc.moveDown(0.5);
@@ -103,9 +110,7 @@ module.exports = {
         doc.font('Helvetica-Bold');
         doc.text(`Sous-total: ${Number(order.subtotal).toFixed(2)} Ar`, 350, positionY + 20, { align: 'right' });
         doc.text(`Taxes: ${Number(order.tax).toFixed(2)} Ar`, 350, positionY + 40, { align: 'right' });
-        doc.text(`TOTAL: ${Number(order.total).toFixed(2)} Ar`, 350, positionY + 60, { align: 'right' });
-
-        /*
+        doc.text(`TOTAL: ${Number(order.total).toFixed(2)} Ar`, 350, positionY + 60, { align: 'right' });        /*
          =========================
          FOOTER
          =========================
@@ -119,6 +124,7 @@ module.exports = {
 
         doc.end();
 
-        return filePath;
+        // Attendre que le fichier soit complètement écrit avant de retourner
+        return pdfPromise;
     }
 };

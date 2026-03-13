@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
-const { Role, Store, Product, User, Menu, Category, Type } = require('../models');
+const { Role, Store, Product, User, Menu, Category, Type, Order } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
 const bcrypt = require('bcryptjs');
@@ -54,6 +54,18 @@ class DatabaseSeeder {
     }
 
     /**
+     * Helper pour caster les _id en ObjectId
+     */
+    tryCastObjectId(value) {
+        if (!value) return null;
+        if (value instanceof mongoose.Types.ObjectId) return value;
+        if (typeof value === 'string' && mongoose.Types.ObjectId.isValid(value)) {
+            return mongoose.Types.ObjectId.createFromHexString(value);
+        }
+        return null;
+    }
+
+    /**
      * Seed les rôles
      */
     async seedRoles(roles) {
@@ -91,9 +103,7 @@ class DatabaseSeeder {
         }
 
         logger.info(`✅ Rôles: ${created} créés, ${updated} mis à jour`);
-    }
-
-    /**
+    }    /**
      * Seed les magasins
      */
     async seedStores(stores) {
@@ -102,25 +112,26 @@ class DatabaseSeeder {
         let updated = 0;
 
         for (const storeData of stores) {
-            const existingStore = await Store.findOne({ email: storeData.email });
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(storeData._id);
+            
+            let existingStore = null;
+            if (providedId) {
+                existingStore = await Store.findById(providedId);
+            }
+            // Sinon chercher par email
+            if (!existingStore) {
+                existingStore = await Store.findOne({ email: storeData.email });
+            }
 
             let relatedUser = null;
             let userIdToAssign = null;
-
-            const tryCastObjectId = (value) => {
-                if (!value) return null;
-                if (value instanceof mongoose.Types.ObjectId) return value;
-                if (typeof value === 'string' && mongoose.Types.ObjectId.isValid(value)) {
-                    return mongoose.Types.ObjectId.createFromHexString(value);
-                }
-                return null;
-            };
 
             // 1) userId explicite
             // Supporte: ObjectId, string hex 24, ou bien un _id string (schema User n'impose pas ObjectId)
             if (storeData.userId) {
                 // a) si c'est castable en ObjectId -> findById normal
-                const castedUserId = tryCastObjectId(storeData.userId);
+                const castedUserId = this.tryCastObjectId(storeData.userId);
                 if (castedUserId) {
                     relatedUser = await User.findById(castedUserId);
                 } else {
@@ -145,12 +156,18 @@ class DatabaseSeeder {
             const payload = { ...storeData, userId: userIdToAssign || null };
             // On ne persiste pas userEmail dans Store
             delete payload.userEmail;
+            // On ne garde pas _id dans le payload pour l'update, on le gère séparément
+            delete payload._id;
 
             if (existingStore) {
                 await Store.findByIdAndUpdate(existingStore._id, payload);
                 updated++;
                 logger.info(`  🔄 Magasin mis à jour: ${storeData.name}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Store.create(payload);
                 created++;
                 logger.info(`  ✅ Magasin créé: ${storeData.name}`);
@@ -206,7 +223,7 @@ class DatabaseSeeder {
         for (const productData of products) {
             const imagesWithIds = (productData.images || []).map(img => ({
                 ...img,
-                imageId: new mongoose.Types.ObjectId()
+                imageId: this.tryCastObjectId(img.imageId) || new mongoose.Types.ObjectId()
             }));
 
             // Convertir categories(name/types.name) -> [{categoryId, typeIds}]
@@ -235,18 +252,24 @@ class DatabaseSeeder {
             }
 
             const categories = Array.from(categoriesMap.entries()).map(([catId, typeIdSet]) => ({
-                categoryId: new mongoose.Types.ObjectId(catId),
-                typeIds: Array.from(typeIdSet).map((tid) => new mongoose.Types.ObjectId(tid))
+                categoryId: this.tryCastObjectId(catId) || new mongoose.Types.ObjectId(catId),
+                typeIds: Array.from(typeIdSet).map((tid) => this.tryCastObjectId(tid) || new mongoose.Types.ObjectId(tid))
             }));
 
+            const payload = {
+                ...productData,
+                categories,
+                images: imagesWithIds,
+                storeData: productData.storeData || []
+            };
+
+            // Utiliser l'_id fourni s'il est valide
+            const providedId = this.tryCastObjectId(productData._id);
+            if (providedId) payload._id = providedId;
+
             const result = await Product.findOneAndUpdate(
-                { _id: productData._id },
-                {
-                    ...productData,
-                    categories,
-                    images: imagesWithIds,
-                    storeData: productData.storeData || []
-                },
+                { _id: payload._id || productData._id },
+                payload,
                 {
                     upsert: true,
                     new: true,
@@ -264,18 +287,31 @@ class DatabaseSeeder {
         }
 
         logger.info(`✅ Produits: ${created} créés, ${updated} mis à jour`);
-    }
-
-    /**
-     * Seed les données produit-magasin
+    }    /**
+     * Seed les données produit-magasin (prix, promotions, mouvements de stock)
      */
     async seedProductStoreData(productStoreData) {
         logger.info('\n💰 Seed des données produit-magasin...');
         let added = 0;
         let updated = 0;
 
+        // Cache pour les utilisateurs (email -> userId)
+        const userCache = new Map();
+
+        const getUserIdByEmail = async (email) => {
+            if (!email) return null;
+            const normalizedEmail = String(email).toLowerCase().trim();
+            if (userCache.has(normalizedEmail)) {
+                return userCache.get(normalizedEmail);
+            }
+            const user = await User.findOne({ email: normalizedEmail });
+            const userId = user ? user._id : null;
+            userCache.set(normalizedEmail, userId);
+            return userId;
+        };
+
         for (const data of productStoreData) {
-            const product = await Product.findById(data.productId);
+            const product = await Product.findById(this.tryCastObjectId(data.productId) || data.productId);
             const store = await Store.findOne({ email: data.storeEmail });
 
             if (!product) {
@@ -294,19 +330,37 @@ class DatabaseSeeder {
             );
 
             // Préparer les données avec IDs
-            const priceHistoryWithDates = data.priceHistory.map(ph => ({
+            const priceHistoryWithDates = (data.priceHistory || []).map(ph => ({
                 price: mongoose.Types.Decimal128.fromString(ph.price.toString()),
                 updatedAt: new Date(ph.updatedAt)
             }));
 
-            const promotionsWithIds = data.promotions.map(promo => ({
+            const promotionsWithIds = (data.promotions || []).map(promo => ({
                 promotionId: new mongoose.Types.ObjectId(),
-                discount: mongoose.Types.Decimal128.fromString(promo.discount.toString()),
+                discount: mongoose.Types.Decimal128.fromString((promo.discount || 0).toString()),
                 description: promo.description,
-                startDate: new Date(promo.startDate),
-                endDate: new Date(promo.endDate),
-                isActive: promo.isActive
+                startDate: promo.startDate ? new Date(promo.startDate) : null,
+                endDate: promo.endDate ? new Date(promo.endDate) : null,
+                isActive: promo.isActive || false
             }));
+
+            // Préparer les mouvements de stock avec résolution userEmail -> userId
+            const stockMovementsWithIds = [];
+            for (const movement of (data.stockMovements || [])) {
+                const userId = await getUserIdByEmail(movement.userEmail);
+                if (!userId) {
+                    logger.warn(`  ⚠️  Utilisateur non trouvé pour mouvement de stock: ${movement.userEmail}`);
+                    continue;
+                }
+                stockMovementsWithIds.push({
+                    movementId: new mongoose.Types.ObjectId(),
+                    isEntry: movement.isEntry,
+                    quantity: movement.quantity,
+                    timestamp: movement.timestamp ? new Date(movement.timestamp) : new Date(),
+                    name: movement.name || '',
+                    userId: userId
+                });
+            }
 
             const newStoreData = {
                 storeId: store._id,
@@ -314,22 +368,19 @@ class DatabaseSeeder {
                 createdAt: new Date(),
                 priceHistory: priceHistoryWithDates,
                 promotions: promotionsWithIds,
-                stockMovements: []
+                stockMovements: stockMovementsWithIds
             };
 
             if (storeDataIndex === -1) {
                 // Ajouter
                 product.storeData.push(newStoreData);
                 added++;
-                logger.info(`  ✅ Données ajoutées: ${product.name} -> ${store.name}`);
+                logger.info(`  ✅ Données ajoutées: ${product.name} -> ${store.name} (${stockMovementsWithIds.length} mouvements)`);
             } else {
-                // Mettre à jour
-                product.storeData[storeDataIndex] = {
-                    ...newStoreData,
-                    stockMovements: product.storeData[storeDataIndex].stockMovements
-                };
+                // Mettre à jour - on remplace tout y compris les mouvements de stock
+                product.storeData[storeDataIndex] = newStoreData;
                 updated++;
-                logger.info(`  🔄 Données mises à jour: ${product.name} -> ${store.name}`);
+                logger.info(`  🔄 Données mises à jour: ${product.name} -> ${store.name} (${stockMovementsWithIds.length} mouvements)`);
             }
 
             await product.save();
@@ -396,7 +447,7 @@ class DatabaseSeeder {
                 updated++;
                 logger.info(`  🔄 Utilisateur mis à jour: ${u.email}`);
             } else {
-                await User.create({
+                const newUserPayload = {
                     username: u.username,
                     email: u.email,
                     roleId,
@@ -406,13 +457,17 @@ class DatabaseSeeder {
                     failedAttempts: 0,
                     sessions: [],
                     favorites: []
-                });
+                };
+
+                // Si un _id est fourni et est castable -> l'utiliser
+                const providedId = this.tryCastObjectId(u._id);
+                if (providedId) newUserPayload._id = providedId;
+
+                await User.create(newUserPayload);
                 created++;
                 logger.info(`  ✅ Utilisateur créé: ${u.email}`);
             }
-        }
-
-        logger.info(`✅ Utilisateurs: ${created} créés, ${updated} mis à jour`);
+        }        logger.info(`✅ Utilisateurs: ${created} créés, ${updated} mis à jour`);
     }
 
     /**
@@ -447,6 +502,9 @@ class DatabaseSeeder {
         const pathToMenuId = new Map();
 
         for (const m of menus) {
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(m._id);
+
             const roleIds = Array.isArray(m.roles) ? m.roles : [];
 
             // Les _id de Role sont des strings dans ce projet -> on les stocke dans Menu en ObjectId.
@@ -462,14 +520,24 @@ class DatabaseSeeder {
                 parentId: null
             };
 
-            const existing = await Menu.findOne({ path: m.path });
+            let existing = null;
+            if (providedId) {
+                existing = await Menu.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Menu.findOne({ path: m.path });
+            }
+
             if (existing) {
                 await Menu.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 pathToMenuId.set(m.path, existing._id);
                 logger.info(`  \ud83d\udd04 Menu mis \u00e0 jour: ${m.path}`);
             } else {
-                const createdMenu = await Menu.create(payload);
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }                const createdMenu = await Menu.create(payload);
                 created++;
                 pathToMenuId.set(m.path, createdMenu._id);
                 logger.info(`  \u2705 Menu cr\u00e9\u00e9: ${m.path}`);
@@ -491,9 +559,7 @@ class DatabaseSeeder {
             }
 
             await Menu.findByIdAndUpdate(childId, { parentId }, { runValidators: true });
-        }
-
-        logger.info(`\u2705 Menus: ${created} cr\u00e9\u00e9s, ${updated} mis \u00e0 jour`);
+        }        logger.info(`\u2705 Menus: ${created} cr\u00e9\u00e9s, ${updated} mis \u00e0 jour`);
     }
 
     /**
@@ -505,6 +571,9 @@ class DatabaseSeeder {
         let updated = 0;
 
         for (const c of categories) {
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(c._id);
+
             const payload = {
                 name: c.name,
                 slug: c.slug,
@@ -512,12 +581,23 @@ class DatabaseSeeder {
                 isActive: c.isActive ?? true,
             };
 
-            const existing = await Category.findOne({ slug: payload.slug });
+            let existing = null;
+            if (providedId) {
+                existing = await Category.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Category.findOne({ slug: payload.slug });
+            }
+
             if (existing) {
                 await Category.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 logger.info(`  🔄 Catégorie mise à jour: ${payload.slug}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Category.create(payload);
                 created++;
                 logger.info(`  ✅ Catégorie créée: ${payload.slug}`);
@@ -528,6 +608,64 @@ class DatabaseSeeder {
     }
 
     /**
+     * Seed des commandes
+     */
+    async seedOrders(orders) {
+        logger.info('\n📋 Seed des commandes...');
+        let created = 0;
+        let updated = 0;
+
+        for (const orderData of orders) {
+            // Vérifier que l'utilisateur existe
+            const user = await User.findById(this.tryCastObjectId(orderData.userId) || orderData.userId);
+            if (!user) {
+                logger.warn(`  ⚠️  Utilisateur introuvable (${orderData.userId}) pour la commande ${orderData._id}`);
+                continue;
+            }
+
+            // Traiter les items avec IDs
+            const itemsWithIds = (orderData.items || []).map(item => ({
+                ...item,
+                itemId: new mongoose.Types.ObjectId(),
+                productId: this.tryCastObjectId(item.productId) || new mongoose.Types.ObjectId(item.productId),
+                storeId: this.tryCastObjectId(item.storeId) || new mongoose.Types.ObjectId(item.storeId),
+                unitPrice: mongoose.Types.Decimal128.fromString((item.unitPrice || 0).toString()),
+                totalPrice: mongoose.Types.Decimal128.fromString((item.totalPrice || 0).toString())
+            }));
+
+            const orderPayload = {
+                ...orderData,
+                userId: this.tryCastObjectId(orderData.userId) || orderData.userId,
+                items: itemsWithIds,
+                subtotal: mongoose.Types.Decimal128.fromString((orderData.subtotal || 0).toString()),
+                total: mongoose.Types.Decimal128.fromString((orderData.total || 0).toString()),
+                createdAt: orderData.createdAt ? new Date(orderData.createdAt) : new Date(),
+                updatedAt: orderData.updatedAt ? new Date(orderData.updatedAt) : new Date()
+            };
+
+            // Utiliser l'_id fourni s'il est valide
+            const orderId = this.tryCastObjectId(orderData._id) || orderData._id;
+
+            const existing = await Order.findById(orderId);
+            
+            if (existing) {
+                await Order.findByIdAndUpdate(orderId, orderPayload);
+                updated++;
+                logger.info(`  🔄 Commande mise à jour: ${orderId}`);
+            } else {
+                // Créer avec _id fourni si c'est un string valide on le passe tel quel
+                if (typeof orderId === 'string') {
+                    await Order.create(Object.assign({ _id: orderId }, orderPayload));
+                } else {
+                    await Order.create(Object.assign({ _id: orderId }, orderPayload));
+                }
+                created++;
+                logger.info(`  ✅ Commande créée: ${orderId}`);
+            }
+        }
+
+        logger.info(`✅ Commandes: ${created} créées, ${updated} mises à jour`);
+    }    /**
      * Seed des types (type de catégorie)
      * Attendu: [{ categorySlug, name, slug, isActive }]
      */
@@ -543,6 +681,9 @@ class DatabaseSeeder {
                 continue;
             }
 
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(t._id);
+
             const payload = {
                 categoryId: category._id,
                 name: t.name,
@@ -550,12 +691,23 @@ class DatabaseSeeder {
                 isActive: t.isActive ?? true,
             };
 
-            const existing = await Type.findOne({ categoryId: category._id, slug: payload.slug });
+            let existing = null;
+            if (providedId) {
+                existing = await Type.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Type.findOne({ categoryId: category._id, slug: payload.slug });
+            }
+
             if (existing) {
                 await Type.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 logger.info(`  🔄 Type mis à jour: ${t.categorySlug}/${payload.slug}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Type.create(payload);
                 created++;
                 logger.info(`  ✅ Type créé: ${t.categorySlug}/${payload.slug}`);
@@ -683,10 +835,14 @@ class DatabaseSeeder {
                 await this.seedMenus(this.seedData.seeds.menus);
             }
 
-            // Marquer comme r\u00e9ussi
+            if (this.seedData.seeds.orders) {
+                await this.seedOrders(this.seedData.seeds.orders);
+            }
+
+            // Marquer comme réussi
             await this.recordMigration(version, 'success');
 
-            logger.info('\n\u2705 Seeding termin\u00e9 avec succ\u00e8s!\n');
+            logger.info('\n✅ Seeding terminé avec succès!\n');
         } catch (error) {
             logger.error('\n\u274c Erreur lors du seeding:', error);
 

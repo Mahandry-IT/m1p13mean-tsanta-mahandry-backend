@@ -64,12 +64,20 @@ router.patch(
     OrderController.cancelOrder
 );
 
-// Mes commandes
+// Mes commandes (Customer)
 router.get(
     '/my',
     auth,
     authorize('order:list_own'),
     OrderController.listMyOrders
+);
+
+// Toutes les commandes (Manager/Admin)
+router.get(
+    '/all',
+    auth,
+    authorize('order:view'),
+    OrderController.listAllOrders
 );
 
 // Détail commande

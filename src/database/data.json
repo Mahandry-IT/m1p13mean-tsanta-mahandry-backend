@@ -5,8 +5,9 @@
       {
         "_id": "6990aefb7053d5bc9001e424",
         "value": "Administrator",
-        "homepage": "/dashboard",
+        "homepage": "/dashboard/admin",
         "features": [
+          { "name": "dashboard:admin", "description": "Accéder au dashboard administrateur" },
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "user:list", "description": "Récupérer la liste des utilisateurs" },
           { "name": "user:get", "description": "Récupérer un utilisateur" },
@@ -41,8 +42,9 @@
       {
         "_id": "6990aefb7053d5bc9001e425",
         "value": "Manager",
-        "homepage": "/dashboard",
+        "homepage": "/dashboard/manager",
         "features": [
+          { "name": "dashboard:manager", "description": "Accéder au dashboard manager" },
           { "name": "create:product", "description": "Créer des produits" },
           { "name": "edit:product", "description": "Modifier des produits" },
           { "name": "store:request", "description": "Demander la création d'une boutique" },
@@ -68,6 +70,7 @@
         "value": "Customer",
         "homepage": "/buy-product",
         "features": [
+          { "name": "dashboard:customer", "description": "Accéder au dashboard client" },
           { "name": "get:products", "description": "Voir les produits" },
           { "name": "order:add", "description": "Ajouter au panier" },
           { "name": "order:view", "description": "Voir son panier" },
@@ -190,10 +193,9 @@
           "gender": "Homme"
         }
       }
-    ],
-
-    "stores": [
+    ],    "stores": [
       {
+        "_id": "65f1c1a5e1c2a9b001001001",
         "name": "Ankoay",
         "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
         "phone": "+261341234567",
@@ -202,6 +204,7 @@
         "status": "active"
       },
       {
+        "_id": "65f1c1a5e1c2a9b001001002",
         "name": "Ivanjo",
         "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
         "phone": "+261331112233",
@@ -210,6 +213,7 @@
         "status": "active"
       },
       {
+        "_id": "65f1c1a5e1c2a9b001001003",
         "name": "Tahina",
         "address": "Akoor Digue, Andohatapenaka, Antananarivo 101",
         "phone": "+261321998877",
@@ -447,6 +451,10 @@
             "endDate": "2026-09-30T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 20, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-03-15T10:00:00Z", "name": "Retour fournisseur défectueux", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -465,6 +473,9 @@
             "endDate": "2027-06-12T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 25, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -475,7 +486,11 @@
           { "price": 5199000, "updatedAt": "2026-02-01T00:00:00Z" },
           { "price": 4999000, "updatedAt": "2026-02-20T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 15, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": true, "quantity": 10, "timestamp": "2025-06-01T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "mamy.rakotoarivelo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e42c",
@@ -493,6 +508,9 @@
             "endDate": "2026-11-15T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 20, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -503,7 +521,11 @@
           { "price": 4799000, "updatedAt": "2026-03-01T00:00:00Z" },
           { "price": 4599000, "updatedAt": "2026-03-03T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 18, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": false, "quantity": 1, "timestamp": "2025-05-20T14:00:00Z", "name": "Produit exposition", "userEmail": "mamy.rakotoarivelo@gmail.com" }
+        ]
       },
 
       {
@@ -522,6 +544,11 @@
             "endDate": "2027-12-20T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 200, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": true, "quantity": 100, "timestamp": "2025-04-01T08:00:00Z", "name": "Réapprovisionnement", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 5, "timestamp": "2025-07-10T11:00:00Z", "name": "Péremption proche", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
       {
@@ -532,7 +559,11 @@
           { "price": 70000, "updatedAt": "2026-01-15T00:00:00Z" },
           { "price": 68000, "updatedAt": "2026-03-02T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 100, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": true, "quantity": 50, "timestamp": "2025-05-15T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "fanja.randrianasolo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e430",
@@ -550,6 +581,10 @@
             "endDate": "2026-10-31T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 80, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 3, "timestamp": "2025-08-05T10:00:00Z", "name": "Dégustation client", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
       {
@@ -560,7 +595,10 @@
           { "price": 19500, "updatedAt": "2026-01-20T00:00:00Z" },
           { "price": 18000, "updatedAt": "2026-02-01T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 60, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e432",
@@ -578,6 +616,10 @@
             "endDate": "2027-03-10T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 80, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-09-12T15:00:00Z", "name": "Echantillon gratuit", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
 
@@ -589,7 +631,11 @@
           { "price": 27000, "updatedAt": "2026-01-05T00:00:00Z" },
           { "price": 25000, "updatedAt": "2026-01-25T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 150, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 100, "timestamp": "2025-06-01T08:00:00Z", "name": "Réapprovisionnement été", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e434",
@@ -607,6 +653,10 @@
             "endDate": "2026-12-31T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 50, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 1, "timestamp": "2025-04-10T16:00:00Z", "name": "Défaut fabrication", "userEmail": "tahina.razanadrakoto@gmail.com" }
         ]
       },
       {
@@ -617,7 +667,11 @@
           { "price": 165000, "updatedAt": "2026-01-18T00:00:00Z" },
           { "price": 155000, "updatedAt": "2026-02-25T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 40, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 20, "timestamp": "2025-05-01T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e436",
@@ -635,6 +689,10 @@
             "endDate": "2027-08-15T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 200, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 5, "timestamp": "2025-07-20T14:00:00Z", "name": "Lot défectueux", "userEmail": "tahina.razanadrakoto@gmail.com" }
         ]
       },
       {
@@ -645,20 +703,418 @@
           { "price": 95000, "updatedAt": "2026-02-12T00:00:00Z" },
           { "price": 89000, "updatedAt": "2026-03-01T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 35, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 25, "timestamp": "2025-04-15T10:00:00Z", "name": "Nouvelle collection", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-08-10T16:00:00Z", "name": "Retour qualité", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
+      }
+    ],
+    "orders": [
+      {
+        "_id": "65f1c1a5e1c2a9b002000001",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "delivered",
+        "subtotal": 5907000,
+        "total": 5907000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e428", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 5799000, "totalPrice": 5799000, "productName": "Laptop Dell XPS 15" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 12000, "totalPrice": 36000, "productName": "Clé USB 64GB SanDisk" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 24000, "totalPrice": 72000, "productName": "Café Arabica grain 250g" }
+        ],
+        "createdAt": "2025-01-08T10:30:00.000Z",
+        "updatedAt": "2025-01-15T14:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000002",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 6495000,
+        "total": 6495000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e429", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 6299000, "totalPrice": 6299000, "productName": "iPhone 15 Pro" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 98000, "totalPrice": 196000, "productName": "Chaussures Sneakers Urban" }
+        ],
+        "createdAt": "2025-01-15T14:20:00.000Z",
+        "updatedAt": "2025-01-22T09:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000003",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 340500,
+        "total": 340500,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42f", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 68000, "totalPrice": 204000, "productName": "Riz de luxe Makalioka 5kg" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 24000, "totalPrice": 48000, "productName": "Café Arabica grain 250g" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 18000, "totalPrice": 36000, "productName": "Shampoing Aloe Vera 400ml" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 10000, "totalPrice": 10000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-01-22T16:45:00.000Z",
+        "updatedAt": "2025-01-28T11:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000004",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "cancelled",
+        "subtotal": 155000,
+        "total": 155000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 155000, "totalPrice": 155000, "productName": "JBL Live 770NC" }
+        ],
+        "createdAt": "2025-01-25T09:00:00.000Z",
+        "updatedAt": "2025-01-26T08:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000005",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 5217000,
+        "total": 5217000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42b", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4999000, "totalPrice": 4999000, "productName": "MacBook Air M2 13 pouces" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 4, "unitPrice": 25000, "totalPrice": 100000, "productName": "T-shirt Cotton Basic" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 18000, "totalPrice": 36000, "productName": "Shampoing Aloe Vera 400ml" },
+          { "productId": "6990aefb7053d5bc9001e432", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 16500, "totalPrice": 33000, "productName": "Savon Douche Vanille 500ml" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 6500, "totalPrice": 6500, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-02-05T11:30:00.000Z",
+        "updatedAt": "2025-02-12T15:45:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000006",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 4197000,
+        "total": 4197000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42c", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 3999000, "totalPrice": 3999000, "productName": "Samsung Galaxy S24" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 98000, "totalPrice": 196000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 12000, "totalPrice": 2000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-02-14T09:15:00.000Z",
+        "updatedAt": "2025-02-20T16:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000007",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "shipped",
+        "subtotal": 4776000,
+        "total": 4776000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42d", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4599000, "totalPrice": 4599000, "productName": "PC Gamer Fixe Ryzen 7" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 155000, "totalPrice": 155000, "productName": "JBL Live 770NC" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 11000, "totalPrice": 22000, "productName": "Café Arabica grain 250g" }
+        ],
+        "createdAt": "2025-02-22T14:00:00.000Z",
+        "updatedAt": "2025-02-25T10:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000008",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 267000,
+        "total": 267000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e437", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 89000, "totalPrice": 178000, "productName": "Bouilloire Électrique 1.7L" },
+          { "productId": "6990aefb7053d5bc9001e432", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 16500, "totalPrice": 49500, "productName": "Savon Douche Vanille 500ml" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" }
+        ],
+        "createdAt": "2025-03-05T08:45:00.000Z",
+        "updatedAt": "2025-03-10T14:20:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000009",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 6523000,
+        "total": 6523000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e429", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 6299000, "totalPrice": 6299000, "productName": "iPhone 15 Pro" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 12000, "totalPrice": 24000, "productName": "Clé USB 64GB SanDisk" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 5, "unitPrice": 25000, "totalPrice": 125000, "productName": "T-shirt Cotton Basic" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 25000, "totalPrice": 75000, "productName": "T-shirt Cotton Basic" }
+        ],
+        "createdAt": "2025-03-18T12:30:00.000Z",
+        "updatedAt": "2025-03-25T09:15:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000010",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "cancelled",
+        "subtotal": 4999000,
+        "total": 4999000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42b", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4999000, "totalPrice": 4999000, "productName": "MacBook Air M2 13 pouces" }
+        ],
+        "createdAt": "2025-03-22T16:00:00.000Z",
+        "updatedAt": "2025-03-23T08:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000011",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 620000,
+        "total": 620000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 98000, "totalPrice": 294000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 155000, "totalPrice": 310000, "productName": "JBL Live 770NC" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 1, "unitPrice": 16000, "totalPrice": 16000, "productName": "Shampoing Aloe Vera 400ml" }
+        ],
+        "createdAt": "2025-04-02T10:00:00.000Z",
+        "updatedAt": "2025-04-08T17:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000012",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 5975000,
+        "total": 5975000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e428", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 5799000, "totalPrice": 5799000, "productName": "Laptop Dell XPS 15" },
+          { "productId": "6990aefb7053d5bc9001e437", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 89000, "totalPrice": 89000, "productName": "Bouilloire Électrique 1.7L" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 4, "unitPrice": 8500, "totalPrice": 34000, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 24000, "totalPrice": 53000, "productName": "Café Arabica grain 250g" }
+        ],
+        "createdAt": "2025-04-15T14:30:00.000Z",
+        "updatedAt": "2025-04-22T11:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000013",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "confirmed",
+        "subtotal": 407500,
+        "total": 407500,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42f", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 68000, "totalPrice": 340000, "productName": "Riz de luxe Makalioka 5kg" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 25000, "totalPrice": 25000, "productName": "T-shirt Cotton Basic" }
+        ],
+        "createdAt": "2025-05-05T09:20:00.000Z",
+        "updatedAt": "2025-05-05T09:25:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000014",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 4747000,
+        "total": 4747000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42d", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4599000, "totalPrice": 4599000, "productName": "PC Gamer Fixe Ryzen 7" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 98000, "totalPrice": 98000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 25000, "totalPrice": 50000, "productName": "T-shirt Cotton Basic" }
+        ],
+        "createdAt": "2025-05-18T15:45:00.000Z",
+        "updatedAt": "2025-05-25T12:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000015",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "shipped",
+        "subtotal": 6429000,
+        "total": 6429000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e429", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 6299000, "totalPrice": 6299000, "productName": "iPhone 15 Pro" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 25000, "totalPrice": 75000, "productName": "T-shirt Cotton Basic" },
+          { "productId": "6990aefb7053d5bc9001e432", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 16500, "totalPrice": 33000, "productName": "Savon Douche Vanille 500ml" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 11000, "totalPrice": 22000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-06-08T11:30:00.000Z",
+        "updatedAt": "2025-06-12T09:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000016",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "delivered",
+        "subtotal": 5213500,
+        "total": 5213500,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42b", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4999000, "totalPrice": 4999000, "productName": "MacBook Air M2 13 pouces" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 155000, "totalPrice": 155000, "productName": "JBL Live 770NC" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 8500, "totalPrice": 25500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 17000, "totalPrice": 34000, "productName": "Shampoing Aloe Vera 400ml" }
+        ],
+        "createdAt": "2025-06-22T14:15:00.000Z",
+        "updatedAt": "2025-06-28T10:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000017",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 532000,
+        "total": 532000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e437", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 89000, "totalPrice": 267000, "productName": "Bouilloire Électrique 1.7L" },
+          { "productId": "6990aefb7053d5bc9001e42f", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 68000, "totalPrice": 204000, "productName": "Riz de luxe Makalioka 5kg" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 24000, "totalPrice": 61000, "productName": "Café Arabica grain 250g" }
+        ],
+        "createdAt": "2025-07-10T08:00:00.000Z",
+        "updatedAt": "2025-07-15T16:45:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000018",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 4143000,
+        "total": 4143000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42c", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 3999000, "totalPrice": 3999000, "productName": "Samsung Galaxy S24" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 98000, "totalPrice": 98000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 18000, "totalPrice": 36000, "productName": "Shampoing Aloe Vera 400ml" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 10000, "totalPrice": 10000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-07-25T12:30:00.000Z",
+        "updatedAt": "2025-08-01T09:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000019",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "pending",
+        "subtotal": 6599000,
+        "total": 6599000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e429", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 6299000, "totalPrice": 6299000, "productName": "iPhone 15 Pro" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 150000, "totalPrice": 300000, "productName": "JBL Live 770NC" }
+        ],
+        "createdAt": "2025-08-12T10:45:00.000Z",
+        "updatedAt": "2025-08-12T10:45:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000020",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 5123000,
+        "total": 5123000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42b", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4999000, "totalPrice": 4999000, "productName": "MacBook Air M2 13 pouces" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 12000, "totalPrice": 36000, "productName": "Clé USB 64GB SanDisk" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 4, "unitPrice": 8500, "totalPrice": 34000, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e432", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 18000, "totalPrice": 54000, "productName": "Savon Douche Vanille 500ml" }
+        ],
+        "createdAt": "2025-08-28T15:00:00.000Z",
+        "updatedAt": "2025-09-04T11:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000021",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 4843000,
+        "total": 4843000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42d", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4599000, "totalPrice": 4599000, "productName": "PC Gamer Fixe Ryzen 7" },
+          { "productId": "6990aefb7053d5bc9001e437", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 89000, "totalPrice": 178000, "productName": "Bouilloire Électrique 1.7L" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 3, "unitPrice": 22000, "totalPrice": 66000, "productName": "Café Arabica grain 250g" }
+        ],
+        "createdAt": "2025-09-15T09:30:00.000Z",
+        "updatedAt": "2025-09-22T14:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000022",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "shipped",
+        "subtotal": 6575000,
+        "total": 6575000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e429", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 6299000, "totalPrice": 6299000, "productName": "iPhone 15 Pro" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 98000, "totalPrice": 196000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 4, "unitPrice": 20000, "totalPrice": 80000, "productName": "T-shirt Cotton Basic" }
+        ],
+        "createdAt": "2025-10-05T11:15:00.000Z",
+        "updatedAt": "2025-10-08T10:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000023",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "delivered",
+        "subtotal": 473500,
+        "total": 473500,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42f", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 4, "unitPrice": 68000, "totalPrice": 272000, "productName": "Riz de luxe Makalioka 5kg" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 155000, "totalPrice": 155000, "productName": "JBL Live 770NC" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 4000, "totalPrice": 4000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-10-20T14:45:00.000Z",
+        "updatedAt": "2025-10-27T09:30:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000024",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "confirmed",
+        "subtotal": 5949000,
+        "total": 5949000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e428", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 5799000, "totalPrice": 5799000, "productName": "Laptop Dell XPS 15" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 5, "unitPrice": 25000, "totalPrice": 125000, "productName": "T-shirt Cotton Basic" },
+          { "productId": "6990aefb7053d5bc9001e433", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 25000, "totalPrice": 25000, "productName": "T-shirt Cotton Basic" }
+        ],
+        "createdAt": "2025-11-08T10:00:00.000Z",
+        "updatedAt": "2025-11-08T10:05:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000025",
+        "userId": "65f1c1a5e1c2a9b001000004",
+        "status": "delivered",
+        "subtotal": 4295500,
+        "total": 4295500,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42c", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 3999000, "totalPrice": 3999000, "productName": "Samsung Galaxy S24" },
+          { "productId": "6990aefb7053d5bc9001e437", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 89000, "totalPrice": 178000, "productName": "Bouilloire Électrique 1.7L" },
+          { "productId": "6990aefb7053d5bc9001e42e", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 5, "unitPrice": 8500, "totalPrice": 42500, "productName": "Jus de fruit passion 1L" },
+          { "productId": "6990aefb7053d5bc9001e430", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 24000, "totalPrice": 48000, "productName": "Café Arabica grain 250g" },
+          { "productId": "6990aefb7053d5bc9001e431", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 14000, "totalPrice": 28000, "productName": "Shampoing Aloe Vera 400ml" }
+        ],
+        "createdAt": "2025-11-22T16:30:00.000Z",
+        "updatedAt": "2025-11-29T12:00:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000026",
+        "userId": "65f1c1a5e1c2a9b001000005",
+        "status": "pending",
+        "subtotal": 5175000,
+        "total": 5175000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42b", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4999000, "totalPrice": 4999000, "productName": "MacBook Air M2 13 pouces" },
+          { "productId": "6990aefb7053d5bc9001e435", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 1, "unitPrice": 155000, "totalPrice": 155000, "productName": "JBL Live 770NC" },
+          { "productId": "6990aefb7053d5bc9001e436", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 2, "unitPrice": 10500, "totalPrice": 21000, "productName": "Clé USB 64GB SanDisk" }
+        ],
+        "createdAt": "2025-12-05T09:15:00.000Z",
+        "updatedAt": "2025-12-05T09:15:00.000Z"
+      },
+      {
+        "_id": "65f1c1a5e1c2a9b002000027",
+        "userId": "65f1c1a5e1c2a9b001000006",
+        "status": "delivered",
+        "subtotal": 4927000,
+        "total": 4927000,
+        "items": [
+          { "productId": "6990aefb7053d5bc9001e42d", "storeId": "65f1c1a5e1c2a9b001001001", "quantity": 1, "unitPrice": 4599000, "totalPrice": 4599000, "productName": "PC Gamer Fixe Ryzen 7" },
+          { "productId": "6990aefb7053d5bc9001e434", "storeId": "65f1c1a5e1c2a9b001001003", "quantity": 3, "unitPrice": 98000, "totalPrice": 294000, "productName": "Chaussures Sneakers Urban" },
+          { "productId": "6990aefb7053d5bc9001e432", "storeId": "65f1c1a5e1c2a9b001001002", "quantity": 2, "unitPrice": 17000, "totalPrice": 34000, "productName": "Savon Douche Vanille 500ml" }
+        ],
+        "createdAt": "2025-12-15T13:00:00.000Z",
+        "updatedAt": "2025-12-20T10:30:00.000Z"
       }
     ],
 
     "menus": [
       {
         "label": "Tableau de bord",
-        "path": "/dashboard",
+        "path": "/dashboard/admin",
         "icon": "dashboard",
         "order": 10,
-        "roles": [
-          "6990aefb7053d5bc9001e424",
-          "6990aefb7053d5bc9001e425"
-        ],
+        "roles": ["6990aefb7053d5bc9001e424"],
+        "parentPath": null
+      },
+      {
+        "label": "Tableau de bord",
+        "path": "/dashboard/manager",
+        "icon": "dashboard",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": null
       },
 
@@ -727,7 +1183,14 @@
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
-
+      {
+        "label": "Commandes",
+        "path": "/manager/orders",
+        "icon": "list_alt",
+        "order": 50,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
 
       {
         "label": "Espace client",
@@ -738,10 +1201,18 @@
         "parentPath": null
       },
       {
+        "label": "Mon panier",
+        "path": "/customer/cart",
+        "icon": "shopping_cart",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
+      },
+      {
         "label": "Mes commandes",
         "path": "/customer/orders",
         "icon": "receipt_long",
-        "order": 10,
+        "order": 20,
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
@@ -753,7 +1224,6 @@
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
-
 
       {
         "label": "Catégories",

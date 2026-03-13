@@ -1181,6 +1181,14 @@
         "roles": ["6990aefb7053d5bc9001e425"],
         "parentPath": "/manager"
       },
+      {
+        "label": "Commandes",
+        "path": "/manager/orders",
+        "icon": "list_alt",
+        "order": 50,
+        "roles": ["6990aefb7053d5bc9001e425"],
+        "parentPath": "/manager"
+      },
 
       {
         "label": "Espace client",
@@ -1191,10 +1199,18 @@
         "parentPath": null
       },
       {
+        "label": "Mon panier",
+        "path": "/customer/cart",
+        "icon": "shopping_cart",
+        "order": 10,
+        "roles": ["6990aefb7053d5bc9001e427"],
+        "parentPath": "/customer"
+      },
+      {
         "label": "Mes commandes",
         "path": "/customer/orders",
         "icon": "receipt_long",
-        "order": 10,
+        "order": 20,
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },

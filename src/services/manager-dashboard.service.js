@@ -3,47 +3,61 @@ const Product = require('../models/product.model');
 const Store = require('../models/store.model');
 const mongoose = require('mongoose');
 
+/**
+ * Construit un filtre de date pour les requêtes MongoDB
+ * Ignore les valeurs vides ou invalides
+ */
 function buildDateFilter(startDate, endDate) {
   const filter = {};
-  if (startDate || endDate) {
+  const validStart = startDate && !isNaN(new Date(startDate).getTime());
+  const validEnd = endDate && !isNaN(new Date(endDate).getTime());
+  
+  if (validStart || validEnd) {
     filter.createdAt = {};
-    if (startDate) filter.createdAt.$gte = new Date(startDate);
-    if (endDate) filter.createdAt.$lte = new Date(endDate);
+    if (validStart) filter.createdAt.$gte = new Date(startDate);
+    if (validEnd) filter.createdAt.$lte = new Date(endDate);
   }
   return filter;
 }
 
+/**
+ * Dashboard d'une boutique spécifique
+ * Retourne les métriques et graphiques pour un store donné
+ */
 async function getStoreDashboard(storeId, { startDate, endDate }) {
   const dateFilter = buildDateFilter(startDate, endDate);
+  const storeObjectId = new mongoose.Types.ObjectId(storeId);
 
-  // 1. Chiffre d’affaires
+  // Chiffre d'affaires (depuis les items filtrés par storeId)
   const revenueAgg = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId), status: { $in: ["confirmed","shipped","delivered"] } } },
-    { $group: { _id: null, revenue: { $sum: "$total" } } }
+    { $match: { ...dateFilter, "items.storeId": storeObjectId, status: { $in: ["confirmed","shipped","delivered"] } } },
+    { $unwind: "$items" },
+    { $match: { "items.storeId": storeObjectId } },
+    { $group: { _id: null, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } }
   ]);
   const revenue = revenueAgg[0]?.revenue || 0;
 
-  // 2. Nombre de commandes
+  // Nombre de commandes
   const ordersCount = await Order.countDocuments({ ...dateFilter, "items.storeId": storeId });
 
-  // 3. Produits vendus
+  // Produits vendus
   const productsSoldAgg = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId), status: { $in: ["confirmed","shipped","delivered"] } } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId, status: { $in: ["confirmed","shipped","delivered"] } } },
     { $unwind: "$items" },
-    { $match: { "items.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { "items.storeId": storeObjectId } },
     { $group: { _id: null, totalQty: { $sum: "$items.quantity" } } }
   ]);
   const productsSold = productsSoldAgg[0]?.totalQty || 0;
 
-  // 4. Clients uniques
+  // Clients uniques
   const uniqueClientsAgg = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId } },
     { $group: { _id: "$userId" } },
     { $count: "uniqueClients" }
   ]);
   const uniqueClients = uniqueClientsAgg[0]?.uniqueClients || 0;
 
-  // 5. Stock actuel
+  // Stock actuel
   const productDocs = await Product.find({ "storeData.storeId": storeId });
   let stockTotal = 0;
   productDocs.forEach(p => {
@@ -55,66 +69,63 @@ async function getStoreDashboard(storeId, { startDate, endDate }) {
     }
   });
 
-  // Schémas
+  // Évolution du chiffre d'affaires par mois
   const revenueEvolution = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId), status: { $in: ["confirmed","shipped","delivered"] } } },
-    { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, revenue: { $sum: "$total" } } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId, status: { $in: ["confirmed","shipped","delivered"] } } },
+    { $unwind: "$items" },
+    { $match: { "items.storeId": storeObjectId } },
+    { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
+  // Évolution des commandes par mois
   const ordersEvolution = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId } },
     { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, count: { $sum: 1 } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
+  // Top produits vendus
   const topProducts = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId), status: { $in: ["confirmed","shipped","delivered"] } } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId, status: { $in: ["confirmed","shipped","delivered"] } } },
     { $unwind: "$items" },
-    { $match: { "items.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { "items.storeId": storeObjectId } },
     { $group: { _id: "$items.productId", totalQty: { $sum: "$items.quantity" } } },
     { $sort: { totalQty: -1 } },
     { $limit: 5 }
   ]);
 
+  // Évolution du stock par mois
   const stockEvolution = await Product.aggregate([
-    { $match: { "storeData.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { "storeData.storeId": storeObjectId } },
     { $unwind: "$storeData" },
-    { $match: { "storeData.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { "storeData.storeId": storeObjectId } },
     { $unwind: "$storeData.stockMovements" },
     { $group: { _id: { year: { $year: "$storeData.stockMovements.timestamp" }, month: { $month: "$storeData.stockMovements.timestamp" } }, qty: { $sum: { $cond: [{ $eq: ["$storeData.stockMovements.isEntry", true] }, "$storeData.stockMovements.quantity", { $multiply: ["$storeData.stockMovements.quantity", -1] }] } } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
+  // Évolution des clients uniques par mois
   const clientsEvolution = await Order.aggregate([
-    { $match: { ...dateFilter, "items.storeId": new mongoose.Types.ObjectId(storeId) } },
+    { $match: { ...dateFilter, "items.storeId": storeObjectId } },
     { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" }, user: "$userId" } } },
     { $group: { _id: { year: "$_id.year", month: "$_id.month" }, uniqueClients: { $sum: 1 } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
   return {
-    metrics: {
-      revenue,
-      ordersCount,
-      productsSold,
-      uniqueClients,
-      stockTotal
-    },
-    schemas: {
-      revenueEvolution,
-      ordersEvolution,
-      topProducts,
-      stockEvolution,
-      clientsEvolution
-    }
+    metrics: { revenue, ordersCount, productsSold, uniqueClients, stockTotal },
+    schemas: { revenueEvolution, ordersEvolution, topProducts, stockEvolution, clientsEvolution }
   };
 }
 
+/**
+ * Dashboard manager - Vue globale de toutes les boutiques du manager
+ */
 async function getManagerDashboard(managerId, { startDate, endDate, storeId }) {
   const dateFilter = buildDateFilter(startDate, endDate);
 
-  // 1. Récupérer toutes les boutiques du manager
+  // Récupérer les boutiques du manager
   const managerStores = await Store.find({ userId: managerId });
   const storeIds = managerStores.map(store => store._id);
 
@@ -128,7 +139,7 @@ async function getManagerDashboard(managerId, { startDate, endDate, storeId }) {
     };
   }
 
-  // 2. Si storeId est spécifié, vérifier qu'il appartient au manager
+  // Filtrer par storeId si spécifié (vérification d'appartenance)
   let filteredStoreIds = storeIds;
   if (storeId) {
     const storeObjectId = new mongoose.Types.ObjectId(storeId);
@@ -138,51 +149,29 @@ async function getManagerDashboard(managerId, { startDate, endDate, storeId }) {
     filteredStoreIds = [storeObjectId];
   }
 
-  // 3. Métriques globales
   const globalMetrics = await calculateGlobalMetrics(filteredStoreIds, dateFilter);
-
-  // 4. Résumé par boutique
   const storesSummary = await calculateStoresSummary(filteredStoreIds, dateFilter);
-
-  // 5. Analytics
   const analytics = await calculateAnalytics(filteredStoreIds, dateFilter);
-
-  // 6. Alertes
   const alerts = await calculateAlerts(filteredStoreIds);
 
-  return {
-    globalMetrics,
-    storesSummary,
-    analytics,
-    alerts
-  };
+  return { globalMetrics, storesSummary, analytics, alerts };
 }
 
+/**
+ * Calcule les métriques globales pour un ensemble de boutiques
+ */
 async function calculateGlobalMetrics(storeIds, dateFilter) {
-  // Revenus totaux
+  // Revenus totaux (depuis les items filtrés par storeId)
   const revenueAgg = await Order.aggregate([
-    { 
-      $match: { 
-        ...dateFilter, 
-        "items.storeId": { $in: storeIds }, 
-        status: { $in: ["confirmed", "shipped", "delivered"] } 
-      } 
-    },
-    { $group: { _id: null, totalRevenue: { $sum: "$total" } } }
+    { $match: { ...dateFilter, "items.storeId": { $in: storeIds }, status: { $in: ["confirmed", "shipped", "delivered"] } } },
+    { $unwind: "$items" },
+    { $match: { "items.storeId": { $in: storeIds } } },
+    { $group: { _id: null, totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } }
   ]);
 
-  // Nombre total de commandes
-  const ordersCount = await Order.countDocuments({
-    ...dateFilter,
-    "items.storeId": { $in: storeIds }
-  });
+  const ordersCount = await Order.countDocuments({ ...dateFilter, "items.storeId": { $in: storeIds } });
+  const productsCount = await Product.countDocuments({ "storeData.storeId": { $in: storeIds } });
 
-  // Nombre total de produits
-  const productsCount = await Product.countDocuments({
-    "storeData.storeId": { $in: storeIds }
-  });
-
-  // Clients uniques
   const uniqueCustomersAgg = await Order.aggregate([
     { $match: { ...dateFilter, "items.storeId": { $in: storeIds } } },
     { $group: { _id: "$userId" } },
@@ -203,49 +192,33 @@ async function calculateGlobalMetrics(storeIds, dateFilter) {
   };
 }
 
+/**
+ * Calcule le résumé par boutique
+ */
 async function calculateStoresSummary(storeIds, dateFilter) {
   const stores = await Store.find({ _id: { $in: storeIds } });
   const summary = [];
 
   for (const store of stores) {
-    // Revenus par boutique
+    // Revenus (depuis les items filtrés par storeId)
     const storeRevenueAgg = await Order.aggregate([
-      { 
-        $match: { 
-          ...dateFilter, 
-          "items.storeId": store._id, 
-          status: { $in: ["confirmed", "shipped", "delivered"] } 
-        } 
-      },
-      { $group: { _id: null, revenue: { $sum: "$total" } } }
+      { $match: { ...dateFilter, "items.storeId": store._id, status: { $in: ["confirmed", "shipped", "delivered"] } } },
+      { $unwind: "$items" },
+      { $match: { "items.storeId": store._id } },
+      { $group: { _id: null, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } }
     ]);
 
-    // Commandes par boutique
-    const storeOrdersCount = await Order.countDocuments({
-      ...dateFilter,
-      "items.storeId": store._id
-    });
+    const storeOrdersCount = await Order.countDocuments({ ...dateFilter, "items.storeId": store._id });
+    const storeProductsCount = await Product.countDocuments({ "storeData.storeId": store._id });
 
-    // Produits par boutique
-    const storeProductsCount = await Product.countDocuments({
-      "storeData.storeId": store._id
-    });
-
-    // Clients par boutique
     const storeCustomersAgg = await Order.aggregate([
       { $match: { ...dateFilter, "items.storeId": store._id } },
       { $group: { _id: "$userId" } },
       { $count: "customers" }
     ]);
 
-    // Stock total et valeur
     const stockInfo = await calculateStoreStock(store._id);
-
-    // Commandes en attente
-    const pendingOrders = await Order.countDocuments({
-      "items.storeId": store._id,
-      status: "pending"
-    });
+    const pendingOrders = await Order.countDocuments({ "items.storeId": store._id, status: "pending" });
 
     summary.push({
       storeId: store._id,
@@ -264,93 +237,41 @@ async function calculateStoresSummary(storeIds, dateFilter) {
   return summary;
 }
 
+/**
+ * Calcule les analytics (évolutions et tops)
+ */
 async function calculateAnalytics(storeIds, dateFilter) {
-  // Évolution des revenus
+  // Évolution des revenus (depuis les items filtrés par storeId)
   const revenueEvolution = await Order.aggregate([
-    { 
-      $match: { 
-        ...dateFilter, 
-        "items.storeId": { $in: storeIds }, 
-        status: { $in: ["confirmed", "shipped", "delivered"] } 
-      } 
-    },
-    { 
-      $group: { 
-        _id: { 
-          year: { $year: "$createdAt" }, 
-          month: { $month: "$createdAt" } 
-        }, 
-        revenue: { $sum: "$total" } 
-      } 
-    },
+    { $match: { ...dateFilter, "items.storeId": { $in: storeIds }, status: { $in: ["confirmed", "shipped", "delivered"] } } },
+    { $unwind: "$items" },
+    { $match: { "items.storeId": { $in: storeIds } } },
+    { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
   // Top boutiques performantes
   const topPerformingStores = await Order.aggregate([
-    { 
-      $match: { 
-        ...dateFilter, 
-        "items.storeId": { $in: storeIds }, 
-        status: { $in: ["confirmed", "shipped", "delivered"] } 
-      } 
-    },
+    { $match: { ...dateFilter, "items.storeId": { $in: storeIds }, status: { $in: ["confirmed", "shipped", "delivered"] } } },
     { $unwind: "$items" },
     { $match: { "items.storeId": { $in: storeIds } } },
-    { 
-      $group: { 
-        _id: "$items.storeId", 
-        revenue: { $sum: "$items.totalPrice" } 
-      } 
-    },
+    { $group: { _id: "$items.storeId", revenue: { $sum: "$items.totalPrice" } } },
     { $sort: { revenue: -1 } },
     { $limit: 5 },
-    {
-      $lookup: {
-        from: "stores",
-        localField: "_id",
-        foreignField: "_id",
-        as: "store"
-      }
-    },
+    { $lookup: { from: "stores", localField: "_id", foreignField: "_id", as: "store" } },
     { $unwind: "$store" },
-    {
-      $project: {
-        storeId: "$_id",
-        storeName: "$store.name",
-        revenue: 1
-      }
-    }
+    { $project: { storeId: "$_id", storeName: "$store.name", revenue: 1 } }
   ]);
 
   // Top produits toutes boutiques confondues
   const topProductsAcrossStores = await Order.aggregate([
-    { 
-      $match: { 
-        ...dateFilter, 
-        "items.storeId": { $in: storeIds }, 
-        status: { $in: ["confirmed", "shipped", "delivered"] } 
-      } 
-    },
+    { $match: { ...dateFilter, "items.storeId": { $in: storeIds }, status: { $in: ["confirmed", "shipped", "delivered"] } } },
     { $unwind: "$items" },
     { $match: { "items.storeId": { $in: storeIds } } },
-    { 
-      $group: { 
-        _id: "$items.productName", 
-        totalSold: { $sum: "$items.quantity" },
-        revenue: { $sum: "$items.totalPrice" }
-      } 
-    },
+    { $group: { _id: "$items.productName", totalSold: { $sum: "$items.quantity" }, revenue: { $sum: "$items.totalPrice" } } },
     { $sort: { totalSold: -1 } },
     { $limit: 10 },
-    {
-      $project: {
-        productName: "$_id",
-        totalSold: 1,
-        revenue: 1,
-        _id: 0
-      }
-    }
+    { $project: { productName: "$_id", totalSold: 1, revenue: 1, _id: 0 } }
   ]);
 
   return {
@@ -363,8 +284,11 @@ async function calculateAnalytics(storeIds, dateFilter) {
   };
 }
 
+/**
+ * Calcule les alertes (stock bas, commandes en attente)
+ */
 async function calculateAlerts(storeIds) {
-  // Stock bas (exemple : moins de 5 unités)
+  // Produits avec stock bas (< 5 unités)
   const lowStockProducts = await Product.aggregate([
     { $match: { "storeData.storeId": { $in: storeIds } } },
     { $unwind: "$storeData" },
@@ -373,64 +297,27 @@ async function calculateAlerts(storeIds) {
       $addFields: {
         currentStock: {
           $subtract: [
-            {
-              $sum: {
-                $map: {
-                  input: { $filter: { input: "$storeData.stockMovements", cond: { $eq: ["$$this.isEntry", true] } } },
-                  as: "entry",
-                  in: "$$entry.quantity"
-                }
-              }
-            },
-            {
-              $sum: {
-                $map: {
-                  input: { $filter: { input: "$storeData.stockMovements", cond: { $eq: ["$$this.isEntry", false] } } },
-                  as: "exit",
-                  in: "$$exit.quantity"
-                }
-              }
-            }
+            { $sum: { $map: { input: { $filter: { input: "$storeData.stockMovements", cond: { $eq: ["$$this.isEntry", true] } } }, as: "entry", in: "$$entry.quantity" } } },
+            { $sum: { $map: { input: { $filter: { input: "$storeData.stockMovements", cond: { $eq: ["$$this.isEntry", false] } } }, as: "exit", in: "$$exit.quantity" } } }
           ]
         }
       }
     },
     { $match: { currentStock: { $lt: 5, $gte: 0 } } },
-    {
-      $lookup: {
-        from: "stores",
-        localField: "storeData.storeId",
-        foreignField: "_id",
-        as: "store"
-      }
-    },
+    { $lookup: { from: "stores", localField: "storeData.storeId", foreignField: "_id", as: "store" } },
     { $unwind: "$store" },
-    {
-      $project: {
-        storeId: "$storeData.storeId",
-        storeName: "$store.name",
-        productName: "$name",
-        stock: "$currentStock"
-      }
-    }
+    { $project: { storeId: "$storeData.storeId", storeName: "$store.name", productName: "$name", stock: "$currentStock" } }
   ]);
 
   // Commandes en attente
-  const pendingOrdersDetails = await Order.find({
-    "items.storeId": { $in: storeIds },
-    status: "pending"
-  })
-  .populate('userId', 'profile.firstName profile.lastName email')
-  .limit(10)
-  .select('_id total createdAt items userId');
+  const pendingOrdersDetails = await Order.find({ "items.storeId": { $in: storeIds }, status: "pending" })
+    .populate('userId', 'profile.firstName profile.lastName email')
+    .limit(10)
+    .select('_id total createdAt items userId');
 
   const pendingOrdersFormatted = await Promise.all(
     pendingOrdersDetails.map(async (order) => {
-      // Trouver le store concerné dans cette commande
-      const storeItem = order.items.find(item => 
-        storeIds.some(storeId => storeId.equals(item.storeId))
-      );
-      
+      const storeItem = order.items.find(item => storeIds.some(storeId => storeId.equals(item.storeId)));
       if (storeItem) {
         const store = await Store.findById(storeItem.storeId);
         return {
@@ -452,6 +339,9 @@ async function calculateAlerts(storeIds) {
   };
 }
 
+/**
+ * Calcule le stock et sa valeur pour une boutique
+ */
 async function calculateStoreStock(storeId) {
   const products = await Product.find({ "storeData.storeId": storeId });
   
@@ -461,14 +351,8 @@ async function calculateStoreStock(storeId) {
   products.forEach(product => {
     const storeData = product.storeData.find(sd => sd.storeId.equals(storeId));
     if (storeData) {
-      const entries = storeData.stockMovements
-        .filter(m => m.isEntry)
-        .reduce((sum, m) => sum + m.quantity, 0);
-      
-      const exits = storeData.stockMovements
-        .filter(m => !m.isEntry)
-        .reduce((sum, m) => sum + m.quantity, 0);
-      
+      const entries = storeData.stockMovements.filter(m => m.isEntry).reduce((sum, m) => sum + m.quantity, 0);
+      const exits = storeData.stockMovements.filter(m => !m.isEntry).reduce((sum, m) => sum + m.quantity, 0);
       const currentStock = entries - exits;
       
       if (currentStock < 5 && currentStock >= 0) {
@@ -479,13 +363,7 @@ async function calculateStoreStock(storeId) {
     }
   });
 
-  return {
-    value: totalValue,
-    lowStockCount
-  };
+  return { value: totalValue, lowStockCount };
 }
 
-module.exports = { 
-  getStoreDashboard,
-  getManagerDashboard
-};
+module.exports = { getStoreDashboard, getManagerDashboard };

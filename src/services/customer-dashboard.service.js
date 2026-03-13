@@ -2,12 +2,19 @@ const Order = require('../models/order.model');
 const Product = require('../models/product.model');
 const mongoose = require('mongoose');
 
+/**
+ * Construit un filtre de date pour les requêtes MongoDB
+ * Ignore les valeurs vides ou invalides
+ */
 function buildDateFilter(startDate, endDate) {
   const filter = {};
-  if (startDate || endDate) {
+  const validStart = startDate && !isNaN(new Date(startDate).getTime());
+  const validEnd = endDate && !isNaN(new Date(endDate).getTime());
+  
+  if (validStart || validEnd) {
     filter.createdAt = {};
-    if (startDate) filter.createdAt.$gte = new Date(startDate);
-    if (endDate) filter.createdAt.$lte = new Date(endDate);
+    if (validStart) filter.createdAt.$gte = new Date(startDate);
+    if (validEnd) filter.createdAt.$lte = new Date(endDate);
   }
   return filter;
 }

@@ -9,18 +9,18 @@ const Joi = require('joi');
 
 const router = Router();
 
-// Validation schemas
+// Validation schemas - Joi.date() avec allow('') pour accepter les chaînes vides du frontend
 const dateRangeQuerySchema = Joi.object({
-    startDate: Joi.date().optional(),
-    endDate: Joi.date().optional(),
-    storeId: Joi.string().optional()  // Pour le filtre optionnel par boutique
+    startDate: Joi.date().optional().allow('', null),
+    endDate: Joi.date().optional().allow('', null),
+    storeId: Joi.string().optional().allow('', null)
 }).unknown(true);
 
 // Schema pour les paramètres optionnels du manager
 const managerQuerySchema = Joi.object({
-    startDate: Joi.date().optional(),
-    endDate: Joi.date().optional(),
-    storeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
+    startDate: Joi.date().optional().allow('', null),
+    endDate: Joi.date().optional().allow('', null),
+    storeId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().allow('', null).messages({
         'string.pattern.base': 'storeId doit être un ObjectId valide'
     })
 }).unknown(true);

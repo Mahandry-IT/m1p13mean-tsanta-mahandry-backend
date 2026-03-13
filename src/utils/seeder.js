@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs').promises;
-const { Role, Store, Product, User, Menu, Category, Type, Order  } = require('../models');
+const { Role, Store, Product, User, Menu, Category, Type, Order } = require('../models');
 const logger = require('./logger');
 const Migration = require('../models/migration.model');
 const bcrypt = require('bcryptjs');
@@ -103,9 +103,7 @@ class DatabaseSeeder {
         }
 
         logger.info(`✅ Rôles: ${created} créés, ${updated} mis à jour`);
-    }
-
-    /**
+    }    /**
      * Seed les magasins
      */
     async seedStores(stores) {
@@ -114,7 +112,17 @@ class DatabaseSeeder {
         let updated = 0;
 
         for (const storeData of stores) {
-            const existingStore = await Store.findOne({ email: storeData.email });
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(storeData._id);
+            
+            let existingStore = null;
+            if (providedId) {
+                existingStore = await Store.findById(providedId);
+            }
+            // Sinon chercher par email
+            if (!existingStore) {
+                existingStore = await Store.findOne({ email: storeData.email });
+            }
 
             let relatedUser = null;
             let userIdToAssign = null;
@@ -148,12 +156,18 @@ class DatabaseSeeder {
             const payload = { ...storeData, userId: userIdToAssign || null };
             // On ne persiste pas userEmail dans Store
             delete payload.userEmail;
+            // On ne garde pas _id dans le payload pour l'update, on le gère séparément
+            delete payload._id;
 
             if (existingStore) {
                 await Store.findByIdAndUpdate(existingStore._id, payload);
                 updated++;
                 logger.info(`  🔄 Magasin mis à jour: ${storeData.name}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Store.create(payload);
                 created++;
                 logger.info(`  ✅ Magasin créé: ${storeData.name}`);
@@ -425,9 +439,7 @@ class DatabaseSeeder {
                 created++;
                 logger.info(`  ✅ Utilisateur créé: ${u.email}`);
             }
-        }
-
-        logger.info(`✅ Utilisateurs: ${created} créés, ${updated} mis à jour`);
+        }        logger.info(`✅ Utilisateurs: ${created} créés, ${updated} mis à jour`);
     }
 
     /**
@@ -462,6 +474,9 @@ class DatabaseSeeder {
         const pathToMenuId = new Map();
 
         for (const m of menus) {
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(m._id);
+
             const roleIds = Array.isArray(m.roles) ? m.roles : [];
 
             // Les _id de Role sont des strings dans ce projet -> on les stocke dans Menu en ObjectId.
@@ -477,14 +492,24 @@ class DatabaseSeeder {
                 parentId: null
             };
 
-            const existing = await Menu.findOne({ path: m.path });
+            let existing = null;
+            if (providedId) {
+                existing = await Menu.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Menu.findOne({ path: m.path });
+            }
+
             if (existing) {
                 await Menu.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 pathToMenuId.set(m.path, existing._id);
                 logger.info(`  \ud83d\udd04 Menu mis \u00e0 jour: ${m.path}`);
             } else {
-                const createdMenu = await Menu.create(payload);
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }                const createdMenu = await Menu.create(payload);
                 created++;
                 pathToMenuId.set(m.path, createdMenu._id);
                 logger.info(`  \u2705 Menu cr\u00e9\u00e9: ${m.path}`);
@@ -506,9 +531,7 @@ class DatabaseSeeder {
             }
 
             await Menu.findByIdAndUpdate(childId, { parentId }, { runValidators: true });
-        }
-
-        logger.info(`\u2705 Menus: ${created} cr\u00e9\u00e9s, ${updated} mis \u00e0 jour`);
+        }        logger.info(`\u2705 Menus: ${created} cr\u00e9\u00e9s, ${updated} mis \u00e0 jour`);
     }
 
     /**
@@ -520,6 +543,9 @@ class DatabaseSeeder {
         let updated = 0;
 
         for (const c of categories) {
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(c._id);
+
             const payload = {
                 name: c.name,
                 slug: c.slug,
@@ -527,12 +553,23 @@ class DatabaseSeeder {
                 isActive: c.isActive ?? true,
             };
 
-            const existing = await Category.findOne({ slug: payload.slug });
+            let existing = null;
+            if (providedId) {
+                existing = await Category.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Category.findOne({ slug: payload.slug });
+            }
+
             if (existing) {
                 await Category.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 logger.info(`  🔄 Catégorie mise à jour: ${payload.slug}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Category.create(payload);
                 created++;
                 logger.info(`  ✅ Catégorie créée: ${payload.slug}`);
@@ -600,9 +637,7 @@ class DatabaseSeeder {
         }
 
         logger.info(`✅ Commandes: ${created} créées, ${updated} mises à jour`);
-    }
-
-    /**
+    }    /**
      * Seed des types (type de catégorie)
      * Attendu: [{ categorySlug, name, slug, isActive }]
      */
@@ -618,6 +653,9 @@ class DatabaseSeeder {
                 continue;
             }
 
+            // Si un _id est fourni et est castable -> chercher par _id d'abord
+            const providedId = this.tryCastObjectId(t._id);
+
             const payload = {
                 categoryId: category._id,
                 name: t.name,
@@ -625,12 +663,23 @@ class DatabaseSeeder {
                 isActive: t.isActive ?? true,
             };
 
-            const existing = await Type.findOne({ categoryId: category._id, slug: payload.slug });
+            let existing = null;
+            if (providedId) {
+                existing = await Type.findById(providedId);
+            }
+            if (!existing) {
+                existing = await Type.findOne({ categoryId: category._id, slug: payload.slug });
+            }
+
             if (existing) {
                 await Type.findByIdAndUpdate(existing._id, payload, { runValidators: true });
                 updated++;
                 logger.info(`  🔄 Type mis à jour: ${t.categorySlug}/${payload.slug}`);
             } else {
+                // Si un _id est fourni -> l'utiliser pour la création
+                if (providedId) {
+                    payload._id = providedId;
+                }
                 await Type.create(payload);
                 created++;
                 logger.info(`  ✅ Type créé: ${t.categorySlug}/${payload.slug}`);

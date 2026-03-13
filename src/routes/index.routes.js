@@ -12,6 +12,7 @@ const categoryRoutes = require('./category.routes');
 const typeRoutes = require('./type.routes');
 const productRoutes = require('./product.routes');
 const promotionRoutes = require('./promotion.routes');
+const favoriteRoutes = require('./favorite.routes');
 
 const router = Router();
 
@@ -32,5 +33,6 @@ router.use('/categories', categoryRoutes);
 router.use('/types', typeRoutes);
 router.use('/products', productRoutes);
 router.use('/promotions', promotionRoutes);
+router.use('/favorites', favoriteRoutes);
 
 module.exports = router;

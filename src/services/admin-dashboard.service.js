@@ -5,6 +5,16 @@ const Store = require('../models/store.model');
 const mongoose = require('mongoose');
 
 /**
+ * Convertit les Decimal128 en nombres pour l'affichage JSON
+ */
+function toNumber(value) {
+    if (value === null || value === undefined) return 0;
+    if (typeof value === 'object' && value.$numberDecimal) return parseFloat(value.$numberDecimal);
+    if (value instanceof mongoose.Types.Decimal128) return parseFloat(value.toString());
+    return parseFloat(value) || 0;
+}
+
+/**
  * Construit un filtre de date pour les requêtes MongoDB
  * Ignore les valeurs vides ou invalides
  */
@@ -33,8 +43,7 @@ async function getAdminDashboard({ startDate, endDate }) {
         { $match: { ...dateFilter, status: { $in: ["confirmed", "shipped", "delivered"] } } },
         { $unwind: "$items" },
         { $group: { _id: null, totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } }
-    ]);
-    const totalRevenue = totalRevenueAgg[0]?.totalRevenue || 0;
+    ]);    const totalRevenue = toNumber(totalRevenueAgg[0]?.totalRevenue);
 
     const totalOrders = await Order.countDocuments(dateFilter);
     const totalUsers = await User.countDocuments(dateFilter);
@@ -89,11 +98,25 @@ async function getAdminDashboard({ startDate, endDate }) {
         { $lookup: { from: "stores", localField: "_id", foreignField: "_id", as: "store" } },
         { $unwind: { path: "$store", preserveNullAndEmptyArrays: true } },
         { $project: { _id: 1, storeName: { $ifNull: ["$store.name", "Boutique inconnue"] }, totalRevenue: 1, totalOrders: 1 } }
-    ]);
-
-    return {
+    ]);    return {
         metrics: { totalRevenue, totalOrders, totalUsers, totalProducts, totalStores },
-        charts: { revenueEvolution, ordersEvolution, usersEvolution, topProducts, ordersByStatus, topStores }
+        charts: { 
+            revenueEvolution: revenueEvolution.map(item => ({
+                ...item,
+                revenue: toNumber(item.revenue)
+            })),
+            ordersEvolution, 
+            usersEvolution, 
+            topProducts: topProducts.map(item => ({
+                ...item,
+                totalRevenue: toNumber(item.totalRevenue)
+            })),
+            ordersByStatus, 
+            topStores: topStores.map(item => ({
+                ...item,
+                totalRevenue: toNumber(item.totalRevenue)
+            }))
+        }
     };
 }
 

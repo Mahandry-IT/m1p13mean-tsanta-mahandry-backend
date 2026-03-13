@@ -287,15 +287,28 @@ class DatabaseSeeder {
         }
 
         logger.info(`✅ Produits: ${created} créés, ${updated} mis à jour`);
-    }
-
-    /**
-     * Seed les données produit-magasin
+    }    /**
+     * Seed les données produit-magasin (prix, promotions, mouvements de stock)
      */
     async seedProductStoreData(productStoreData) {
         logger.info('\n💰 Seed des données produit-magasin...');
         let added = 0;
         let updated = 0;
+
+        // Cache pour les utilisateurs (email -> userId)
+        const userCache = new Map();
+
+        const getUserIdByEmail = async (email) => {
+            if (!email) return null;
+            const normalizedEmail = String(email).toLowerCase().trim();
+            if (userCache.has(normalizedEmail)) {
+                return userCache.get(normalizedEmail);
+            }
+            const user = await User.findOne({ email: normalizedEmail });
+            const userId = user ? user._id : null;
+            userCache.set(normalizedEmail, userId);
+            return userId;
+        };
 
         for (const data of productStoreData) {
             const product = await Product.findById(this.tryCastObjectId(data.productId) || data.productId);
@@ -331,28 +344,43 @@ class DatabaseSeeder {
                 isActive: promo.isActive || false
             }));
 
+            // Préparer les mouvements de stock avec résolution userEmail -> userId
+            const stockMovementsWithIds = [];
+            for (const movement of (data.stockMovements || [])) {
+                const userId = await getUserIdByEmail(movement.userEmail);
+                if (!userId) {
+                    logger.warn(`  ⚠️  Utilisateur non trouvé pour mouvement de stock: ${movement.userEmail}`);
+                    continue;
+                }
+                stockMovementsWithIds.push({
+                    movementId: new mongoose.Types.ObjectId(),
+                    isEntry: movement.isEntry,
+                    quantity: movement.quantity,
+                    timestamp: movement.timestamp ? new Date(movement.timestamp) : new Date(),
+                    name: movement.name || '',
+                    userId: userId
+                });
+            }
+
             const newStoreData = {
                 storeId: store._id,
                 currentPrice: mongoose.Types.Decimal128.fromString(data.currentPrice.toString()),
                 createdAt: new Date(),
                 priceHistory: priceHistoryWithDates,
                 promotions: promotionsWithIds,
-                stockMovements: []
+                stockMovements: stockMovementsWithIds
             };
 
             if (storeDataIndex === -1) {
                 // Ajouter
                 product.storeData.push(newStoreData);
                 added++;
-                logger.info(`  ✅ Données ajoutées: ${product.name} -> ${store.name}`);
+                logger.info(`  ✅ Données ajoutées: ${product.name} -> ${store.name} (${stockMovementsWithIds.length} mouvements)`);
             } else {
-                // Mettre à jour
-                product.storeData[storeDataIndex] = {
-                    ...newStoreData,
-                    stockMovements: product.storeData[storeDataIndex].stockMovements
-                };
+                // Mettre à jour - on remplace tout y compris les mouvements de stock
+                product.storeData[storeDataIndex] = newStoreData;
                 updated++;
-                logger.info(`  🔄 Données mises à jour: ${product.name} -> ${store.name}`);
+                logger.info(`  🔄 Données mises à jour: ${product.name} -> ${store.name} (${stockMovementsWithIds.length} mouvements)`);
             }
 
             await product.save();

@@ -4,6 +4,16 @@ const Store = require('../models/store.model');
 const mongoose = require('mongoose');
 
 /**
+ * Convertit les Decimal128 en nombres pour l'affichage JSON
+ */
+function toNumber(value) {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'object' && value.$numberDecimal) return parseFloat(value.$numberDecimal);
+  if (value instanceof mongoose.Types.Decimal128) return parseFloat(value.toString());
+  return parseFloat(value) || 0;
+}
+
+/**
  * Construit un filtre de date pour les requêtes MongoDB
  * Ignore les valeurs vides ou invalides
  */
@@ -177,18 +187,16 @@ async function calculateGlobalMetrics(storeIds, dateFilter) {
     { $group: { _id: "$userId" } },
     { $count: "uniqueCustomers" }
   ]);
-
-  const totalRevenue = revenueAgg[0]?.totalRevenue || 0;
+  const totalRevenue = toNumber(revenueAgg[0]?.totalRevenue);
   const uniqueCustomers = uniqueCustomersAgg[0]?.uniqueCustomers || 0;
-
   return {
     totalStores: storeIds.length,
-    activeStores: await Store.countDocuments({ _id: { $in: storeIds }, isActive: true }),
+    activeStores: await Store.countDocuments({ _id: { $in: storeIds }, status: 'active' }),
     totalRevenue,
     totalOrders: ordersCount,
     totalProducts: productsCount,
     totalCustomers: uniqueCustomers,
-    averageOrderValue: ordersCount > 0 ? (totalRevenue / ordersCount) : 0
+    averageOrderValue: ordersCount > 0 ? Math.round(totalRevenue / ordersCount) : 0
   };
 }
 
@@ -215,16 +223,14 @@ async function calculateStoresSummary(storeIds, dateFilter) {
       { $match: { ...dateFilter, "items.storeId": store._id } },
       { $group: { _id: "$userId" } },
       { $count: "customers" }
-    ]);
-
-    const stockInfo = await calculateStoreStock(store._id);
+    ]);    const stockInfo = await calculateStoreStock(store._id);
     const pendingOrders = await Order.countDocuments({ "items.storeId": store._id, status: "pending" });
 
     summary.push({
       storeId: store._id,
       storeName: store.name,
-      status: store.isActive ? 'active' : 'inactive',
-      revenue: storeRevenueAgg[0]?.revenue || 0,
+      status: store.status,
+      revenue: toNumber(storeRevenueAgg[0]?.revenue),
       orders: storeOrdersCount,
       products: storeProductsCount,
       customers: storeCustomersAgg[0]?.customers || 0,
@@ -240,13 +246,19 @@ async function calculateStoresSummary(storeIds, dateFilter) {
 /**
  * Calcule les analytics (évolutions et tops)
  */
-async function calculateAnalytics(storeIds, dateFilter) {
-  // Évolution des revenus (depuis les items filtrés par storeId)
+async function calculateAnalytics(storeIds, dateFilter) {  // Évolution des revenus (depuis les items filtrés par storeId)
   const revenueEvolution = await Order.aggregate([
     { $match: { ...dateFilter, "items.storeId": { $in: storeIds }, status: { $in: ["confirmed", "shipped", "delivered"] } } },
     { $unwind: "$items" },
     { $match: { "items.storeId": { $in: storeIds } } },
     { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, revenue: { $sum: { $multiply: ["$items.quantity", "$items.unitPrice"] } } } },
+    { $sort: { "_id.year": 1, "_id.month": 1 } }
+  ]);
+
+  // Évolution des commandes par mois
+  const ordersEvolution = await Order.aggregate([
+    { $match: { ...dateFilter, "items.storeId": { $in: storeIds } } },
+    { $group: { _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } }, count: { $sum: 1 } } },
     { $sort: { "_id.year": 1, "_id.month": 1 } }
   ]);
 
@@ -272,15 +284,25 @@ async function calculateAnalytics(storeIds, dateFilter) {
     { $sort: { totalSold: -1 } },
     { $limit: 10 },
     { $project: { productName: "$_id", totalSold: 1, revenue: 1, _id: 0 } }
-  ]);
-
-  return {
+  ]);  return {
     revenueEvolution: revenueEvolution.map(item => ({
       month: `${item._id.year}-${String(item._id.month).padStart(2, '0')}`,
-      revenue: item.revenue
+      revenue: toNumber(item.revenue)
     })),
-    topPerformingStores,
-    topProductsAcrossStores
+    ordersEvolution: ordersEvolution.map(item => ({
+      month: `${item._id.year}-${String(item._id.month).padStart(2, '0')}`,
+      count: item.count
+    })),
+    topPerformingStores: topPerformingStores.map(item => ({
+      storeId: item._id,
+      storeName: item.storeName,
+      revenue: toNumber(item.revenue)
+    })),
+    topProductsAcrossStores: topProductsAcrossStores.map(item => ({
+      productName: item.productName,
+      totalSold: item.totalSold,
+      revenue: toNumber(item.revenue)
+    }))
   };
 }
 
@@ -308,24 +330,23 @@ async function calculateAlerts(storeIds) {
     { $unwind: "$store" },
     { $project: { storeId: "$storeData.storeId", storeName: "$store.name", productName: "$name", stock: "$currentStock" } }
   ]);
-
   // Commandes en attente
   const pendingOrdersDetails = await Order.find({ "items.storeId": { $in: storeIds }, status: "pending" })
     .populate('userId', 'profile.firstName profile.lastName email')
     .limit(10)
-    .select('_id total createdAt items userId');
+    .select('_id orderNumber total createdAt items userId');
 
   const pendingOrdersFormatted = await Promise.all(
     pendingOrdersDetails.map(async (order) => {
-      const storeItem = order.items.find(item => storeIds.some(storeId => storeId.equals(item.storeId)));
-      if (storeItem) {
+      const storeItem = order.items.find(item => storeIds.some(storeId => storeId.equals(item.storeId)));      if (storeItem) {
         const store = await Store.findById(storeItem.storeId);
         return {
           storeId: storeItem.storeId,
           storeName: store?.name || 'Boutique inconnue',
           orderId: order._id,
+          orderNumber: order.orderNumber || order._id.toString(),
           customerName: `${order.userId?.profile?.firstName || ''} ${order.userId?.profile?.lastName || ''}`.trim() || order.userId?.email || 'Client inconnu',
-          total: order.total,
+          total: toNumber(order.total),
           createdAt: order.createdAt
         };
       }

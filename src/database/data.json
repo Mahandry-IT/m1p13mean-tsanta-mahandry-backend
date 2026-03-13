@@ -449,6 +449,10 @@
             "endDate": "2026-09-30T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 20, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-03-15T10:00:00Z", "name": "Retour fournisseur défectueux", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -467,6 +471,9 @@
             "endDate": "2027-06-12T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 25, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -477,7 +484,11 @@
           { "price": 5199000, "updatedAt": "2026-02-01T00:00:00Z" },
           { "price": 4999000, "updatedAt": "2026-02-20T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 15, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": true, "quantity": 10, "timestamp": "2025-06-01T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "mamy.rakotoarivelo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e42c",
@@ -495,6 +506,9 @@
             "endDate": "2026-11-15T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 20, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" }
         ]
       },
       {
@@ -505,7 +519,11 @@
           { "price": 4799000, "updatedAt": "2026-03-01T00:00:00Z" },
           { "price": 4599000, "updatedAt": "2026-03-03T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 18, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "mamy.rakotoarivelo@gmail.com" },
+          { "isEntry": false, "quantity": 1, "timestamp": "2025-05-20T14:00:00Z", "name": "Produit exposition", "userEmail": "mamy.rakotoarivelo@gmail.com" }
+        ]
       },
 
       {
@@ -524,6 +542,11 @@
             "endDate": "2027-12-20T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 200, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": true, "quantity": 100, "timestamp": "2025-04-01T08:00:00Z", "name": "Réapprovisionnement", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 5, "timestamp": "2025-07-10T11:00:00Z", "name": "Péremption proche", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
       {
@@ -534,7 +557,11 @@
           { "price": 70000, "updatedAt": "2026-01-15T00:00:00Z" },
           { "price": 68000, "updatedAt": "2026-03-02T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 100, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": true, "quantity": 50, "timestamp": "2025-05-15T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "fanja.randrianasolo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e430",
@@ -552,6 +579,10 @@
             "endDate": "2026-10-31T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 80, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 3, "timestamp": "2025-08-05T10:00:00Z", "name": "Dégustation client", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
       {
@@ -562,7 +593,10 @@
           { "price": 19500, "updatedAt": "2026-01-20T00:00:00Z" },
           { "price": 18000, "updatedAt": "2026-02-01T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 60, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e432",
@@ -580,6 +614,10 @@
             "endDate": "2027-03-10T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 80, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "fanja.randrianasolo@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-09-12T15:00:00Z", "name": "Echantillon gratuit", "userEmail": "fanja.randrianasolo@gmail.com" }
         ]
       },
 
@@ -591,7 +629,11 @@
           { "price": 27000, "updatedAt": "2026-01-05T00:00:00Z" },
           { "price": 25000, "updatedAt": "2026-01-25T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 150, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 100, "timestamp": "2025-06-01T08:00:00Z", "name": "Réapprovisionnement été", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e434",
@@ -609,6 +651,10 @@
             "endDate": "2026-12-31T23:59:59Z",
             "isActive": false
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 50, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 1, "timestamp": "2025-04-10T16:00:00Z", "name": "Défaut fabrication", "userEmail": "tahina.razanadrakoto@gmail.com" }
         ]
       },
       {
@@ -619,7 +665,11 @@
           { "price": 165000, "updatedAt": "2026-01-18T00:00:00Z" },
           { "price": 155000, "updatedAt": "2026-02-25T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 40, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 20, "timestamp": "2025-05-01T09:00:00Z", "name": "Réapprovisionnement", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
       },
       {
         "productId": "6990aefb7053d5bc9001e436",
@@ -637,6 +687,10 @@
             "endDate": "2027-08-15T23:59:59Z",
             "isActive": true
           }
+        ],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 200, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 5, "timestamp": "2025-07-20T14:00:00Z", "name": "Lot défectueux", "userEmail": "tahina.razanadrakoto@gmail.com" }
         ]
       },
       {
@@ -647,7 +701,12 @@
           { "price": 95000, "updatedAt": "2026-02-12T00:00:00Z" },
           { "price": 89000, "updatedAt": "2026-03-01T00:00:00Z" }
         ],
-        "promotions": []
+        "promotions": [],
+        "stockMovements": [
+          { "isEntry": true, "quantity": 35, "timestamp": "2024-12-01T08:00:00Z", "name": "Stock initial", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": true, "quantity": 25, "timestamp": "2025-04-15T10:00:00Z", "name": "Nouvelle collection", "userEmail": "tahina.razanadrakoto@gmail.com" },
+          { "isEntry": false, "quantity": 2, "timestamp": "2025-08-10T16:00:00Z", "name": "Retour qualité", "userEmail": "tahina.razanadrakoto@gmail.com" }
+        ]
       }
     ],
     "orders": [

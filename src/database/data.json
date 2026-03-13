@@ -1,7 +1,8 @@
 {
   "version": "1.0.0",
   "seeds": {
-    "roles": [      {
+    "roles": [
+      {
         "_id": "6990aefb7053d5bc9001e424",
         "value": "Administrator",
         "homepage": "/dashboard",
@@ -37,7 +38,8 @@
           { "name": "product:manage", "description": "Créer / modifier / supprimer des produits" },
           { "name": "product:list", "description": "Récupérer la liste des produits" }
         ]
-      },      {
+      },
+      {
         "_id": "6990aefb7053d5bc9001e425",
         "value": "Manager",
         "homepage": "/dashboard",
@@ -62,7 +64,8 @@
           { "name": "product:list", "description": "Récupérer la liste des produits" },
           { "name": "promotion:manage", "description": "Gérer les promotions" }
         ]
-      },      {
+      },
+      {
         "_id": "6990aefb7053d5bc9001e427",
         "value": "Customer",
         "homepage": "/buy-product",
@@ -644,8 +647,8 @@
           { "price": 89000, "updatedAt": "2026-03-01T00:00:00Z" }
         ],
         "promotions": []
-      }    ],
-
+      }
+    ],
     "orders": [
       {
         "_id": "65f1c1a5e1c2a9b002000001",
@@ -663,12 +666,12 @@
             "productName": "Laptop Dell XPS 15"
           },
           {
-            "productId": "6990aefb7053d5bc9001e42a",
+            "productId": "6990aefb7053d5bc9001e433",
             "storeId": "65f1c1a5e1c2a9b001001001",
             "quantity": 1,
             "unitPrice": 299.99,
             "totalPrice": 299.99,
-            "productName": "Chaise de Bureau Ergonomique"
+            "productName": "T-shirt Cotton Basic"
           }
         ],
         "createdAt": "2024-02-05T14:30:00.000Z",
@@ -676,17 +679,17 @@
       },
       {
         "_id": "65f1c1a5e1c2a9b002000002",
-        "userId": "65f1c1a5e1c2a9b001000004",
+        "userId": "65f1c1a5e1c2a9b001000005",
         "status": "shipped",
-        "subtotal": 1199.99,
-        "total": 1199.99,
+        "subtotal": 6299000,
+        "total": 6299000,
         "items": [
           {
             "productId": "6990aefb7053d5bc9001e429",
             "storeId": "65f1c1a5e1c2a9b001001001",
             "quantity": 1,
-            "unitPrice": 1199.99,
-            "totalPrice": 1199.99,
+            "unitPrice": 6299000,
+            "totalPrice": 6299000,
             "productName": "iPhone 15 Pro"
           }
         ],
@@ -695,13 +698,13 @@
       },
       {
         "_id": "65f1c1a5e1c2a9b002000003",
-        "userId": "65f1c1a5e1c2a9b001000005",
+        "userId": "65f1c1a5e1c2a9b001000006",
         "status": "confirmed",
         "subtotal": 899.99,
         "total": 899.99,
         "items": [
           {
-            "productId": "6990aefb7053d5bc9001e42b",
+            "productId": "6990aefb7053d5bc9001e42c",
             "storeId": "65f1c1a5e1c2a9b001001002",
             "quantity": 1,
             "unitPrice": 899.99,
@@ -714,18 +717,18 @@
       },
       {
         "_id": "65f1c1a5e1c2a9b002000004",
-        "userId": "65f1c1a5e1c2a9b001000006",
+        "userId": "65f1c1a5e1c2a9b001000004",
         "status": "delivered",
-        "subtotal": 599.99,
-        "total": 599.99,
+        "subtotal": 98000,
+        "total": 98000,
         "items": [
           {
-            "productId": "6990aefb7053d5bc9001e42c",
+            "productId": "6990aefb7053d5bc9001e434",
             "storeId": "65f1c1a5e1c2a9b001001001",
             "quantity": 1,
-            "unitPrice": 599.99,
-            "totalPrice": 599.99,
-            "productName": "Bureau en Bois Massif"
+            "unitPrice": 98000,
+            "totalPrice": 98000,
+            "productName": "Chaussures Sneakers Urban"
           }
         ],
         "createdAt": "2024-02-14T11:45:00.000Z",
@@ -733,17 +736,17 @@
       },
       {
         "_id": "65f1c1a5e1c2a9b002000005",
-        "userId": "65f1c1a5e1c2a9b001000004",
+        "userId": "65f1c1a5e1c2a9b001000005",
         "status": "pending",
-        "subtotal": 2699.98,
-        "total": 2699.98,
+        "subtotal": 5799000,
+        "total": 5799000,
         "items": [
           {
             "productId": "6990aefb7053d5bc9001e428",
-            "storeId": "65f1c1a5e1c2a9b001001002",
-            "quantity": 2,
-            "unitPrice": 1349.99,
-            "totalPrice": 2699.98,
+            "storeId": "65f1c1a5e1c2a9b001001001",
+            "quantity": 1,
+            "unitPrice": 5799000,
+            "totalPrice": 5799000,
             "productName": "Laptop Dell XPS 15"
           }
         ],
@@ -752,18 +755,18 @@
       },
       {
         "_id": "65f1c1a5e1c2a9b002000006",
-        "userId": "65f1c1a5e1c2a9b001000005",
+        "userId": "65f1c1a5e1c2a9b001000006",
         "status": "delivered",
-        "subtotal": 319.99,
-        "total": 319.99,
+        "subtotal": 68000,
+        "total": 68000,
         "items": [
           {
-            "productId": "6990aefb7053d5bc9001e42a",
+            "productId": "6990aefb7053d5bc9001e42f",
             "storeId": "65f1c1a5e1c2a9b001001002",
             "quantity": 1,
-            "unitPrice": 319.99,
-            "totalPrice": 319.99,
-            "productName": "Chaise de Bureau Ergonomique"
+            "unitPrice": 68000,
+            "totalPrice": 68000,
+            "productName": "Riz de luxe Makalioka 5kg"
           }
         ],
         "createdAt": "2024-01-25T09:15:00.000Z",
@@ -773,16 +776,16 @@
         "_id": "65f1c1a5e1c2a9b002000007",
         "userId": "65f1c1a5e1c2a9b001000006",
         "status": "cancelled",
-        "subtotal": 1199.99,
-        "total": 1199.99,
+        "subtotal": 155000,
+        "total": 155000,
         "items": [
           {
-            "productId": "6990aefb7053d5bc9001e429",
+            "productId": "6990aefb7053d5bc9001e435",
             "storeId": "65f1c1a5e1c2a9b001001001",
             "quantity": 1,
-            "unitPrice": 1199.99,
-            "totalPrice": 1199.99,
-            "productName": "iPhone 15 Pro"
+            "unitPrice": 155000,
+            "totalPrice": 155000,
+            "productName": "JBL Live 770NC"
           }
         ],
         "createdAt": "2024-01-18T15:20:00.000Z",
@@ -869,7 +872,6 @@
         "parentPath": "/manager"
       },
 
-
       {
         "label": "Espace client",
         "path": "/customer",
@@ -886,7 +888,6 @@
         "roles": ["6990aefb7053d5bc9001e427"],
         "parentPath": "/customer"
       },
-
 
       {
         "label": "Catégories",

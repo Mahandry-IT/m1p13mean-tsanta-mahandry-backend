@@ -33,7 +33,7 @@ module.exports = {
         doc
             .fontSize(22)
             .font('Helvetica-Bold')
-            .text(order.items[0]?.storeId?.name || 'Nom Boutique', { align: 'center' });
+            .text(order.items[0]?.storeId?.name || 'Ivanjo', { align: 'center' });
 
 
         doc.moveDown(0.5);
